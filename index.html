@@ -210,7 +210,12 @@ input:focus,select:focus,textarea:focus{border-color:#4a90e2;background:#fff}
  
 <!-- FINANCE -->
 <div class="page" id="page-finance">
-  <div class="page-header"><h1>Finance</h1><p id="fin-annee">—</p></div>
+  <div class="page-header"><h1>Finance</h1></div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+    <button onclick="finNav(-1)" style="background:none;border:none;font-size:26px;color:#1a56db;cursor:pointer;padding:2px 10px">‹</button>
+    <span id="fin-annee" style="font-size:17px;font-weight:700">—</span>
+    <button onclick="finNav(1)" style="background:none;border:none;font-size:26px;color:#1a56db;cursor:pointer;padding:2px 10px">›</button>
+  </div>
   <div class="fin-stat"><div class="label">Chiffre d'affaires total</div><div class="amount" id="fin-total">0 €</div></div>
   <div class="fin-grid">
     <div class="fin-card"><div class="fl">Acomptes reçus</div><div class="fv green" id="fin-acomptes">0 €</div></div>
@@ -561,8 +566,10 @@ function savePrestation(){
 }
  
 // FINANCE
+var anneeFinance=new Date().getFullYear();
+function finNav(dir){anneeFinance+=dir;renderFinance();}
 function renderFinance(){
-  var y=new Date().getFullYear();
+  var y=anneeFinance;
   document.getElementById('fin-annee').textContent='Année '+y;
   var conf=prestations.filter(function(p){return p.statut==='confirme'&&p.date.startsWith(y);});
   var att=prestations.filter(function(p){return p.statut==='attente'&&p.date.startsWith(y);});
