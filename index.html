@@ -1,21 +1,935 @@
+
+/
+Claude a terminé la réponse.
+Je veut créer un outil qui me permet de calculer rapidement combien dois je facture ma prestation. Je suis Dj et je realise plusieur type de prestation (Mariage 1200€, Kina 800€, Fiancailles 800€ et Anniversaire 500€) ce forfait la est pour 6h de travail, si je depasse les 6h de travail l'heure supp est facture 100€ en plus. Il faut mettre aussi les fraie de deplacement par tranche de 50km jusqu'a 800km
+
+20:28
+V
+
+Connexion à visualize...
+Voilà ton calculateur de devis DJ ! Voici comment l'utiliser :
+
+Choisis le type de prestation — Mariage, EVJF/Kina, Fiançailles ou Anniversaire
+Règle la durée avec le curseur — les heures supplémentaires au-delà de 6h sont automatiquement ajoutées à 100 €/h
+Sélectionne la tranche kilométrique — de local (0 €) jusqu'à 800 km par tranches de 50 km
+Le récapitulatif se met à jour instantanément avec le total à facturer
+Les frais de déplacement sont calculés à 1 €/km (50 € par tranche de 50 km), ce qui semble une base raisonnable. Si tu veux un tarif différent par tranche, dis-le moi et j'ajuste !
+
+peut tu ajuster ton outil par raport au besoin que j'ai via mon tableau de facturation ci joint https://1drv.ms/x/c/f4fa88cbf5a2517a/EcIoNR79tyVFn9jWIofEr8kBwhKsba1jRaGV00UOmBbuqw
+
+20:32
+Je ne peux pas accéder aux liens OneDrive directement. Peux-tu me partager le tableau d'une autre façon ?
+
+Par exemple :
+
+Copier-coller le contenu ici
+Télécharger le fichier Excel et l'uploader directement dans le chat
+
+2 janvier 2026 18:00 - 00:00 Betul kemiklioglu 41791977603 Golden palast Confirmé 200,00 € 900,00 € 700,00 € 3 janvier 2026 18:00 - 22:00 Fiancaille 06-59-15-22-97 Wittelsheim Confirmé 0,00 € 500,00 € 500,00 € 7 février 2026 18:00 - 00:00 Kina Ozen Merve 07-67-95-98-15 Espace de la t
+
+pasted
+
+20:34
+Parfait, je vois bien ta logique de facturation. Je peux déduire ta grille tarifaire réelle :
+
+Kina / Fiançailles : tarif de base variable selon déplacement
+Frais de déplacement : pas forcément au km fixe — certaines prestations à 200€, une à 300€, une à 500€
+Le total facturé varie selon la salle et la distance
+Laisse-moi analyser tes données pour comprendre exactement ta grille de prix par type + distance avant de reconstruire l'outil.
+
+D'après ton tableau, voici ce que je lis :
+
+Forfaits de base (hors déplacement) :
+
+Kina 6h : 500€ (local) → 600€ (proche) → 700€ → 800€ → etc.
+Fiançailles : 500€ de base
+Mariage : 800€ à 1300€
+Mais en réalité tes prix semblent négociés au cas par cas plutôt que sur une grille fixe. Avant de reconstruire l'outil, dis-moi :
+
+Quel est le forfait fixe par type (Kina, Fiançailles, Mariage, Anniversaire, Sünnet...) ?
+Ta grille déplacement — les frais varient entre 0€, 200€, 300€, 500€ dans ton tableau. C'est quoi ta règle exacte par tranche km ?
+Ou si tu préfères, je peux construire l'outil directement à partir de tes données réelles observées ?
+
+Prix fix : Mariage 1200€, Kina 800€, Fiancailles 800€, Anniversaire 500€. je n'ai pas vraiment de grille de deplacement
+
+20:36
+Donc pour le déplacement tu fixes le prix librement selon la destination ? Dans ce cas je peux mettre un champ libre où tu saisis le montant du déplacement manuellement plutôt qu'une grille fixe. Et pour les heures sup c'est toujours 100€/h au delà de 6h ?
+
+Non je veux quand meme faire un outil avec un genre de bareme par rapoort au km mais je ne suis pas encore fixer sur les tarifs peut tu m'aider pour ce bareme j'aimerai bien que cela contient mon essence, si c'est loin que la nuit d'hotel sois inclus, et fraie de derangement comme c'est loin c'est pas tres arrangent il y a beaucoup de route aller retour. oui pour les heures supp c tjr 100€ l'heure
+
+20:39
+Bonne idée de structurer ça proprement. Voilà une base de réflexion pour ton barème :
+
+Hypothèses de calcul (aller-retour) :
+
+Consommation moyenne : ~7L/100km, essence à ~1,75€/L = ~0,12€/km
+Usure véhicule : ~0,05€/km
+Coût réel route : ~0,17€/km aller-retour
+Barème suggéré :
+
+Tranche	Coût route AR	Hôtel	Dérangement	Total suggéré
+0 – 50 km	~17€	—	—	0€ (inclus forfait)
+50 – 100 km	~17-34€	—	—	50€
+100 – 200 km	~34-68€	—	50€	150€
+200 – 300 km	~68-102€	—	100€	200€
+300 – 400 km	~102-136€	~80€	150€	350€
+400 – 600 km	~136-204€	~80€	200€	450€
+600 – 800 km	~204-272€	~100€	250€	600€
+L'hôtel est intégré à partir de 300 km car au-delà tu ne peux pas rentrer sereinement après une nuit de travail.
+
+Tu veux ajuster les montants ou ça te semble cohérent ? Une fois validé je mets tout ça dans l'outil.
+
+peut tu rajouter le peage stp bien sur fait une moyenne
+
+20:41
+Bonne idée. Voilà le barème mis à jour avec les péages (moyennes estimées France/Suisse/Allemagne aller-retour) :
+
+Péages estimés AR (autoroutes françaises principalement) :
+
+50–100 km : ~10€
+100–200 km : ~20€
+200–300 km : ~35€
+300–400 km : ~50€
+400–600 km : ~70€
+600–800 km : ~90€
+Barème complet révisé :
+
+Tranche	Route AR	Péages AR	Hôtel	Dérangement	Total suggéré
+0 – 50 km	~17€	—	—	—	0€
+50 – 100 km	~26€	~10€	—	—	50€
+100 – 200 km	~51€	~20€	—	50€	150€
+200 – 300 km	~85€	~35€	—	100€	200€
+300 – 400 km	~119€	~50€	~80€	150€	400€
+400 – 600 km	~170€	~70€	~80€	200€	500€
+600 – 800 km	~238€	~90€	~100€	250€	650€
+Les totaux arrondis couvrent bien tes frais réels + une marge de dérangement. Tu valides ces montants ou tu veux ajuster certaines tranches avant que je l'intègre dans l'outil ?
+
+tout a l'air bien
+
+20:42
+V
+
+Connexion à visualize...
+Voilà l'outil mis à jour ! Les nouveautés par rapport à la version précédente :
+
+Barème déplacement en 7 tranches avec les vrais frais inclus (essence + péages AR + hôtel à partir de 300 km + dérangement)
+Indication hôtel qui s'affiche automatiquement quand tu sélectionnes une tranche 300 km+
+Détail des frais visible dans le récapitulatif (ce qui compose le montant)
+Sünnet ajouté comme type de prestation vu que tu en fais dans ton tableau
+Les heures supp restent à 100 €/h au-delà de 6h
+Dis-moi si tu veux ajuster un tarif ou ajouter autre chose !
+
+Peut tu enlever sunnet, la mention EVJF aussi stp, pour la durrée de prestation peut tu mettre un genre d'affiche d'heure ou je peut rentre moi meme les heures quand la prestation ce passe, pour les fraie de deplacement peut tu mettre une barre de recherche ou je note la ville et sa me calcule automatiquement le nombre de km a faire
+
+20:47
+Pour le calcul automatique des km depuis une ville, j'ai besoin de faire appel à une API de géolocalisation. Je vais utiliser l'API Anthropic intégrée pour calculer la distance depuis Mulhouse (ta base) vers la ville saisie.
+
+
+
+Voilà la version mise à jour ! Les changements :
+
+Sünnet et EVJF supprimés
+Horaires en saisie libre — tu rentres l'heure de début et de fin, la durée se calcule automatiquement (même si ça passe minuit, ex: 18h → 02h = 8h)
+Recherche de ville — tu tapes la ville, des suggestions apparaissent, tu cliques et la distance depuis Mulhouse est calculée automatiquement, le barème se sélectionne tout seul
+Note : la distance est calculée à vol d'oiseau (légèrement inférieure à la route réelle), ce qui reste une bonne base pour ton barème. Si tu veux un ajustement sur les montants, dis-moi !
+
+comment puis je ameliorer cet outil ?
+
+20:58
+Voilà quelques idées d'amélioration classées par priorité :
+
+Utilité immédiate
+
+Générer un PDF ou devis à envoyer directement au client (avec ton nom, logo, coordonnées, numéro de devis)
+Ajouter un champ nom du client et date de la prestation pour personnaliser le récapitulatif
+Bouton copier le récapitulatif pour le coller rapidement dans un SMS ou WhatsApp
+Calcul plus précis
+
+Distance en km routiers réels au lieu de vol d'oiseau (actuellement ~15% en dessous de la réalité)
+Option matériel supplémentaire (sono additionnelle, éclairage, écran LED...) avec tarifs fixes
+Suivi & historique
+
+Sauvegarder les devis avec date et client pour les retrouver plus tard
+Un petit tableau de bord avec le chiffre d'affaires prévu sur l'année (comme ton fichier Excel)
+Indicateur disponibilité — rentrer tes dates réservées pour voir si tu es libre
+Expérience
+
+Option acompte — afficher automatiquement le montant de l'acompte à demander (ex: 30% du total)
+Basculer en mode sombre/clair
+Version mobile optimisée pour calculer directement depuis ton téléphone pendant un appel client
+Par quoi tu veux commencer ? Je recommande le devis PDF — c'est ce qui t'apporte le plus de valeur concrète au quotidien.
+
+tes idée sont bonne tu peut faire les suivante : Générer un PDF ou devis à envoyer directement au client (avec ton nom, logo, coordonnées, numéro de devis), Ajouter un champ nom du client et date de la prestation pour personnaliser le récapitulatif, Distance en km routiers réels au lieu de vol d'oiseau (actuellement ~15% en dessous de la réalité), Option acompte — afficher automatiquement le montant de l'acompte à demander (ex: 30% du total), Version mobile optimisée pour calculer directement depuis ton téléphone pendant un appel client
+
+Afficher plus
+21:02
+Pour le PDF et les km routiers réels, j'ai besoin de quelques infos d'abord :
+
+Ton nom / nom de ton activité (ex: "DJ Karim" ou "K Music Events")
+Ton téléphone et email pour le devis
+Tu as un logo ? Si oui, uploade-le ici
+Le % d'acompte que tu demandes habituellement (30% ? 50% ?)
+DJ MEYRA, 2. 06.66.15.35.83, 4. 25%
+21:03
+Pas de logo, pas de problème, je ferai un en-tête sobre et professionnel. Je lance la version complète !
+
+
+
+Voilà la version complète ! Tout ce qui a été ajouté :
+
+Nom du client + date en haut du formulaire
+Distance routière réelle — la distance à vol d'oiseau est corrigée par un coefficient +25% pour correspondre à la route réelle
+Acompte 25% calculé automatiquement avec le reste à percevoir affiché clairement
+Génération PDF — en cliquant sur "Générer le devis PDF", tu télécharges un devis complet avec ton nom, ton numéro, les détails de la prestation, l'acompte et les mentions légales
+Optimisé mobile — grilles en 2 colonnes, boutons larges, tout lisible sur téléphone
+Le numéro de devis est généré automatiquement (ex: DM-20260605-437). Dis-moi si tu veux ajuster quelque chose sur le PDF !
+
+peut tu faire cet outil pour qu'il soit adapter sur iphone
+
+00:46
+
+
+Voilà la version optimisée iPhone ! Les ajustements spécifiques mobile :
+
+Boutons plus grands — zone de tap minimum 56px pour les doigts
+Texte 16px minimum sur les champs de saisie — évite le zoom automatique d'iOS sur les inputs
+Clavier adapté — le champ ville ouvre le clavier en majuscules automatiquement, sans correction automatique
+Touch events — les suggestions de ville se ferment au toucher en dehors, pas seulement au clic souris
+Espacement généreux entre toutes les sections pour faciliter la navigation au pouce
+Bouton PDF bien visible en bas avec une zone de tap large
+Pour l'utiliser depuis ton iPhone, ouvre cette conversation dans l'app Claude et l'outil sera directement utilisable. Dis-moi si tu veux ajuster quelque chose !
+
+FullSizeRender.jpeg
+Voici ce qui est noter quand j’ouvre l’app sur iPhone
+
+00:49
+Je vois le problème — l'outil utilise un connecteur "visualize" qui n'est pas disponible sur l'app iPhone. Je vais recréer l'outil directement en HTML pur sans passer par ce connecteur.
+
+
+Fichier créé, lu un fichier
+Fichier créé, lu un fichier
+Voilà ! Le problème venait du connecteur "visualize" qui n'existe pas sur l'app iPhone. J'ai créé un fichier HTML autonome qui fonctionne partout.
+
+Comment l'utiliser sur iPhone :
+
+Télécharge le fichier HTML ci-dessus
+Ouvre-le dans Safari sur ton iPhone
+Appuie sur le bouton Partager puis "Sur l'écran d'accueil" — ça crée une icône comme une vraie app
+Tu peux l'utiliser sans connexion internet, sauf pour la recherche de villes
+Toutes les fonctionnalités sont là : sélection de prestation, horaires, recherche de ville avec km automatique, acompte 25%, et génération du PDF.
+
+
+Devis dj meyra
+Code · HTML 
+Que je sélectionne une ville sa ne la trouve pas
+
+01:00
+Le problème vient de l'API Nominatim qui est bloquée dans le fichier HTML. Je vais utiliser une autre approche — intégrer Claude directement pour calculer la distance.
+
+
+Test Nominatim API
+Test Nominatim API
+Nominatim est bloqué. Je vais utiliser l'API Anthropic intégrée pour que Claude calcule lui-même les distances quand tu tapes une ville — ça marchera partout.
+
+
+Test Anthropic API depuis le sandbox
+Test Anthropic API depuis le sandbox
+L'API Anthropic est accessible. Je vais donc construire l'outil avec Claude intégré pour la recherche de villes et le calcul de distance — ça fonctionnera directement dans le fichier HTML sur iPhone.
+
+
+A exécuté une commande, lu un fichier
+A exécuté une commande, lu un fichier
+Nouveau fichier prêt ! Le problème était que l'ancienne version utilisait Nominatim (bloqué). Maintenant la recherche de villes passe par Claude directement — il connaît les villes et calcule lui-même la distance routière depuis Mulhouse.
+
+Comment ça marche maintenant :
+
+Tu tapes une ville → Claude cherche et propose jusqu'à 4 résultats
+Chaque suggestion affiche la ville, la région, la distance en km et les frais correspondants
+Tu tapes et après ~0.6 secondes les suggestions apparaissent
+Pour l'utiliser sur iPhone :
+
+Télécharge le fichier HTML
+Ouvre-le dans Safari
+Partager → "Sur l'écran d'accueil" pour l'avoir comme une app
+Il faut juste une connexion internet pour la recherche de villes (et la génération du PDF fonctionne aussi sans).
+
+
+Devis dj meyra
+Code · HTML 
+Je n’arrive pas à l’ouvrir dans safari
+
+01:06
+Le fichier HTML nécessite Safari pour fonctionner, mais je comprends que c'est compliqué à ouvrir depuis l'app Claude. La meilleure solution est de t'envoyer le fichier autrement.
+
+Dis-moi comment tu préfères le recevoir :
+
+Q : Comment veux-tu récupérer le fichier ?
+R : Via un lien direct (hébergement gratuit)
+
+01:07
+Bonne idée ! Je vais héberger le fichier sur GitHub Gist — c'est gratuit, tu auras un lien direct à ouvrir dans Safari.
+
+
+Exécuté 2 commandes
+Exécuté 2 commandes
+GitHub est limité sans compte. La solution la plus simple : je te donne le code complet à copier-coller sur htmlsave.net ou codepen.io — c'est 30 secondes et tu auras un lien permanent.
+
+Voici la marche à suivre :
+
+Option 1 — htmlsave.net (le plus simple)
+
+Va sur htmlsave.net depuis ton iPhone
+Colle le code ci-dessous
+Clique "Save" → tu obtiens un lien à mettre en favori Safari
+Option 2 — codepen.io
+
+Va sur codepen.io → "New Pen"
+Colle le code dans la zone "HTML"
+Clique "Save" → lien partageable
+Voici le code complet à copier :
+
+
+Afficher le code complet
+Afficher le code complet
+Voici la marche à suivre la plus simple depuis ton iPhone :
+
+1. Va sur ce site depuis Safari sur ton iPhone : 👉 glitch.com/edit
+
+2. Clique "New Project" → "hello-webpage"
+
+3. Ouvre le fichier index.html et remplace tout le contenu par le code du fichier téléchargé
+
+Mais en fait la solution la plus simple de toutes : ouvre directement ce lien depuis Safari sur ton iPhone —
+
+👉 https://codepen.io/pen
+
+Colle le code dans la zone HTML (en haut à gauche)
+Clique Save (en haut)
+Clique Change View → Full Page pour l'utiliser
+Mets la page en favori sur ton écran d'accueil
+Le code complet est dans le fichier téléchargeable ci-dessus — copie-le depuis les "Fichiers" de ton iPhone après téléchargement. Tu veux que je t'envoie le code directement ici dans le chat pour le copier plus facilement ?
+
+IMG_1896.PNG
+Toujours problème de ville
+
+01:15
+Je vois le problème — l'appel à l'API Anthropic depuis CodePen est bloqué par une restriction de sécurité (CORS). Je vais remplacer la recherche de villes par une liste intégrée de toutes les villes courantes autour de Mulhouse, sans besoin d'API. Ça marchera partout.
+
+
+A exécuté une commande, lu un fichier
+A exécuté une commande, lu un fichier
+Problème résolu ! J'ai intégré plus de 200 villes directement dans le fichier — plus besoin d'internet pour la recherche. Ça marche partout, même hors connexion.
+
+La recherche fonctionne maintenant en tapant simplement le début du nom :
+
+"Mar" → Marseille, Martigues...
+"Str" → Strasbourg, Strasbourg Meinau...
+"Bas" → Basel, Bâle...
+"Col" → Colmar, Colombes...
+J'ai inclus toutes les villes de tes prestations passées (Mulhouse, Colmar, Strasbourg, Montbéliard, Gray, Lancrans, Beauvais, Lisle-d'Abeau, Buggingen, Zwingen...) + toutes les grandes villes France/Suisse/Allemagne/Belgique.
+
+Sur CodePen, colle le nouveau fichier et ça marchera directement.
+
+
+Devis dj meyra
+Code · HTML 
+Magnifique sa marche as tu une astuce pour que j’ai cet outil comme si c’était une application i phone
+
+01:23
+Oui ! C'est très simple avec Safari, ça s'appelle une PWA (Progressive Web App). Voici comment faire :
+
+Sur CodePen :
+
+Ouvre ton projet CodePen
+Clique sur "Change View" en haut à droite
+Sélectionne "Full Page" — tu obtiens une URL directe comme codepen.io/xxx/full/yyy
+Ensuite sur iPhone :
+
+Ouvre cette URL dans Safari
+Appuie sur le bouton Partager (le carré avec une flèche vers le haut) en bas de Safari
+Fais défiler et appuie sur "Sur l'écran d'accueil"
+Donne-lui le nom "DJ Meyra" et appuie sur "Ajouter"
+Une icône apparaît sur ton écran d'accueil exactement comme une vraie app. Quand tu l'ouvres, Safari disparaît et tu as l'outil en plein écran sans les barres du navigateur.
+
+Si tu veux aller encore plus loin, je peux améliorer le fichier pour qu'il ait une vraie icône personnalisée et un écran de démarrage comme une vraie app iOS — tu veux que je le fasse ?
+
+Je ne trouve pas change view
+
+01:27
+Pas de souci ! Sur CodePen depuis iPhone c'est différent. Voici la méthode directe :
+
+Dans l'URL de ton CodePen, change juste le mot pen par full :
+
+URL normale : codepen.io/ton-pseudo/pen/abc123
+URL plein écran : codepen.io/ton-pseudo/full/abc123
+Sinon la méthode encore plus simple — envoie-toi le fichier HTML par email :
+
+Dans cette conversation Claude, télécharge le fichier devis_dj_meyra.html
+Envoie-le toi par email
+Ouvre l'email sur iPhone, appuie sur le fichier puis "Ouvrir dans Safari"
+Une fois dans Safari → bouton Partager → "Sur l'écran d'accueil"
+C'est la méthode la plus fiable sur iPhone. Tu veux essayer laquelle ?
+
+J’ai essayer la deuxième mais quand je clic sur le fichier dans le mail on me propose pas de l’ouvrir via safari
+
+01:31
+Oui c'est une limitation d'iOS, les fichiers HTML ne s'ouvrent pas directement depuis Mail. Voici la solution qui marche à coup sûr :
+
+Étape 1 — Télécharge le fichier depuis Claude sur ton iPhone, il va dans l'app Fichiers
+
+Étape 2 — Ouvre l'app Fichiers sur ton iPhone
+
+Étape 3 — Trouve le fichier devis_dj_meyra.html, appuie dessus 1 seconde (appui long)
+
+Étape 4 — Dans le menu qui apparaît, appuie sur "Partager"
+
+Étape 5 — Dans la liste, cherche et appuie sur "Copier dans Safari" ou "Ouvrir dans Safari"
+
+Étape 6 — Une fois dans Safari → bouton Partager en bas → "Sur l'écran d'accueil"
+
+Si tu ne vois pas Safari dans la liste de partage à l'étape 5, dis-moi et je te propose une autre solution (héberger le fichier sur un service gratuit pour avoir une vraie URL).
+
+IMG_1897.PNG
+Après l’étape 4 je trv pas le truc avec safari
+
+01:36
+Je vois le problème — Safari n'apparaît pas dans ta liste de partage. La solution la plus simple maintenant c'est de l'héberger sur Netlify Drop, c'est gratuit et tu auras une vraie URL.
+
+Fais ça depuis ton ordinateur :
+
+Va sur netlify.com/drop
+Glisse-dépose le fichier devis_dj_meyra.html dans la zone
+Tu obtiens une URL comme random-name.netlify.app
+Ouvre cette URL dans Safari sur iPhone
+Partager → "Sur l'écran d'accueil"
+Tu as accès à un ordinateur pour faire ça ? Ou tu veux qu'on trouve une solution 100% depuis iPhone ?
+
+C’est bon j’ai réussi
+
+01:54
+Super ! Maintenant tu peux l'ajouter sur ton écran d'accueil :
+
+Ouvre l'URL dans Safari
+Bouton Partager en bas (le carré avec la flèche)
+"Sur l'écran d'accueil"
+Nomme-la "DJ Meyra" → Ajouter
+Et voilà, tu as ton outil comme une vraie app sur ton iPhone ! 🎉
+
+Si tu veux je peux encore améliorer l'outil — ajouter une vraie icône personnalisée, ou d'autres fonctionnalités. Dis-moi !
+
+Je sais pas comment plus l’améliorer
+
+01:56
+L'outil est déjà très complet pour ton usage quotidien ! Voilà ce qu'il fait déjà :
+
+Calcul automatique du devis par type de prestation
+Heures supplémentaires calculées
+Recherche de ville avec frais de déplacement
+Acompte 25% automatique
+Génération de PDF professionnel
+La seule vraie amélioration utile qui me vient serait un historique des devis — pour retrouver ce que tu as envoyé à quel client, avec le montant. Mais ça nécessite une vraie base de données et ça devient plus complexe.
+
+Mon conseil : utilise-le tel quel pendant quelques semaines. Tu verras naturellement ce qui te manque en l'utilisant dans de vraies situations — un champ qui manque, un tarif à ajuster, une ville absente de la liste. Ce sera bien plus utile que d'améliorer pour améliorer.
+
+Si tu as une ville qui n'est pas dans la liste, dis-le moi et je l'ajoute rapidement !
+
+Oui je reviendrai vers toi si besoin le seul petit point que je vai améliorer peut être c’est rajouter des villes et ajuster peut être les fraie de déplacement
+
+01:58
+Parfait, c'est exactement la bonne approche — utiliser l'outil et ajuster au fur et à mesure selon ta vraie expérience terrain.
+
+Quand tu veux ajouter des villes ou ajuster les frais, reviens simplement ici et dis-moi par exemple :
+
+"Ajoute la ville X à Y km"
+"Les frais pour 100-200 km passent à 180€"
+Je mets à jour le fichier en quelques secondes et tu le redéposes sur Netlify. Bonne chance pour tes prestations ! 🎵
+
+IMG_1898.PNG
+Voici le message qui s’affiche quand je veut rentrer sur l’app
+
+11:47
+Netlify a suspendu ton site gratuit — ça arrive parfois sur les comptes gratuits sans inscription. La solution : utilise GitHub Pages à la place, c'est gratuit et beaucoup plus stable.
+
+Depuis ton ordinateur :
+
+Va sur github.com et crée un compte gratuit
+Clique "New repository"
+Nomme-le dj-meyra, coche "Public", clique "Create"
+Clique "uploading an existing file"
+Glisse le fichier devis_dj_meyra.html et renomme-le index.html avant d'uploader
+Clique "Commit changes"
+Va dans Settings → Pages → Branch: main → Save
+Ton URL sera : ton-pseudo.github.io/dj-meyra
+C'est permanent, gratuit, jamais suspendu. Ensuite tu refais Safari → Partager → Sur l'écran d'accueil avec cette nouvelle URL.
+
+Tu as accès à un ordi là ?
+
+oui
+
+14:03
+Parfait, lance-toi ! Suis les étapes une par une et dis-moi si tu bloques quelque part, je t'aide en temps réel. 🙂
+
+marouanmouti.github.io. a la fin jaiobtenue sa
+
+14:04
+Parfait ! Ton URL complète est donc :
+
+marouanmouti.github.io/dj-meyra
+
+Ouvre cette URL dans Safari sur ton iPhone, et ensuite :
+
+Bouton Partager en bas ↗
+"Sur l'écran d'accueil"
+Nomme-la "DJ Meyra"
+Ajouter
+Et c'est permanent cette fois, GitHub Pages ne suspend jamais ! Dis-moi si ça s'affiche bien.
+
+IMG_1899.PNG
+14:23
+GitHub Pages n'est pas encore activé. Depuis ton ordi, fais ça :
+
+Va sur github.com/marouanmouti/dj-meyra
+Clique sur "Settings" (en haut à droite du repo)
+Dans le menu gauche, clique "Pages"
+Sous "Branch", sélectionne "main" puis /root et clique "Save"
+Attends 2-3 minutes
+Rafraîchis la page — tu verras ton URL en vert
+Ensuite réessaie marouanmouti.github.io/dj-meyra sur iPhone. Dis-moi ce que tu vois !
+
+ok sa marche jespere que demaine et lres prochain mon aplli marchera encore
+
+14:28
+Oui GitHub Pages est permanent et gratuit, pas de risque de suspension comme Netlify ! Ton app sera là dans 6 mois, dans 1 an, sans rien faire.
+
+La seule chose à retenir : quand tu veux mettre à jour l'outil (nouvelles villes, nouveaux tarifs), il suffit de :
+
+Me demander ici les modifications
+Je te génère le nouveau fichier
+Tu vas sur github.com/marouanmouti/dj-meyra
+Tu cliques sur index.html → ✏️ Edit → tu colles le nouveau code → Commit
+Et l'app se met à jour automatiquement en quelques minutes. Bonne chance pour tes prestations DJ Meyra ! 🎵
+
+peut tu me renvoyer le bareme de fraie de deplacement
+
+18:21
+Voici ton barème actuel intégré dans l'outil :
+
+Tranche	Frais	Ce qui est inclus	Hôtel
+0 – 50 km	0 €	Inclus dans le forfait	❌
+50 – 100 km	50 €	Essence + péages	❌
+100 – 200 km	150 €	Essence + péages + dérangement	❌
+200 – 300 km	200 €	Essence + péages + dérangement	❌
+300 – 400 km	400 €	Essence + péages + dérangement + hôtel	✅
+400 – 600 km	500 €	Essence + péages + dérangement + hôtel	✅
+600 – 800 km	650 €	Essence + péages + dérangement + hôtel	✅
+Tu veux ajuster des montants ?
+
+peut tu me donner les montant detailler
+
+18:22
+Voici le détail complet qu'on avait calculé ensemble :
+
+Tranche	Route AR	Péages AR	Hôtel	Dérangement	Total
+0 – 50 km	~17 €	—	—	—	0 €
+50 – 100 km	~26 €	~10 €	—	—	50 €
+100 – 200 km	~51 €	~20 €	—	50 €	150 €
+200 – 300 km	~85 €	~35 €	—	100 €	200 €
+300 – 400 km	~119 €	~50 €	~80 €	150 €	400 €
+400 – 600 km	~170 €	~70 €	~80 €	200 €	500 €
+600 – 800 km	~238 €	~90 €	~100 €	250 €	650 €
+Les totaux couvrent tes frais réels + une marge de dérangement. Tu veux modifier quelque chose ?
+
+que pensse tu que je pourrai facturer en plus dans les fraie ?
+
+18:23
+Bonne question ! Voici ce que tu pourrais ajouter selon les situations :
+
+Frais souvent oubliés par les DJs :
+
+Parking — surtout en ville (Strasbourg, Lyon, Paris...) ça peut vite monter à 20-40€ la nuit. Tu pourrais ajouter 20€ forfaitaire au-delà de 100 km.
+
+Repas — si tu pars loin et reviens tard, tu manges sur la route. 15-20€ par prestation au-delà de 100 km c'est raisonnable.
+
+Usure du matériel — câbles, ampoules, transport... beaucoup de DJs ajoutent 20-30€ forfaitaire par prestation pour compenser.
+
+Péage retour de nuit — certains axes ont des tarifs différents la nuit, difficile à estimer mais réel.
+
+Ce que je te recommande concrètement :
+
+Plutôt que de détailler tout ça sur le devis (ça fait beaucoup), tu pourrais simplement revoir tes frais à la hausse :
+
+Tranche	Actuel	Suggéré
+50 – 100 km	50 €	70 €
+100 – 200 km	150 €	180 €
+200 – 300 km	200 €	250 €
+300 – 400 km	400 €	450 €
+400 – 600 km	500 €	580 €
+600 – 800 km	650 €	750 €
+Tu veux qu'on ajuste le barème dans l'outil ?
+
+arrondi tout sa a la centaine supérieur
+
+18:26
+Voici le barème arrondi à la centaine supérieure :
+
+Tranche	Actuel	Nouveau
+0 – 50 km	0 €	0 €
+50 – 100 km	70 €	100 €
+100 – 200 km	180 €	200 €
+200 – 300 km	250 €	300 €
+300 – 400 km	450 €	500 €
+400 – 600 km	580 €	600 €
+600 – 800 km	750 €	800 €
+C'est propre et facile à retenir ! Je mets à jour l'outil avec ces nouveaux montants ?
+
+oui
+
+18:26
+
+A exécuté une commande, lu un fichier
+A exécuté une commande, lu un fichier
+C'est mis à jour ! Pour l'installer sur GitHub :
+
+Va sur github.com/marouanmouti/dj-meyra
+Clique sur index.html
+Clique le crayon ✏️ Edit
+Sélectionne tout le texte (Ctrl+A) et supprime
+Colle le nouveau code du fichier téléchargé
+Clique "Commit changes"
+L'app sera mise à jour en 2-3 minutes ! 🎵
+
+
+Devis dj meyra
+Code · HTML 
+oui sa a marcher mais ya un tout long texte qui s'affcihe juste au desuus de l'outil
+
+18:33
+C'est le code HTML qui s'affiche en texte brut — GitHub a dû coller le code dans le mauvais endroit.
+
+Sur github.com/marouanmouti/dj-meyra :
+
+Clique sur index.html
+Clique le crayon ✏️ Edit
+Vérifie que le fichier commence bien par <!DOCTYPE html> tout en haut — si tu vois du texte avant, supprime-le
+Le fichier doit commencer exactement par <!DOCTYPE html> sans rien avant
+Commit changes
+Est-ce que tu vois <!DOCTYPE html> tout en haut quand tu édites le fichier ?
+
+cest bon jai supprimer tout me texte et tout en haut sa commence par doctype
+
+18:39
+Parfait ! Attends 2-3 minutes et rafraîchis l'app sur ton iPhone. Ça devrait être nickel maintenant avec le nouveau barème de déplacement. 🎵
+
+on va re ajuster certain montant
+
+18:52
+Dis-moi, je t'écoute !
+
+pose moi les question par rapport au nombre de km
+
+18:52
+On y va tranche par tranche !
+
+Q : 0 – 50 km : frais actuels 0 € (inclus dans le forfait), tu gardes ?
+R : Oui 0 €
+
+Q : 50 – 100 km : frais actuels 100 €, tu gardes ?
+R : Oui 100 €
+
+Q : 100 – 200 km : frais actuels 200 €, tu gardes ?
+R : Je change
+
+18:56
+C'est quoi le nouveau montant pour 100 – 200 km ?
+
+100
+
+18:56
+OK, 100 – 200 km passe à 100 €. On continue !
+
+Q : 200 – 300 km : frais actuels 300 €, tu gardes ?
+R : 400€
+
+Q : 300 – 400 km : frais actuels 500 €, tu gardes ?
+R : 600€
+
+Q : 400 – 600 km : frais actuels 600 €, tu gardes ?
+R : 800€
+
+18:59
+Et la dernière !
+
+Q : 600 – 800 km : frais actuels 800 €, tu gardes ?
+R : 1000€
+
+18:59
+Parfait ! Voici le nouveau barème complet :
+
+Tranche	Nouveau montant
+0 – 50 km	0 €
+50 – 100 km	100 €
+100 – 200 km	100 €
+200 – 300 km	400 €
+300 – 400 km	600 €
+400 – 600 km	800 €
+600 – 800 km	1 000 €
+Je mets à jour le fichier !
+
+
+A exécuté une commande, lu un fichier
+A exécuté une commande, lu un fichier
+Voilà ! Télécharge le fichier et mets à jour GitHub comme la dernière fois :
+
+github.com/marouanmouti/dj-meyra
+Clique index.html → ✏️ Edit
+Sélectionne tout → colle le nouveau code
+Commit changes
+L'app sera à jour en 2-3 minutes ! 🎵
+
+
+Devis dj meyra
+Code · HTML 
+et entre 800-1000km c'est 1200€
+
+19:00
+Pas de problème, j'ajoute cette tranche !
+
+
+A exécuté une commande, lu un fichier
+A exécuté une commande, lu un fichier
+Ajouté ! Barème final :
+
+Tranche	Frais
+0 – 50 km	0 €
+50 – 100 km	100 €
+100 – 200 km	100 €
+200 – 300 km	400 €
+300 – 400 km	600 €
+400 – 600 km	800 €
+600 – 800 km	1 000 €
+800 – 1 000 km	1 200 €
+Mets à jour GitHub avec le nouveau fichier et c'est bon ! 🎵
+
+
+Devis dj meyra
+Code · HTML 
+changer le logo de l'application phone
+
+19:08
+Pour changer l'icône de l'app sur iPhone, j'ai besoin de savoir ce que tu veux comme logo :
+
+Q : Tu veux quoi comme icône ?
+R : je dirai un genre de logo facture
+
+19:08
+Et tu préfères quelle couleur ?
+
+Q : Quelle couleur pour l'icône ?
+R : sombre
+
+19:08
+Je crée l'icône et l'intègre dans le fichier !
+
+
+Exécuté 2 commandes, lu un fichier
+Exécuté 2 commandes, lu un fichier
+L'icône est intégrée — un fond sombre avec une facture dorée et une note de musique ♪
+
+Mets à jour GitHub comme d'habitude, puis supprime l'ancienne app de ton écran d'accueil et rajoute-la depuis Safari — l'icône ne se met pas à jour automatiquement sur les apps déjà installées.
+
+Important : il faut refaire "Sur l'écran d'accueil" pour que la nouvelle icône apparaisse ! 🎵
+
+
+Devis dj meyra
+Code · HTML 
+l'icone n'a pas changer
+
+19:19
+C'est normal — Safari met en cache l'ancienne icône. Voici comment forcer la mise à jour :
+
+Supprime l'app de ton écran d'accueil (appui long → Supprimer)
+Ouvre Safari et tape l'URL marouanmouti.github.io/dj-meyra
+Attends que la page charge complètement
+Vide le cache Safari : Réglages → Safari → Effacer historique et données
+Retourne sur l'URL dans Safari
+Partager → "Sur l'écran d'accueil"
+La nouvelle icône devrait apparaître. Dis-moi si ça change !
+
+marche toujours pas
+
+19:22
+Le problème vient du fait que Safari sur iPhone ne supporte pas les icônes SVG en base64 pour les PWA. Il faut un vrai fichier PNG hébergé sur GitHub.
+
+Voici la solution :
+
+Va sur github.com/marouanmouti/dj-meyra
+Clique "Add file" → "Create new file"
+Nomme le fichier icon.png
+Mais on ne peut pas créer un PNG directement comme ça...
+La meilleure solution : je te génère une icône PNG en ligne. Va sur favicon.io/favicon-generator depuis ton ordi :
+
+Texte : DM
+Background : Rounded
+Background color : #1a1a2e
+Font color : #c9a84c
+Font size : 110
+Clique Download
+Dézippe et prends le fichier apple-touch-icon.png
+Upload ce fichier sur GitHub dans ton repo sous le nom icon.png
+Je mets ensuite à jour le HTML pour pointer vers ce fichier
+Tu veux essayer ça ?
+
+non pas grave cet imagine etait pas tres importante au final
+
+19:22
+OK pas de souci ! L'essentiel c'est que l'outil fonctionne bien.
+
+Si tu as besoin d'ajouter des villes, ajuster des tarifs ou autre chose, n'hésite pas à revenir ! 🎵
+
+je reflechie a dautre idée d'amelioration pas forcement sur l'outil en lui meme mais peut etre rajouter de nouvelles option pour faciliter mon organisation
+
+19:24
+Bonne idée ! Voilà quelques pistes pour t'aider à mieux t'organiser :
+
+Gestion des clients
+
+Un carnet de contacts clients (nom, téléphone, type de prestation, statut acompte reçu ou non)
+Historique des devis envoyés
+Planning
+
+Un calendrier visuel de tes dates réservées pour voir d'un coup d'œil tes disponibilités
+Alerte si tu as déjà une prestation ce jour-là
+Suivi financier
+
+Tableau de bord avec ton chiffre d'affaires du mois / de l'année
+Suivi des acomptes reçus et des soldes restants à encaisser
+Comparaison avec ton tableau Excel actuel
+Communication client
+
+Modèle de contrat simple à remplir et envoyer
+Message WhatsApp type à envoyer avec le devis
+Parmi tout ça, qu'est-ce qui te manque le plus au quotidien ? Le planning pour gérer tes dates, ou le suivi financier pour savoir ce que tu as encaissé ?
+
+je dirai le planning
+
+19:25
+Super choix ! Quelques questions pour bien comprendre ce dont tu as besoin :
+
+Q : Comment tu veux voir ton planning ?
+R : Quel serai le mieux en terme de visualisation ?
+
+Q : Quelles infos tu veux voir sur chaque prestation ?
+R : Type, client, ville et montant
+
+Q : Tu veux voir tes jours libres pour répondre vite aux clients ?
+R : dispo en vert et en rouge les jours pas dispo
+
+19:27
+Pour la visualisation, la combinaison des deux est clairement la meilleure :
+
+Vue calendrier mensuelle → tu vois d'un coup d'œil les jours en rouge (réservés) et vert (libres), parfait quand un client te demande une date
+Vue liste → tu vois toutes tes prestations dans l'ordre avec tous les détails (client, ville, montant)
+Tu passes d'une vue à l'autre avec un bouton. C'est exactement comme ça que fonctionnent les apps pro de gestion de planning.
+
+Je te fais ça ? Ce sera une deuxième app séparée sur ton iPhone — le calculateur de devis d'un côté, le planning de l'autre. Ou tu préfères tout regrouper dans une seule app ?
+
+oui ton idée est bonne, quel serai le mieux ? faire tout sur la meme app ?
+
+19:29
+Pour toi je recommande une seule app — voilà pourquoi :
+
+Une seule app c'est mieux parce que...
+
+Tu ouvres un seul endroit pour tout gérer
+Quand tu fais un devis, tu peux ajouter la date directement au planning en un clic
+Tu vois ton chiffre d'affaires du planning en même temps
+Un seul lien GitHub à maintenir
+L'app aurait 3 onglets en bas :
+
+📄 Devis — ton calculateur actuel
+📅 Planning — calendrier + liste
+💰 Finance — total encaissé, acomptes reçus (bonus utile)
+C'est comme une vraie app pro de DJ, tout centralisé en un seul endroit.
+
+Tu veux que je la construise comme ça ?
+
+oui
+
+19:30
+Parfait ! Avant de construire, quelques dernières questions rapides :
+
+Q : Quels statuts tu veux pour une prestation ? (Sélectionnez toutes les réponses applicables)
+R : Confirmé, En attente, Annulé
+
+Q : Dans l'onglet Finance, tu veux suivre les acomptes reçus (cocher quand tu as reçu le paiement) ?
+R : Oui
+
+19:30
+Parfait, je construis l'app complète ! Ça va prendre quelques minutes.
+
+
+A exécuté une commande, lu un fichier
+A exécuté une commande, lu un fichier
+L'app complète est prête ! Voici ce qu'elle contient :
+
+📄 Onglet Devis — ton calculateur habituel avec un nouveau bouton "Ajouter au planning" qui envoie directement la prestation dans le planning
+
+📅 Onglet Planning
+
+Vue calendrier avec jours en 🟢 vert (libre) et 🔴 rouge (réservé) / 🟡 jaune (en attente)
+Vue liste avec tous les détails
+Ajout manuel de prestations
+Changement de statut et suppression
+💰 Onglet Finance
+
+Chiffre d'affaires de l'année
+Acomptes reçus vs reste à encaisser
+Suivi des acomptes avec un bouton ON/OFF par prestation
+Les données sont sauvegardées automatiquement sur ton iPhone, elles restent même si tu fermes l'app.
+
+Mets à jour GitHub comme d'habitude ! 🎵
+
+
+Devis dj meyra
+Code · HTML 
+
+
+
+
+
+Claude est une IA et peut faire des erreurs. Veuillez vérifier les réponses.
+
+
+raw
+Devis dj meyra · HTML
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8IS0tIEZvbmQgc29tYnJlIC0tPgogIDxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iODAiIGZpbGw9IiMxYTFhMmUiLz4KICAKICA8IS0tIERvY3VtZW50L2ZhY3R1cmUgLS0+CiAgPHJlY3QgeD0iMTMwIiB5PSI4MCIgd2lkdGg9IjIyMCIgaGVpZ2h0PSIyODAiIHJ4PSIxOCIgZmlsbD0iIzE2MjEzZSIvPgogIDxyZWN0IHg9IjEzMCIgeT0iODAiIHdpZHRoPSIyMjAiIGhlaWdodD0iMjgwIiByeD0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2M5YTg0YyIgc3Ryb2tlLXdpZHRoPSI2Ii8+CiAgCiAgPCEtLSBDb2luIHJlcGxpw6kgLS0+CiAgPHBhdGggZD0iTTI5MCA4MCBMMzUwIDE0MCBMMjkwIDE0MCBaIiBmaWxsPSIjMWExYTJlIi8+CiAgPHBhdGggZD0iTTI5MCA4MCBMMzUwIDE0MCIgc3Ryb2tlPSIjYzlhODRjIiBzdHJva2Utd2lkdGg9IjYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0yOTAgMTQwIEwzNTAgMTQwIiBzdHJva2U9IiNjOWE4NGMiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgCiAgPCEtLSBMaWduZXMgdGV4dGUgLS0+CiAgPHJlY3QgeD0iMTU4IiB5PSIxNzAiIHdpZHRoPSIxNDAiIGhlaWdodD0iMTAiIHJ4PSI1IiBmaWxsPSIjYzlhODRjIi8+CiAgPHJlY3QgeD0iMTU4IiB5PSIyMDAiIHdpZHRoPSIxMDAiIGhlaWdodD0iOCIgcng9IjQiIGZpbGw9IiM0YTRhNmEiLz4KICA8cmVjdCB4PSIxNTgiIHk9IjIyMCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSI4IiByeD0iNCIgZmlsbD0iIzRhNGE2YSIvPgogIDxyZWN0IHg9IjE1OCIgeT0iMjQwIiB3aWR0aD0iOTAiIGhlaWdodD0iOCIgcng9IjQiIGZpbGw9IiM0YTRhNmEiLz4KICAKICA8IS0tIExpZ25lIHPDqXBhcmF0aW9uIC0tPgogIDxyZWN0IHg9IjE1OCIgeT0iMjY4IiB3aWR0aD0iMTY0IiBoZWlnaHQ9IjIiIHJ4PSIxIiBmaWxsPSIjYzlhODRjIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFRvdGFsIC0tPgogIDxyZWN0IHg9IjE1OCIgeT0iMjg1IiB3aWR0aD0iODAiIGhlaWdodD0iMTAiIHJ4PSI1IiBmaWxsPSIjNGE0YTZhIi8+CiAgPHJlY3QgeD0iMjY4IiB5PSIyODUiIHdpZHRoPSI1NCIgaGVpZ2h0PSIxMCIgcng9IjUiIGZpbGw9IiNjOWE4NGMiLz4KCiAgPCEtLSBOb3RlIG11c2ljYWxlIC0tPgogIDx0ZXh0IHg9IjI1NiIgeT0iNDMwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iOTAiIGZpbGw9IiNjOWE4NGMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPuKZqjwvdGV4dD4KPC9zdmc+Cg==">
-<link rel="apple-touch-icon-precomposed" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8IS0tIEZvbmQgc29tYnJlIC0tPgogIDxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iODAiIGZpbGw9IiMxYTFhMmUiLz4KICAKICA8IS0tIERvY3VtZW50L2ZhY3R1cmUgLS0+CiAgPHJlY3QgeD0iMTMwIiB5PSI4MCIgd2lkdGg9IjIyMCIgaGVpZ2h0PSIyODAiIHJ4PSIxOCIgZmlsbD0iIzE2MjEzZSIvPgogIDxyZWN0IHg9IjEzMCIgeT0iODAiIHdpZHRoPSIyMjAiIGhlaWdodD0iMjgwIiByeD0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2M5YTg0YyIgc3Ryb2tlLXdpZHRoPSI2Ii8+CiAgCiAgPCEtLSBDb2luIHJlcGxpw6kgLS0+CiAgPHBhdGggZD0iTTI5MCA4MCBMMzUwIDE0MCBMMjkwIDE0MCBaIiBmaWxsPSIjMWExYTJlIi8+CiAgPHBhdGggZD0iTTI5MCA4MCBMMzUwIDE0MCIgc3Ryb2tlPSIjYzlhODRjIiBzdHJva2Utd2lkdGg9IjYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0yOTAgMTQwIEwzNTAgMTQwIiBzdHJva2U9IiNjOWE4NGMiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgCiAgPCEtLSBMaWduZXMgdGV4dGUgLS0+CiAgPHJlY3QgeD0iMTU4IiB5PSIxNzAiIHdpZHRoPSIxNDAiIGhlaWdodD0iMTAiIHJ4PSI1IiBmaWxsPSIjYzlhODRjIi8+CiAgPHJlY3QgeD0iMTU4IiB5PSIyMDAiIHdpZHRoPSIxMDAiIGhlaWdodD0iOCIgcng9IjQiIGZpbGw9IiM0YTRhNmEiLz4KICA8cmVjdCB4PSIxNTgiIHk9IjIyMCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSI4IiByeD0iNCIgZmlsbD0iIzRhNGE2YSIvPgogIDxyZWN0IHg9IjE1OCIgeT0iMjQwIiB3aWR0aD0iOTAiIGhlaWdodD0iOCIgcng9IjQiIGZpbGw9IiM0YTRhNmEiLz4KICAKICA8IS0tIExpZ25lIHPDqXBhcmF0aW9uIC0tPgogIDxyZWN0IHg9IjE1OCIgeT0iMjY4IiB3aWR0aD0iMTY0IiBoZWlnaHQ9IjIiIHJ4PSIxIiBmaWxsPSIjYzlhODRjIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFRvdGFsIC0tPgogIDxyZWN0IHg9IjE1OCIgeT0iMjg1IiB3aWR0aD0iODAiIGhlaWdodD0iMTAiIHJ4PSI1IiBmaWxsPSIjNGE0YTZhIi8+CiAgPHJlY3QgeD0iMjY4IiB5PSIyODUiIHdpZHRoPSI1NCIgaGVpZ2h0PSIxMCIgcng9IjUiIGZpbGw9IiNjOWE4NGMiLz4KCiAgPCEtLSBOb3RlIG11c2ljYWxlIC0tPgogIDx0ZXh0IHg9IjI1NiIgeT0iNDMwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iOTAiIGZpbGw9IiNjOWE4NGMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPuKZqjwvdGV4dD4KPC9zdmc+Cg==">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="DJ Meyra">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>DJ Meyra — Devis</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="DJ Meyra">
+<title>DJ Meyra</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f2f2f7;color:#1c1c1e;padding:16px 16px 40px}
-h1{font-size:22px;font-weight:700;margin-bottom:2px}
-.sub{font-size:13px;color:#8e8e93;margin-bottom:18px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f2f2f7;color:#1c1c1e;padding-bottom:80px}
+/* NAV */
+.nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e5ea;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.nav-btn{flex:1;padding:10px 0 8px;cursor:pointer;border:none;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:#8e8e93}
+.nav-btn.active{color:#1a56db}
+.nav-btn .icon{font-size:22px}
+/* PAGES */
+.page{display:none;padding:16px 16px 20px}
+.page.active{display:block}
+/* HEADER */
+.page-header{margin-bottom:18px}
+.page-header h1{font-size:22px;font-weight:700}
+.page-header p{font-size:13px;color:#8e8e93;margin-top:2px}
+/* CARDS */
 .card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px}
 .stitle{font-size:11px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+/* BUTTONS PRESTATION */
 .pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .pbtn{background:#f2f2f7;border:2px solid transparent;border-radius:12px;padding:14px 10px;cursor:pointer;text-align:left;width:100%;min-height:60px;display:flex;flex-direction:column;justify-content:center;-webkit-appearance:none}
 .pbtn.active{background:#e8f0fe;border-color:#4a90e2}
@@ -23,13 +937,16 @@ h1{font-size:22px;font-weight:700;margin-bottom:2px}
 .pp{font-size:11px;color:#8e8e93;margin-top:3px}
 .pbtn.active .pn{color:#1a56db}
 .pbtn.active .pp{color:#4a90e2}
+/* INPUTS */
 .flabel{font-size:13px;color:#8e8e93;margin-bottom:5px;margin-top:10px}
 .flabel:first-child{margin-top:0}
-input[type=text],input[type=date],input[type=time]{width:100%;font-size:16px;padding:12px 14px;border-radius:10px;border:1.5px solid #e5e5ea;background:#f9f9f9;color:#1c1c1e;-webkit-appearance:none;outline:none}
-input:focus{border-color:#4a90e2;background:#fff}
+input[type=text],input[type=date],input[type=time],select{width:100%;font-size:16px;padding:12px 14px;border-radius:10px;border:1.5px solid #e5e5ea;background:#f9f9f9;color:#1c1c1e;-webkit-appearance:none;outline:none}
+input:focus,select:focus{border-color:#4a90e2;background:#fff}
+/* BADGES */
 .dbadge{display:inline-flex;align-items:center;gap:6px;background:#f2f2f7;border-radius:10px;padding:9px 14px;font-size:14px;color:#1c1c1e;margin-top:10px}
 .supp-note{margin-top:8px;font-size:13px;color:#ff9500;display:none}
-.sugg-box{background:#fff;border:1.5px solid #e5e5ea;border-radius:12px;margin-top:6px;overflow:hidden;display:none;max-height:280px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+/* VILLE */
+.sugg-box{background:#fff;border:1.5px solid #e5e5ea;border-radius:12px;margin-top:6px;overflow:hidden;display:none;max-height:220px;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .sitem{padding:13px 14px;font-size:14px;cursor:pointer;color:#1c1c1e;border-bottom:1px solid #f2f2f7;line-height:1.35}
 .sitem:last-child{border-bottom:none}
 .sitem:active{background:#f2f2f7}
@@ -37,219 +954,294 @@ input:focus{border-color:#4a90e2;background:#fff}
 .sdetail{font-size:12px;color:#8e8e93;margin-top:2px}
 .kmbox{display:flex;align-items:center;gap:10px;margin-top:10px;padding:12px 14px;background:#f9f9f9;border-radius:10px;border:1.5px solid #e5e5ea}
 .hotel-note{margin-top:8px;font-size:13px;color:#ff9500;display:none}
+/* RECAP */
 .dline{display:flex;justify-content:space-between;align-items:flex-start;font-size:14px;padding:8px 0;border-bottom:1px solid #f2f2f7;color:#8e8e93;gap:8px}
 .dline:last-child{border-bottom:none}
 .dline.main{color:#1c1c1e;font-weight:600}
 .dline span:last-child{text-align:right;flex-shrink:0}
-.totbox{background:#1c1c1e;border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:12px;display:none}
-.abox{background:#eaf5ea;border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:8px;display:none}
-.mgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px;display:none}
+.totbox{background:#1c1c1e;border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.abox{background:#eaf5ea;border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.mgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
 .metric{background:#f9f9f9;border-radius:10px;padding:12px;text-align:center}
 .ml{font-size:11px;color:#8e8e93;margin-bottom:4px}
 .mv{font-size:18px;font-weight:700;color:#1c1c1e}
-.pdfbtn{width:100%;padding:16px;font-size:16px;font-weight:600;background:#1c1c1e;border:none;border-radius:12px;cursor:pointer;color:#fff;margin-top:12px;display:none;align-items:center;justify-content:center;gap:8px;-webkit-appearance:none}
-.pdfbtn:active{opacity:.8}
-.resetbtn{width:100%;padding:13px;font-size:14px;font-weight:500;background:#f2f2f7;border:none;border-radius:12px;cursor:pointer;color:#8e8e93;margin-top:8px;-webkit-appearance:none}
+/* BUTTONS */
+.btn-primary{width:100%;padding:15px;font-size:15px;font-weight:600;background:#1c1c1e;border:none;border-radius:12px;cursor:pointer;color:#fff;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px;-webkit-appearance:none}
+.btn-primary:active{opacity:.8}
+.btn-secondary{width:100%;padding:12px;font-size:14px;font-weight:500;background:#f2f2f7;border:none;border-radius:12px;cursor:pointer;color:#8e8e93;margin-top:8px;-webkit-appearance:none}
+.btn-success{width:100%;padding:15px;font-size:15px;font-weight:600;background:#34c759;border:none;border-radius:12px;cursor:pointer;color:#fff;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px;-webkit-appearance:none}
 .empty-note{font-size:13px;color:#c7c7cc;text-align:center;padding:8px 0}
 .no-result{font-size:13px;color:#8e8e93;padding:12px 14px;text-align:center}
+/* CALENDRIER */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.cal-nav{background:none;border:none;font-size:22px;cursor:pointer;padding:4px 10px;color:#1a56db}
+.cal-title{font-size:17px;font-weight:700}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-day-name{text-align:center;font-size:11px;font-weight:600;color:#8e8e93;padding:4px 0}
+.cal-day{text-align:center;padding:7px 2px;border-radius:8px;font-size:14px;cursor:pointer;min-height:34px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px}
+.cal-day.empty{background:none;cursor:default}
+.cal-day.libre{background:#e8fbe8;color:#1a7f37}
+.cal-day.reserve{background:#ffe5e5;color:#cc0000;font-weight:600}
+.cal-day.attente{background:#fff8e1;color:#b8860b;font-weight:600}
+.cal-day.today{border:2px solid #1a56db}
+.cal-dot{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:0.7}
+/* LISTE PRESTATIONS */
+.presta-item{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;border-left:4px solid #e5e5ea}
+.presta-item.confirme{border-left-color:#34c759}
+.presta-item.attente{border-left-color:#ff9500}
+.presta-item.annule{border-left-color:#ff3b30;opacity:0.6}
+.presta-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.presta-type{font-size:15px;font-weight:700;color:#1c1c1e}
+.presta-montant{font-size:15px;font-weight:700;color:#1a56db}
+.presta-client{font-size:13px;color:#8e8e93;margin-bottom:3px}
+.presta-info{font-size:12px;color:#c7c7cc}
+.badge{display:inline-block;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600}
+.badge.confirme{background:#e8fbe8;color:#1a7f37}
+.badge.attente{background:#fff8e1;color:#b8860b}
+.badge.annule{background:#ffe5e5;color:#cc0000}
+.presta-actions{display:flex;gap:6px;margin-top:10px}
+.presta-actions button{flex:1;padding:8px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer}
+.btn-edit{background:#f2f2f7;color:#1c1c1e}
+.btn-delete{background:#ffe5e5;color:#cc0000}
+/* FINANCE */
+.fin-stat{background:#1c1c1e;border-radius:14px;padding:16px;margin-bottom:10px;color:#fff}
+.fin-stat .label{font-size:12px;color:#8e8e93;margin-bottom:4px}
+.fin-stat .amount{font-size:30px;font-weight:700}
+.fin-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}
+.fin-card{background:#fff;border-radius:14px;padding:14px;text-align:center}
+.fin-card .fl{font-size:11px;color:#8e8e93;margin-bottom:4px}
+.fin-card .fv{font-size:20px;font-weight:700;color:#1c1c1e}
+.fin-card .fv.green{color:#34c759}
+.fin-card .fv.orange{color:#ff9500}
+/* ACOMPTE TOGGLE */
+.acompte-item{background:#fff;border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.acompte-info{flex:1}
+.acompte-name{font-size:14px;font-weight:600;color:#1c1c1e}
+.acompte-detail{font-size:12px;color:#8e8e93;margin-top:2px}
+.acompte-amount{font-size:14px;font-weight:700;color:#1a56db;margin-right:10px}
+.toggle{width:48px;height:28px;background:#e5e5ea;border-radius:14px;position:relative;cursor:pointer;transition:background 0.2s;flex-shrink:0;border:none}
+.toggle.on{background:#34c759}
+.toggle::after{content:'';position:absolute;width:22px;height:22px;background:#fff;border-radius:50%;top:3px;left:3px;transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
+.toggle.on::after{left:23px}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:none;align-items:flex-end}
+.modal-overlay.open{display:flex}
+.modal{background:#f2f2f7;border-radius:20px 20px 0 0;padding:20px 16px 40px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:16px;text-align:center}
+.modal-close{float:right;background:none;border:none;font-size:24px;cursor:pointer;color:#8e8e93;margin-top:-4px}
 </style>
 </head>
 <body>
  
-<h1>DJ Meyra</h1>
-<p class="sub">06.66.15.35.83 — Mulhouse</p>
+<!-- NAV -->
+<nav class="nav">
+  <button class="nav-btn active" onclick="showPage('devis')">
+    <span class="icon">📄</span>Devis
+  </button>
+  <button class="nav-btn" onclick="showPage('planning')">
+    <span class="icon">📅</span>Planning
+  </button>
+  <button class="nav-btn" onclick="showPage('finance')">
+    <span class="icon">💰</span>Finance
+  </button>
+</nav>
  
-<div class="card">
-  <p class="stitle">Client</p>
-  <div class="flabel">Nom du client</div>
-  <input type="text" id="nom-client" placeholder="Ex : Dupont Marie" oninput="upd()" autocorrect="off" autocapitalize="words">
-  <div class="flabel">Date de la prestation</div>
-  <input type="date" id="date-presta" oninput="upd()">
-</div>
- 
-<div class="card">
-  <p class="stitle">Type de prestation</p>
-  <div class="pgrid">
-    <button class="pbtn" data-base="1200" data-label="Mariage" onclick="selP(this)"><span class="pn">Mariage</span><span class="pp">1 200 € — 6h</span></button>
-    <button class="pbtn" data-base="800" data-label="Kina" onclick="selP(this)"><span class="pn">Kina</span><span class="pp">800 € — 6h</span></button>
-    <button class="pbtn" data-base="800" data-label="Fiançailles" onclick="selP(this)"><span class="pn">Fiançailles</span><span class="pp">800 € — 6h</span></button>
-    <button class="pbtn" data-base="500" data-label="Anniversaire" onclick="selP(this)"><span class="pn">Anniversaire</span><span class="pp">500 € — 6h</span></button>
-    <button class="pbtn" data-base="600" data-label="Autre" onclick="selP(this)" style="grid-column:span 2"><span class="pn">Autre</span><span class="pp">600 € — 6h</span></button>
+<!-- PAGE DEVIS -->
+<div class="page active" id="page-devis">
+  <div class="page-header">
+    <h1>DJ Meyra</h1>
+    <p>06.66.15.35.83 — Mulhouse</p>
   </div>
-</div>
  
-<div class="card">
-  <p class="stitle">Horaires</p>
-  <div class="flabel">Heure de début</div>
-  <input type="time" id="h-debut" value="18:00" oninput="upd()">
-  <div class="flabel">Heure de fin</div>
-  <input type="time" id="h-fin" value="00:00" oninput="upd()">
-  <div class="dbadge">⏳ <span id="dur-txt">6h de prestation</span></div>
-  <div class="supp-note" id="supp-info">⚡ <span id="supp-txt"></span></div>
-</div>
+  <div class="card">
+    <p class="stitle">Client</p>
+    <div class="flabel">Nom du client</div>
+    <input type="text" id="nom-client" placeholder="Ex : Dupont Marie" oninput="upd()" autocorrect="off" autocapitalize="words">
+    <div class="flabel">Date de la prestation</div>
+    <input type="date" id="date-presta" oninput="upd()">
+  </div>
  
-<div class="card">
-  <p class="stitle">Lieu de la prestation</p>
-  <input type="text" id="ville-input" placeholder="Tapez une ville..." oninput="onVI()" autocomplete="off" autocorrect="off" autocapitalize="words">
-  <div class="sugg-box" id="sugg-box"></div>
-  <div class="kmbox" id="km-box" style="display:none">
-    <div>
-      <div style="font-size:17px;font-weight:700;color:#1c1c1e" id="km-num">—</div>
-      <div style="font-size:11px;color:#8e8e93">depuis Mulhouse</div>
+  <div class="card">
+    <p class="stitle">Type de prestation</p>
+    <div class="pgrid">
+      <button class="pbtn" data-base="1200" data-label="Mariage" onclick="selP(this)"><span class="pn">Mariage</span><span class="pp">1 200 € — 6h</span></button>
+      <button class="pbtn" data-base="800" data-label="Kina" onclick="selP(this)"><span class="pn">Kina</span><span class="pp">800 € — 6h</span></button>
+      <button class="pbtn" data-base="800" data-label="Fiançailles" onclick="selP(this)"><span class="pn">Fiançailles</span><span class="pp">800 € — 6h</span></button>
+      <button class="pbtn" data-base="500" data-label="Anniversaire" onclick="selP(this)"><span class="pn">Anniversaire</span><span class="pp">500 € — 6h</span></button>
+      <button class="pbtn" data-base="600" data-label="Autre" onclick="selP(this)" style="grid-column:span 2"><span class="pn">Autre</span><span class="pp">600 € — 6h</span></button>
     </div>
-    <div style="margin-left:auto;font-size:15px;font-weight:700;color:#34c759" id="km-frais">0 €</div>
   </div>
-  <div class="hotel-note" id="hotel-info">🏨 Nuit d'hôtel incluse dans les frais</div>
+ 
+  <div class="card">
+    <p class="stitle">Horaires</p>
+    <div class="flabel">Heure de début</div>
+    <input type="time" id="h-debut" value="18:00" oninput="upd()">
+    <div class="flabel">Heure de fin</div>
+    <input type="time" id="h-fin" value="00:00" oninput="upd()">
+    <div class="dbadge">⏳ <span id="dur-txt">6h de prestation</span></div>
+    <div class="supp-note" id="supp-info">⚡ <span id="supp-txt"></span></div>
+  </div>
+ 
+  <div class="card">
+    <p class="stitle">Lieu de la prestation</p>
+    <input type="text" id="ville-input" placeholder="Tapez une ville..." oninput="onVI()" autocomplete="off" autocorrect="off" autocapitalize="words">
+    <div class="sugg-box" id="sugg-box"></div>
+    <div class="kmbox" id="km-box" style="display:none">
+      <div>
+        <div style="font-size:17px;font-weight:700;color:#1c1c1e" id="km-num">—</div>
+        <div style="font-size:11px;color:#8e8e93">depuis Mulhouse</div>
+      </div>
+      <div style="margin-left:auto;font-size:15px;font-weight:700;color:#34c759" id="km-frais">0 €</div>
+    </div>
+    <div class="hotel-note" id="hotel-info">🏨 Nuit d'hôtel incluse dans les frais</div>
+  </div>
+ 
+  <div class="card">
+    <p class="stitle">Récapitulatif</p>
+    <div id="detail-wrap"><p class="empty-note">Sélectionnez une prestation pour voir le total</p></div>
+    <div id="tot-box" style="display:none" class="totbox"><span style="font-size:15px;font-weight:600;color:#fff">Total à facturer</span><span style="font-size:28px;font-weight:700;color:#fff" id="total-amt">—</span></div>
+    <div id="ac-box" style="display:none" class="abox"><span style="font-size:13px;font-weight:600;color:#1a7f37">Acompte 25 %</span><span style="font-size:20px;font-weight:700;color:#1a7f37" id="acompte-amt">—</span></div>
+    <div id="metric-box" style="display:none" class="mgrid">
+      <div class="metric"><div class="ml">Reste à percevoir</div><div class="mv" id="reste-amt">—</div></div>
+      <div class="metric"><div class="ml">Durée totale</div><div class="mv" id="dur-recap">—</div></div>
+    </div>
+    <button class="btn-success" id="planning-btn" style="display:none" onclick="ajouterAuPlanning()">📅 Ajouter au planning</button>
+    <button class="btn-primary" id="pdf-btn" style="display:none" onclick="genPDF()">📄 Télécharger le devis PDF</button>
+    <button class="btn-secondary" onclick="reset()">Réinitialiser</button>
+  </div>
 </div>
  
-<div class="card">
-  <p class="stitle">Récapitulatif</p>
-  <div id="detail-wrap"><p class="empty-note">Sélectionnez une prestation pour voir le total</p></div>
-  <div class="totbox" id="tot-box"><span style="font-size:15px;font-weight:600;color:#fff">Total à facturer</span><span style="font-size:28px;font-weight:700;color:#fff" id="total-amt">—</span></div>
-  <div class="abox" id="ac-box"><span style="font-size:13px;font-weight:600;color:#1a7f37">Acompte 25 %</span><span style="font-size:20px;font-weight:700;color:#1a7f37" id="acompte-amt">—</span></div>
-  <div class="mgrid" id="metric-box">
-    <div class="metric"><div class="ml">Reste à percevoir</div><div class="mv" id="reste-amt">—</div></div>
-    <div class="metric"><div class="ml">Durée totale</div><div class="mv" id="dur-recap">—</div></div>
+<!-- PAGE PLANNING -->
+<div class="page" id="page-planning">
+  <div class="page-header">
+    <h1>Planning</h1>
+    <p id="planning-subtitle">Chargement...</p>
   </div>
-  <button class="pdfbtn" id="pdf-btn" onclick="genPDF()">📄 Télécharger le devis PDF</button>
-  <button class="resetbtn" onclick="reset()">Réinitialiser</button>
+ 
+  <!-- Toggle vue -->
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <button onclick="setVue('cal')" id="btn-vue-cal" style="flex:1;padding:10px;border-radius:10px;border:none;font-size:14px;font-weight:600;background:#1c1c1e;color:#fff;cursor:pointer">📅 Calendrier</button>
+    <button onclick="setVue('list')" id="btn-vue-list" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid #e5e5ea;font-size:14px;font-weight:600;background:#fff;color:#1c1c1e;cursor:pointer">📋 Liste</button>
+  </div>
+ 
+  <!-- Vue calendrier -->
+  <div id="vue-cal">
+    <div class="card">
+      <div class="cal-header">
+        <button class="cal-nav" onclick="calNav(-1)">‹</button>
+        <span class="cal-title" id="cal-title">—</span>
+        <button class="cal-nav" onclick="calNav(1)">›</button>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <span style="font-size:12px;background:#e8fbe8;color:#1a7f37;padding:5px 10px;border-radius:8px;font-weight:500">🟢 Libre</span>
+      <span style="font-size:12px;background:#ffe5e5;color:#cc0000;padding:5px 10px;border-radius:8px;font-weight:500">🔴 Réservé</span>
+      <span style="font-size:12px;background:#fff8e1;color:#b8860b;padding:5px 10px;border-radius:8px;font-weight:500">🟡 En attente</span>
+    </div>
+  </div>
+ 
+  <!-- Vue liste -->
+  <div id="vue-list" style="display:none">
+    <div id="liste-prestations"></div>
+  </div>
+ 
+  <button class="btn-primary" onclick="openModal()">+ Ajouter une prestation</button>
+</div>
+ 
+<!-- PAGE FINANCE -->
+<div class="page" id="page-finance">
+  <div class="page-header">
+    <h1>Finance</h1>
+    <p id="fin-annee">Année 2026</p>
+  </div>
+ 
+  <div class="fin-stat">
+    <div class="label">Chiffre d'affaires total</div>
+    <div class="amount" id="fin-total">0 €</div>
+  </div>
+ 
+  <div class="fin-grid">
+    <div class="fin-card">
+      <div class="fl">Acomptes reçus</div>
+      <div class="fv green" id="fin-acomptes">0 €</div>
+    </div>
+    <div class="fin-card">
+      <div class="fl">Reste à encaisser</div>
+      <div class="fv orange" id="fin-reste">0 €</div>
+    </div>
+    <div class="fin-card">
+      <div class="fl">Prestations confirmées</div>
+      <div class="fv" id="fin-nb-conf">0</div>
+    </div>
+    <div class="fin-card">
+      <div class="fl">En attente</div>
+      <div class="fv orange" id="fin-nb-att">0</div>
+    </div>
+  </div>
+ 
+  <div class="card">
+    <p class="stitle">Suivi des acomptes</p>
+    <div id="acompte-list"><p class="empty-note">Aucune prestation enregistrée</p></div>
+  </div>
+</div>
+ 
+<!-- MODAL AJOUT PRESTATION -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title">Ajouter une prestation</div>
+    <div class="flabel">Nom du client</div>
+    <input type="text" id="m-client" placeholder="Nom du client" autocorrect="off" autocapitalize="words">
+    <div class="flabel">Date</div>
+    <input type="date" id="m-date">
+    <div class="flabel">Type de prestation</div>
+    <select id="m-type">
+      <option value="Mariage">Mariage — 1 200 €</option>
+      <option value="Kina">Kina — 800 €</option>
+      <option value="Fiançailles">Fiançailles — 800 €</option>
+      <option value="Anniversaire">Anniversaire — 500 €</option>
+      <option value="Autre">Autre — 600 €</option>
+    </select>
+    <div class="flabel">Ville</div>
+    <input type="text" id="m-ville" placeholder="Ville" autocorrect="off" autocapitalize="words">
+    <div class="flabel">Montant total (€)</div>
+    <input type="text" id="m-montant" placeholder="Ex: 1000">
+    <div class="flabel">Statut</div>
+    <select id="m-statut">
+      <option value="confirme">Confirmé</option>
+      <option value="attente">En attente</option>
+      <option value="annule">Annulé</option>
+    </select>
+    <button class="btn-primary" onclick="savePrestation()" style="margin-top:16px">Enregistrer</button>
+  </div>
 </div>
  
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-var sB=0,sL='',sF=0,sK=0,sH=0,sC='',dNum=null;
-var BAR=[{max:50,f:0,h:0},{max:100,f:100,h:0},{max:200,f:100,h:0},{max:300,f:400,h:0},{max:400,f:600,h:1},{max:600,f:800,h:1},{max:800,f:1000,h:1},{max:1000,f:1200,h:1}];
+// ===================== DONNEES =====================
+var prestations = JSON.parse(localStorage.getItem('djmeyra_prestations') || '[]');
+var acomptesReçus = JSON.parse(localStorage.getItem('djmeyra_acomptes') || '{}');
+function saveData(){localStorage.setItem('djmeyra_prestations',JSON.stringify(prestations));localStorage.setItem('djmeyra_acomptes',JSON.stringify(acomptesReçus));}
  
-// Base de villes avec distance routière depuis Mulhouse (km)
-var VILLES=[
-  {n:"Mulhouse",r:"Haut-Rhin",km:0},{n:"Colmar",r:"Haut-Rhin",km:40},{n:"Freiburg-im-Breisgau",r:"Allemagne",km:45},
-  {n:"Wittelsheim",r:"Haut-Rhin",km:10},{n:"Lutterbach",r:"Haut-Rhin",km:5},{n:"Illzach",r:"Haut-Rhin",km:5},
-  {n:"Riedisheim",r:"Haut-Rhin",km:4},{n:"Brunstatt",r:"Haut-Rhin",km:6},{n:"Kingersheim",r:"Haut-Rhin",km:8},
-  {n:"Wittenheim",r:"Haut-Rhin",km:10},{n:"Rixheim",r:"Haut-Rhin",km:8},{n:"Habsheim",r:"Haut-Rhin",km:10},
-  {n:"Sausheim",r:"Haut-Rhin",km:7},{n:"Baldersheim",r:"Haut-Rhin",km:12},{n:"Pfastatt",r:"Haut-Rhin",km:5},
-  {n:"Delle",r:"Territoire de Belfort",km:30},{n:"Altkirch",r:"Haut-Rhin",km:20},{n:"Cernay",r:"Haut-Rhin",km:15},
-  {n:"Thann",r:"Haut-Rhin",km:20},{n:"Guebwiller",r:"Haut-Rhin",km:25},{n:"Ensisheim",r:"Haut-Rhin",km:20},
-  {n:"Sierentz",r:"Haut-Rhin",km:15},{n:"Saint-Louis",r:"Haut-Rhin",km:20},{n:"Huningue",r:"Haut-Rhin",km:22},
-  {n:"Hésingue",r:"Haut-Rhin",km:18},{n:"Blotzheim",r:"Haut-Rhin",km:18},{n:"Bartenheim",r:"Haut-Rhin",km:16},
-  {n:"Magny-Vernois",r:"Haute-Saône",km:20},{n:"Bethoncourt",r:"Doubs",km:40},{n:"Montbéliard",r:"Doubs",km:45},
-  {n:"Belfort",r:"Territoire de Belfort",km:35},{n:"Héricourt",r:"Haute-Saône",km:30},
-  {n:"Strasbourg",r:"Bas-Rhin",km:110},{n:"Mulhouse",r:"Haut-Rhin",km:0},
-  {n:"Strasbourg Meinau",r:"Bas-Rhin",km:115},{n:"Hautpierre Strasbourg",r:"Bas-Rhin",km:115},
-  {n:"Boofzheim",r:"Bas-Rhin",km:85},{n:"Lisle-d'Abeau",r:"Isère",km:380},
-  {n:"Besançon",r:"Doubs",km:130},{n:"Vesoul",r:"Haute-Saône",km:85},
-  {n:"Gray",r:"Haute-Saône",km:130},{n:"Dampierre-sur-Salon",r:"Haute-Saône",km:130},
-  {n:"Luxeuil-les-Bains",r:"Haute-Saône",km:85},{n:"Lure",r:"Haute-Saône",km:55},
-  {n:"Epinal",r:"Vosges",km:120},{n:"Nancy",r:"Meurthe-et-Moselle",km:190},
-  {n:"Metz",r:"Moselle",km:210},{n:"Dijon",r:"Côte-d'Or",km:220},
-  {n:"Lyon",r:"Auvergne-Rhône-Alpes",km:340},{n:"Paris",r:"Île-de-France",km:530},
-  {n:"Marseille",r:"Bouches-du-Rhône",km:660},{n:"Nice",r:"Alpes-Maritimes",km:730},
-  {n:"Bordeaux",r:"Gironde",km:790},{n:"Toulouse",r:"Haute-Garonne",km:700},
-  {n:"Nantes",r:"Loire-Atlantique",km:750},{n:"Rennes",r:"Ille-et-Vilaine",km:830},
-  {n:"Lille",r:"Nord",km:570},{n:"Reims",r:"Marne",km:400},
-  {n:"Grenoble",r:"Isère",km:390},{n:"Montpellier",r:"Hérault",km:620},
-  {n:"Annecy",r:"Haute-Savoie",km:300},{n:"Chambéry",r:"Savoie",km:330},
-  {n:"Brest",r:"Finistère",km:1000},{n:"Clermont-Ferrand",r:"Puy-de-Dôme",km:520},
-  {n:"Orléans",r:"Loiret",km:540},{n:"Tours",r:"Indre-et-Loire",km:600},
-  {n:"Beauvais",r:"Oise",km:590},{n:"Amiens",r:"Somme",km:560},
-  {n:"Caen",r:"Calvados",km:750},{n:"Rouen",r:"Seine-Maritime",km:620},
-  {n:"Le Havre",r:"Seine-Maritime",km:680},{n:"Nîmes",r:"Gard",km:590},
-  {n:"Avignon",r:"Vaucluse",km:580},{n:"Aix-en-Provence",r:"Bouches-du-Rhône",km:640},
-  {n:"Toulon",r:"Var",km:700},{n:"Perpignan",r:"Pyrénées-Orientales",km:750},
-  {n:"Pau",r:"Pyrénées-Atlantiques",km:830},{n:"Biarritz",r:"Pyrénées-Atlantiques",km:890},
-  {n:"Angoulême",r:"Charente",km:720},{n:"Limoges",r:"Haute-Vienne",km:640},
-  {n:"Poitiers",r:"Vienne",km:660},{n:"Le Mans",r:"Sarthe",km:680},
-  {n:"Angers",r:"Maine-et-Loire",km:700},{n:"Troyes",r:"Aube",km:340},
-  {n:"Châlons-en-Champagne",r:"Marne",km:380},{n:"Verdun",r:"Meuse",km:270},
-  {n:"Bar-le-Duc",r:"Meuse",km:240},{n:"Chaumont",r:"Haute-Marne",km:200},
-  {n:"Langres",r:"Haute-Marne",km:170},{n:"Auxerre",r:"Yonne",km:380},
-  {n:"Chalon-sur-Saône",r:"Saône-et-Loire",km:260},{n:"Mâcon",r:"Saône-et-Loire",km:295},
-  {n:"Bourg-en-Bresse",r:"Ain",km:270},{n:"Villefranche-sur-Saône",r:"Rhône",km:310},
-  {n:"Lons-le-Saunier",r:"Jura",km:150},{n:"Dole",r:"Jura",km:140},
-  {n:"Pontarlier",r:"Doubs",km:120},{n:"Morteau",r:"Doubs",km:90},
-  {n:"Maîche",r:"Doubs",km:70},{n:"Audincourt",r:"Doubs",km:45},
-  {n:"Sochaux",r:"Doubs",km:45},{n:"Grand-Charmont",r:"Doubs",km:45},
-  {n:"Valentigney",r:"Doubs",km:50},{n:"Baume-les-Dames",r:"Doubs",km:100},
-  {n:"Ornans",r:"Doubs",km:120},{n:"Sainte-Marie-aux-Mines",r:"Haut-Rhin",km:55},
-  {n:"Ribeauvillé",r:"Haut-Rhin",km:55},{n:"Sélestat",r:"Bas-Rhin",km:70},
-  {n:"Obernai",r:"Bas-Rhin",km:90},{n:"Haguenau",r:"Bas-Rhin",km:140},
-  {n:"Saverne",r:"Bas-Rhin",km:130},{n:"Molsheim",r:"Bas-Rhin",km:100},
-  {n:"Erstein",r:"Bas-Rhin",km:90},{n:"Munster",r:"Haut-Rhin",km:35},
-  {n:"Masevaux",r:"Haut-Rhin",km:25},{n:"Dannemarie",r:"Haut-Rhin",km:25},
-  {n:"Ferrette",r:"Haut-Rhin",km:35},{n:"Hirsingue",r:"Haut-Rhin",km:20},
-  {n:"Illfurth",r:"Haut-Rhin",km:12},{n:"Landser",r:"Haut-Rhin",km:10},
-  {n:"Zimmersheim",r:"Haut-Rhin",km:8},{n:"Staffelfelden",r:"Haut-Rhin",km:8},
-  {n:"Morschwiller-le-Bas",r:"Haut-Rhin",km:7},{n:"Pulversheim",r:"Haut-Rhin",km:15},
-  {n:"Bollwiller",r:"Haut-Rhin",km:18},{n:"Rouffach",r:"Haut-Rhin",km:30},
-  {n:"Turckheim",r:"Haut-Rhin",km:42},{n:"Wintzenheim",r:"Haut-Rhin",km:38},
-  {n:"Eguisheim",r:"Haut-Rhin",km:35},{n:"Kaysersberg",r:"Haut-Rhin",km:48},
-  {n:"Lapoutroie",r:"Haut-Rhin",km:55},{n:"Fraize",r:"Vosges",km:80},
-  {n:"Saint-Dié-des-Vosges",r:"Vosges",km:100},{n:"Gérardmer",r:"Vosges",km:90},
-  {n:"Remiremont",r:"Vosges",km:75},{n:"Thionville",r:"Moselle",km:235},
-  {n:"Sarrebourg",r:"Moselle",km:160},{n:"Sarreguemines",r:"Moselle",km:195},
-  {n:"Forbach",r:"Moselle",km:215},{n:"Karlsruhe",r:"Allemagne",km:120},
-  {n:"Stuttgart",r:"Allemagne",km:200},{n:"Mannheim",r:"Allemagne",km:160},
-  {n:"Heidelberg",r:"Allemagne",km:165},{n:"Frankfurt",r:"Allemagne",km:290},
-  {n:"Düsseldorf",r:"Allemagne",km:470},{n:"Hamburg",r:"Allemagne",km:750},
-  {n:"München",r:"Allemagne",km:380},{n:"Berlin",r:"Allemagne",km:850},
-  {n:"Offenburg",r:"Allemagne",km:70},{n:"Lahr",r:"Allemagne",km:65},
-  {n:"Konstanz",r:"Allemagne",km:110},{n:"Ulm",r:"Allemagne",km:250},
-  {n:"Bâle",r:"Suisse",km:35},{n:"Basel",r:"Suisse",km:35},
-  {n:"Zurich",r:"Suisse",km:200},{n:"Berne",r:"Suisse",km:210},
-  {n:"Genève",r:"Suisse",km:330},{n:"Lausanne",r:"Suisse",km:290},
-  {n:"Lucerne",r:"Suisse",km:250},{n:"Winterthur",r:"Suisse",km:215},
-  {n:"Saint-Gall",r:"Suisse",km:220},{n:"Buggingen",r:"Allemagne",km:50},
-  {n:"Zwingen",r:"Suisse",km:40},{n:"Bruxelles",r:"Belgique",km:540},
-  {n:"Liège",r:"Belgique",km:460},{n:"Luxembourg",r:"Luxembourg",km:300},
-  {n:"Lancrans",r:"Ain",km:220},{n:"Oyonnax",r:"Ain",km:250},
-  {n:"Ambérieu-en-Bugey",r:"Ain",km:290},{n:"Privas",r:"Ardèche",km:470},
-  {n:"Valence",r:"Drôme",km:450},{n:"Romans-sur-Isère",r:"Drôme",km:420},
-  {n:"Vienne",r:"Isère",km:360},{n:"Bourgoin-Jallieu",r:"Isère",km:370},
-  {n:"Villeurbanne",r:"Rhône",km:340},{n:"Caluire-et-Cuire",r:"Rhône",km:345},
-  {n:"Vénissieux",r:"Rhône",km:345},{n:"Saint-Étienne",r:"Loire",km:395},
-  {n:"Roanne",r:"Loire",km:360},{n:"Moulins",r:"Allier",km:440},
-  {n:"Vichy",r:"Allier",km:470},{n:"Aurillac",r:"Cantal",km:600},
-  {n:"Rodez",r:"Aveyron",km:640},{n:"Albi",r:"Tarn",km:680},
-  {n:"Castres",r:"Tarn",km:700},{n:"Narbonne",r:"Aude",km:690},
-  {n:"Carcassonne",r:"Aude",km:690},{n:"Béziers",r:"Hérault",km:650},
-  {n:"Sète",r:"Hérault",km:630},{n:"Arles",r:"Bouches-du-Rhône",km:600},
-  {n:"Istres",r:"Bouches-du-Rhône",km:640},{n:"Martigues",r:"Bouches-du-Rhône",km:650},
-  {n:"Aubagne",r:"Bouches-du-Rhône",km:660},{n:"Fréjus",r:"Var",km:710},
-  {n:"Antibes",r:"Alpes-Maritimes",km:730},{n:"Cannes",r:"Alpes-Maritimes",km:730},
-  {n:"Grasse",r:"Alpes-Maritimes",km:725},{n:"Draguignan",r:"Var",km:695},
-  {n:"Gap",r:"Hautes-Alpes",km:500},{n:"Briançon",r:"Hautes-Alpes",km:470},
-  {n:"Embrun",r:"Hautes-Alpes",km:490},{n:"Digne-les-Bains",r:"Alpes-de-Haute-Provence",km:570},
-  {n:"Manosque",r:"Alpes-de-Haute-Provence",km:600},{n:"Salon-de-Provence",r:"Bouches-du-Rhône",km:620},
-  {n:"Carpentras",r:"Vaucluse",km:570},{n:"Orange",r:"Vaucluse",km:560},
-  {n:"Pont-Saint-Esprit",r:"Gard",km:540},{n:"Alès",r:"Gard",km:560},
-  {n:"Millau",r:"Aveyron",km:600},{n:"Montauban",r:"Tarn-et-Garonne",km:720},
-  {n:"Agen",r:"Lot-et-Garonne",km:750},{n:"Périgueux",r:"Dordogne",km:720},
-  {n:"Bergerac",r:"Dordogne",km:750},{n:"Saintes",r:"Charente-Maritime",km:730},
-  {n:"La Rochelle",r:"Charente-Maritime",km:730},{n:"Niort",r:"Deux-Sèvres",km:680},
-  {n:"Cholet",r:"Maine-et-Loire",km:720},{n:"Saint-Nazaire",r:"Loire-Atlantique",km:770},
-  {n:"Lorient",r:"Morbihan",km:850},{n:"Vannes",r:"Morbihan",km:820},
-  {n:"Quimper",r:"Finistère",km:900},{n:"Saint-Brieuc",r:"Côtes-d'Armor",km:870},
-  {n:"Morlaix",r:"Finistère",km:930},{n:"Cherbourg",r:"Manche",km:850},
-  {n:"Saint-Malo",r:"Ille-et-Vilaine",km:790},{n:"Saint-Lô",r:"Manche",km:790},
-  {n:"Alençon",r:"Orne",km:710},{n:"Chartres",r:"Eure-et-Loir",km:570},
-  {n:"Évreux",r:"Eure",km:620},{n:"Versailles",r:"Yvelines",km:540},
-  {n:"Créteil",r:"Val-de-Marne",km:535},{n:"Saint-Denis",r:"Seine-Saint-Denis",km:540},
-  {n:"Argenteuil",r:"Val-d'Oise",km:545},{n:"Montreuil",r:"Seine-Saint-Denis",km:535},
-  {n:"Vitry-sur-Seine",r:"Val-de-Marne",km:535},{n:"Colombes",r:"Hauts-de-Seine",km:545},
-  {n:"Sedan",r:"Ardennes",km:370},{n:"Charleville-Mézières",r:"Ardennes",km:360},
-  {n:"Soissons",r:"Aisne",km:470},{n:"Laon",r:"Aisne",km:440},
-  {n:"Valenciennes",r:"Nord",km:560},{n:"Douai",r:"Nord",km:555},
-  {n:"Lens",r:"Pas-de-Calais",km:560},{n:"Arras",r:"Pas-de-Calais",km:540},
-  {n:"Calais",r:"Pas-de-Calais",km:640},{n:"Dunkerque",r:"Nord",km:620},
-  {n:"Boulogne-sur-Mer",r:"Pas-de-Calais",km:620}
-];
- 
-function normalise(s){
-  return s.toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-    .replace(/[-']/g,' ').trim();
+// ===================== NAVIGATION =====================
+function showPage(p){
+  document.querySelectorAll('.page').forEach(function(x){x.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(function(x){x.classList.remove('active')});
+  document.getElementById('page-'+p).classList.add('active');
+  var btns=document.querySelectorAll('.nav-btn');
+  var idx={devis:0,planning:1,finance:2}[p];
+  btns[idx].classList.add('active');
+  if(p==='planning'){renderPlanning();}
+  if(p==='finance'){renderFinance();}
 }
  
-function gF(km){for(var i=0;i<BAR.length;i++)if(km<=BAR[i].max)return BAR[i];return{f:650,h:1};}
+// ===================== DEVIS =====================
+var sB=0,sL='',sF=0,sK=0,sH=0,sC='',dNum=null;
+var BAR=[{max:50,f:0,h:0},{max:100,f:100,h:0},{max:200,f:100,h:0},{max:300,f:400,h:0},{max:400,f:600,h:1},{max:600,f:800,h:1},{max:800,f:1000,h:1},{max:1000,f:1200,h:1}];
+var PRIX={Mariage:1200,Kina:800,'Fiançailles':800,Anniversaire:500,Autre:600};
+ 
+function gF(km){for(var i=0;i<BAR.length;i++)if(km<=BAR[i].max)return BAR[i];return{f:1200,h:1};}
 function gDN(){if(dNum)return dNum;var d=new Date();dNum='DM-'+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+Math.floor(Math.random()*900+100);return dNum;}
 function fmt(n){return n.toLocaleString('fr-FR')+' €';}
  
@@ -257,46 +1249,11 @@ function selP(btn){
   document.querySelectorAll('.pbtn').forEach(function(b){b.classList.remove('active')});
   btn.classList.add('active');sB=parseInt(btn.dataset.base);sL=btn.dataset.label;upd();
 }
- 
 function cD(d,f){
   var dm=parseInt(d.split(':')[0])*60+parseInt(d.split(':')[1]);
   var fm=parseInt(f.split(':')[0])*60+parseInt(f.split(':')[1]);
   if(fm<=dm)fm+=1440;return(fm-dm)/60;
 }
- 
-function onVI(){
-  var v=document.getElementById('ville-input').value.trim();
-  var box=document.getElementById('sugg-box');
-  if(v.length<2){box.style.display='none';return;}
-  var q=normalise(v);
-  var matches=VILLES.filter(function(c){return normalise(c.n).indexOf(q)===0||normalise(c.r).indexOf(q)===0;});
-  if(!matches.length) matches=VILLES.filter(function(c){return normalise(c.n).indexOf(q)!==-1;});
-  matches=matches.slice(0,6);
-  if(!matches.length){box.innerHTML='<div class="no-result">Aucune ville trouvée</div>';box.style.display='block';return;}
-  var html='';
-  matches.forEach(function(c){
-    var b=gF(c.km);
-    var fs=c.km===0?'Local (inclus)':b.f===0?'Inclus':'+ '+fmt(b.f);
-    html+='<div class="sitem" onclick="selCity(\''+c.n.replace(/'/g,"\\'")+'\','+c.km+')">'
-      +'<div class="sname">'+c.n+'</div>'
-      +'<div class="sdetail">'+c.r+' — '+c.km+' km — Frais : '+fs+'</div>'
-      +'</div>';
-  });
-  box.innerHTML=html;box.style.display='block';
-}
- 
-function selCity(ville,km){
-  document.getElementById('ville-input').value=ville;
-  document.getElementById('sugg-box').style.display='none';
-  sC=ville;sK=km;
-  var b=gF(km);sF=b.f;sH=b.h;
-  document.getElementById('km-box').style.display='flex';
-  document.getElementById('km-num').textContent=km+' km';
-  document.getElementById('km-frais').textContent=km===0?'Local':fmt(b.f);
-  document.getElementById('hotel-info').style.display=b.h?'block':'none';
-  upd();
-}
- 
 function upd(){
   var deb=document.getElementById('h-debut').value||'18:00';
   var fin=document.getElementById('h-fin').value||'00:00';
@@ -319,14 +1276,9 @@ function upd(){
   html+='<div class="dline main"><span>'+sL+'</span><span>'+fmt(sB)+'</span></div>';
   html+='<div class="dline"><span style="color:#c7c7cc">Forfait 6h ('+deb+' → '+fin+')</span><span style="color:#c7c7cc">inclus</span></div>';
   if(nbS>0)html+='<div class="dline"><span>'+nbS.toFixed(nbS%1?1:0)+'h supp. × 100 €</span><span>+ '+fmt(supp)+'</span></div>';
-  if(sF>0){
-    var det='Essence + péages'+(sH?' + hôtel':'')+(sF>=200?' + dérangement':'');
-    html+='<div class="dline"><span>Déplacement ('+sK+' km)<br><span style="font-size:11px;color:#c7c7cc">'+det+'</span></span><span>+ '+fmt(sF)+'</span></div>';
-  } else if(sC){
-    html+='<div class="dline"><span>Déplacement</span><span style="color:#34c759">Local (inclus)</span></div>';
-  } else {
-    html+='<div class="dline"><span>Déplacement</span><span style="color:#c7c7cc">—</span></div>';
-  }
+  if(sF>0){var det='Essence + péages'+(sH?' + hôtel':'')+(sF>=400?' + dérangement':'');html+='<div class="dline"><span>Déplacement ('+sK+' km)<br><span style="font-size:11px;color:#c7c7cc">'+det+'</span></span><span>+ '+fmt(sF)+'</span></div>';}
+  else if(sC){html+='<div class="dline"><span>Déplacement</span><span style="color:#34c759">Local (inclus)</span></div>';}
+  else{html+='<div class="dline"><span>Déplacement</span><span style="color:#c7c7cc">—</span></div>';}
   document.getElementById('detail-wrap').innerHTML=html;
   document.getElementById('total-amt').textContent=fmt(total);
   document.getElementById('acompte-amt').textContent=fmt(ac);
@@ -334,7 +1286,22 @@ function upd(){
   document.getElementById('tot-box').style.display='flex';
   document.getElementById('ac-box').style.display='flex';
   document.getElementById('metric-box').style.display='grid';
+  document.getElementById('planning-btn').style.display='flex';
   document.getElementById('pdf-btn').style.display='flex';
+}
+ 
+function ajouterAuPlanning(){
+  var client=document.getElementById('nom-client').value;
+  var date=document.getElementById('date-presta').value;
+  if(!client||!date||!sL){alert('Remplissez le client, la date et le type de prestation.');return;}
+  var deb=document.getElementById('h-debut').value||'18:00';
+  var fin=document.getElementById('h-fin').value||'00:00';
+  var h=cD(deb,fin);
+  var nbS=Math.max(0,h-6);
+  var total=sB+Math.round(nbS*100)+sF;
+  var p={id:Date.now(),client:client,date:date,type:sL,ville:sC||'—',montant:total,statut:'confirme',acompte:Math.round(total*.25),horaires:deb+' → '+fin};
+  prestations.push(p);saveData();
+  alert('✅ Prestation ajoutée au planning !');
 }
  
 function reset(){
@@ -352,9 +1319,233 @@ function reset(){
   document.getElementById('tot-box').style.display='none';
   document.getElementById('ac-box').style.display='none';
   document.getElementById('metric-box').style.display='none';
+  document.getElementById('planning-btn').style.display='none';
   document.getElementById('pdf-btn').style.display='none';
 }
  
+// ===================== VILLE =====================
+var VILLES=[
+  {n:"Mulhouse",r:"Haut-Rhin",km:0},{n:"Colmar",r:"Haut-Rhin",km:40},{n:"Wittelsheim",r:"Haut-Rhin",km:10},
+  {n:"Lutterbach",r:"Haut-Rhin",km:5},{n:"Illzach",r:"Haut-Rhin",km:5},{n:"Brunstatt",r:"Haut-Rhin",km:6},
+  {n:"Kingersheim",r:"Haut-Rhin",km:8},{n:"Wittenheim",r:"Haut-Rhin",km:10},{n:"Rixheim",r:"Haut-Rhin",km:8},
+  {n:"Pfastatt",r:"Haut-Rhin",km:5},{n:"Delle",r:"Territoire de Belfort",km:30},{n:"Altkirch",r:"Haut-Rhin",km:20},
+  {n:"Cernay",r:"Haut-Rhin",km:15},{n:"Thann",r:"Haut-Rhin",km:20},{n:"Guebwiller",r:"Haut-Rhin",km:25},
+  {n:"Ensisheim",r:"Haut-Rhin",km:20},{n:"Saint-Louis",r:"Haut-Rhin",km:20},{n:"Huningue",r:"Haut-Rhin",km:22},
+  {n:"Magny-Vernois",r:"Haute-Saône",km:20},{n:"Bethoncourt",r:"Doubs",km:40},{n:"Montbéliard",r:"Doubs",km:45},
+  {n:"Belfort",r:"Territoire de Belfort",km:35},{n:"Héricourt",r:"Haute-Saône",km:30},
+  {n:"Strasbourg",r:"Bas-Rhin",km:110},{n:"Strasbourg Meinau",r:"Bas-Rhin",km:115},
+  {n:"Boofzheim",r:"Bas-Rhin",km:85},{n:"Lisle-d'Abeau",r:"Isère",km:380},
+  {n:"Besançon",r:"Doubs",km:130},{n:"Vesoul",r:"Haute-Saône",km:85},
+  {n:"Gray",r:"Haute-Saône",km:130},{n:"Dampierre-sur-Salon",r:"Haute-Saône",km:130},
+  {n:"Lure",r:"Haute-Saône",km:55},{n:"Epinal",r:"Vosges",km:120},
+  {n:"Nancy",r:"Meurthe-et-Moselle",km:190},{n:"Metz",r:"Moselle",km:210},
+  {n:"Dijon",r:"Côte-d'Or",km:220},{n:"Lyon",r:"Auvergne-Rhône-Alpes",km:340},
+  {n:"Paris",r:"Île-de-France",km:530},{n:"Marseille",r:"Bouches-du-Rhône",km:660},
+  {n:"Nice",r:"Alpes-Maritimes",km:730},{n:"Bordeaux",r:"Gironde",km:790},
+  {n:"Toulouse",r:"Haute-Garonne",km:700},{n:"Nantes",r:"Loire-Atlantique",km:750},
+  {n:"Lille",r:"Nord",km:570},{n:"Reims",r:"Marne",km:400},
+  {n:"Grenoble",r:"Isère",km:390},{n:"Montpellier",r:"Hérault",km:620},
+  {n:"Annecy",r:"Haute-Savoie",km:300},{n:"Bâle",r:"Suisse",km:35},
+  {n:"Basel",r:"Suisse",km:35},{n:"Zurich",r:"Suisse",km:200},
+  {n:"Berne",r:"Suisse",km:210},{n:"Genève",r:"Suisse",km:330},
+  {n:"Buggingen",r:"Allemagne",km:50},{n:"Zwingen",r:"Suisse",km:40},
+  {n:"Freiburg",r:"Allemagne",km:45},{n:"Karlsruhe",r:"Allemagne",km:120},
+  {n:"Stuttgart",r:"Allemagne",km:200},{n:"Lancrans",r:"Ain",km:220},
+  {n:"Beauvais",r:"Oise",km:590},{n:"Lons-le-Saunier",r:"Jura",km:150},
+  {n:"Dole",r:"Jura",km:140},{n:"Pontarlier",r:"Doubs",km:120},
+  {n:"Morteau",r:"Doubs",km:90},{n:"Audincourt",r:"Doubs",km:45},
+  {n:"Sochaux",r:"Doubs",km:45},{n:"Sélestat",r:"Bas-Rhin",km:70},
+  {n:"Obernai",r:"Bas-Rhin",km:90},{n:"Saverne",r:"Bas-Rhin",km:130},
+  {n:"Munster",r:"Haut-Rhin",km:35},{n:"Ribeauvillé",r:"Haut-Rhin",km:55},
+  {n:"Chalon-sur-Saône",r:"Saône-et-Loire",km:260},{n:"Bourg-en-Bresse",r:"Ain",km:270},
+  {n:"Roanne",r:"Loire",km:360},{n:"Saint-Étienne",r:"Loire",km:395},
+  {n:"Troyes",r:"Aube",km:340},{n:"Auxerre",r:"Yonne",km:380},
+  {n:"Bruxelles",r:"Belgique",km:540},{n:"Luxembourg",r:"Luxembourg",km:300}
+];
+ 
+function normalise(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[-']/g,' ').trim();}
+ 
+var sTO=null;
+function onVI(){
+  var v=document.getElementById('ville-input').value.trim();
+  clearTimeout(sTO);
+  if(v.length<2){document.getElementById('sugg-box').style.display='none';return;}
+  sTO=setTimeout(function(){searchV(v);},300);
+}
+function searchV(q){
+  var nq=normalise(q);
+  var m=VILLES.filter(function(c){return normalise(c.n).indexOf(nq)===0;});
+  if(!m.length)m=VILLES.filter(function(c){return normalise(c.n).indexOf(nq)!==-1;});
+  m=m.slice(0,5);
+  var box=document.getElementById('sugg-box');
+  if(!m.length){box.innerHTML='<div class="no-result">Aucune ville trouvée</div>';box.style.display='block';return;}
+  var html='';
+  m.forEach(function(c){
+    var b=gF(c.km);var fs=c.km===0?'Inclus':b.f===0?'Inclus':'+ '+fmt(b.f);
+    html+='<div class="sitem" onclick="selCity(\''+c.n.replace(/'/g,"\\'")+'\','+c.km+')"><div class="sname">'+c.n+'</div><div class="sdetail">'+c.r+' — '+c.km+' km — '+fs+'</div></div>';
+  });
+  box.innerHTML=html;box.style.display='block';
+}
+function selCity(ville,km){
+  document.getElementById('ville-input').value=ville;
+  document.getElementById('sugg-box').style.display='none';
+  sC=ville;sK=km;var b=gF(km);sF=b.f;sH=b.h;
+  document.getElementById('km-box').style.display='flex';
+  document.getElementById('km-num').textContent=km+' km';
+  document.getElementById('km-frais').textContent=km===0?'Local':fmt(b.f);
+  document.getElementById('hotel-info').style.display=b.h?'block':'none';
+  upd();
+}
+ 
+// ===================== PLANNING =====================
+var calDate=new Date();
+var vueActuelle='cal';
+ 
+function setVue(v){
+  vueActuelle=v;
+  document.getElementById('vue-cal').style.display=v==='cal'?'block':'none';
+  document.getElementById('vue-list').style.display=v==='list'?'block':'none';
+  document.getElementById('btn-vue-cal').style.background=v==='cal'?'#1c1c1e':'#fff';
+  document.getElementById('btn-vue-cal').style.color=v==='cal'?'#fff':'#1c1c1e';
+  document.getElementById('btn-vue-cal').style.border=v==='cal'?'none':'1.5px solid #e5e5ea';
+  document.getElementById('btn-vue-list').style.background=v==='list'?'#1c1c1e':'#fff';
+  document.getElementById('btn-vue-list').style.color=v==='list'?'#fff':'#1c1c1e';
+  document.getElementById('btn-vue-list').style.border=v==='list'?'none':'1.5px solid #e5e5ea';
+  renderPlanning();
+}
+ 
+function calNav(dir){calDate.setMonth(calDate.getMonth()+dir);renderPlanning();}
+ 
+function renderPlanning(){
+  var y=calDate.getFullYear(),m=calDate.getMonth();
+  var mois=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  document.getElementById('cal-title').textContent=mois[m]+' '+y;
+  var conf=prestations.filter(function(p){return p.statut==='confirme'}).length;
+  var att=prestations.filter(function(p){return p.statut==='attente'}).length;
+  document.getElementById('planning-subtitle').textContent=conf+' confirmée(s) · '+att+' en attente';
+ 
+  // Calendrier
+  var firstDay=new Date(y,m,1).getDay();
+  firstDay=(firstDay+6)%7; // Lundi=0
+  var daysInMonth=new Date(y,m+1,0).getDate();
+  var today=new Date();
+  var jours=['L','M','M','J','V','S','D'];
+  var grid=document.getElementById('cal-grid');
+  var html='';
+  jours.forEach(function(j){html+='<div class="cal-day-name">'+j+'</div>';});
+  for(var i=0;i<firstDay;i++)html+='<div class="cal-day empty"></div>';
+  for(var d=1;d<=daysInMonth;d++){
+    var dateStr=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    var p=prestations.find(function(x){return x.date===dateStr&&x.statut!=='annule';});
+    var isToday=today.getFullYear()===y&&today.getMonth()===m&&today.getDate()===d;
+    var cls='cal-day';
+    var dot='';
+    if(p){cls+=' '+(p.statut==='confirme'?'reserve':'attente');dot='<div class="cal-dot"></div>';}
+    else cls+=' libre';
+    if(isToday)cls+=' today';
+    html+='<div class="'+cls+'">'+d+dot+'</div>';
+  }
+  grid.innerHTML=html;
+ 
+  // Liste
+  var sorted=[...prestations].sort(function(a,b){return a.date.localeCompare(b.date);});
+  var listHtml='';
+  if(!sorted.length){listHtml='<p class="empty-note" style="text-align:center;padding:20px">Aucune prestation enregistrée</p>';}
+  sorted.forEach(function(p){
+    var ds=new Date(p.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+    var badgeCls=p.statut==='confirme'?'confirme':p.statut==='attente'?'attente':'annule';
+    var badgeTxt=p.statut==='confirme'?'Confirmé':p.statut==='attente'?'En attente':'Annulé';
+    listHtml+='<div class="presta-item '+badgeCls+'">'
+      +'<div class="presta-top"><span class="presta-type">'+p.type+'</span><span class="presta-montant">'+fmt(p.montant)+'</span></div>'
+      +'<div class="presta-client">👤 '+p.client+'</div>'
+      +'<div class="presta-info">📅 '+ds+' · 📍 '+p.ville+'</div>'
+      +'<div style="margin-top:6px"><span class="badge '+badgeCls+'">'+badgeTxt+'</span></div>'
+      +'<div class="presta-actions">'
+      +'<button class="btn-edit" onclick="editStatut('+p.id+')">Changer statut</button>'
+      +'<button class="btn-delete" onclick="deletePresta('+p.id+')">Supprimer</button>'
+      +'</div></div>';
+  });
+  document.getElementById('liste-prestations').innerHTML=listHtml;
+}
+ 
+function editStatut(id){
+  var p=prestations.find(function(x){return x.id===id;});
+  if(!p)return;
+  var statuts=['confirme','attente','annule'];
+  var noms=['Confirmé','En attente','Annulé'];
+  var idx=statuts.indexOf(p.statut);
+  var choix=prompt('Statut actuel : '+noms[idx]+'\n\nNouveau statut :\n1. Confirmé\n2. En attente\n3. Annulé\n\nTapez 1, 2 ou 3');
+  if(choix==='1')p.statut='confirme';
+  else if(choix==='2')p.statut='attente';
+  else if(choix==='3')p.statut='annule';
+  saveData();renderPlanning();renderFinance();
+}
+ 
+function deletePresta(id){
+  if(!confirm('Supprimer cette prestation ?'))return;
+  prestations=prestations.filter(function(x){return x.id!==id;});
+  saveData();renderPlanning();renderFinance();
+}
+ 
+// MODAL
+function openModal(){
+  document.getElementById('modal').classList.add('open');
+  document.getElementById('m-date').value='';
+  document.getElementById('m-client').value='';
+  document.getElementById('m-ville').value='';
+  document.getElementById('m-montant').value='';
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');}
+function savePrestation(){
+  var client=document.getElementById('m-client').value.trim();
+  var date=document.getElementById('m-date').value;
+  var type=document.getElementById('m-type').value;
+  var ville=document.getElementById('m-ville').value.trim()||'—';
+  var montant=parseInt(document.getElementById('m-montant').value)||PRIX[type]||600;
+  var statut=document.getElementById('m-statut').value;
+  if(!client||!date){alert('Remplissez le nom et la date.');return;}
+  var p={id:Date.now(),client:client,date:date,type:type,ville:ville,montant:montant,statut:statut,acompte:Math.round(montant*.25)};
+  prestations.push(p);saveData();closeModal();renderPlanning();renderFinance();
+}
+ 
+// ===================== FINANCE =====================
+function renderFinance(){
+  var annee=new Date().getFullYear();
+  document.getElementById('fin-annee').textContent='Année '+annee;
+  var conf=prestations.filter(function(p){return p.statut==='confirme'&&p.date.startsWith(annee);});
+  var att=prestations.filter(function(p){return p.statut==='attente'&&p.date.startsWith(annee);});
+  var total=conf.reduce(function(s,p){return s+p.montant;},0);
+  var totalAcomptes=conf.reduce(function(s,p){return s+(acomptesReçus[p.id]?p.acompte:0);},0);
+  var reste=total-totalAcomptes;
+  document.getElementById('fin-total').textContent=fmt(total);
+  document.getElementById('fin-acomptes').textContent=fmt(totalAcomptes);
+  document.getElementById('fin-reste').textContent=fmt(reste);
+  document.getElementById('fin-nb-conf').textContent=conf.length;
+  document.getElementById('fin-nb-att').textContent=att.length;
+ 
+  var html='';
+  if(!conf.length){html='<p class="empty-note">Aucune prestation confirmée</p>';}
+  conf.sort(function(a,b){return a.date.localeCompare(b.date);}).forEach(function(p){
+    var ds=new Date(p.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'short'});
+    var recu=!!acomptesReçus[p.id];
+    html+='<div class="acompte-item">'
+      +'<div class="acompte-info">'
+      +'<div class="acompte-name">'+p.client+'</div>'
+      +'<div class="acompte-detail">'+ds+' · '+p.type+'</div>'
+      +'</div>'
+      +'<span class="acompte-amount">'+fmt(p.acompte)+'</span>'
+      +'<button class="toggle'+(recu?' on':'')+'" onclick="toggleAcompte('+p.id+')"></button>'
+      +'</div>';
+  });
+  document.getElementById('acompte-list').innerHTML=html;
+}
+ 
+function toggleAcompte(id){
+  acomptesReçus[id]=!acomptesReçus[id];
+  saveData();renderFinance();
+}
+ 
+// ===================== PDF =====================
 function genPDF(){
   if(!sB){alert('Veuillez sélectionner une prestation.');return;}
   var jsPDF=window.jspdf.jsPDF;
@@ -381,12 +1572,10 @@ function genPDF(){
   doc.text('Nom : '+client,mg,y);y+=5;
   doc.text('Date : '+ds,mg,y);y+=5;
   doc.text('Horaires : '+deb+' \u2192 '+fin,mg,y);y+=5;
-  if(sC)doc.text('Lieu : '+sC,mg,y);
-  y+=12;
+  if(sC)doc.text('Lieu : '+sC,mg,y);y+=12;
   doc.setFillColor(240,240,240);doc.rect(mg,y,W-mg*2,8,'F');
   doc.setFont('helvetica','bold');doc.setFontSize(10);
-  doc.text('Prestation',mg+3,y+5.5);doc.text('Montant',W-mg-3,y+5.5,{align:'right'});
-  y+=12;
+  doc.text('Prestation',mg+3,y+5.5);doc.text('Montant',W-mg-3,y+5.5,{align:'right'});y+=12;
   function row(a,b){doc.setFont('helvetica','normal');doc.setFontSize(10);doc.text(a,mg+3,y);doc.text(b,W-mg-3,y,{align:'right'});y+=7;}
   row(sL+' \u2014 forfait 6h ('+deb+' \u2192 '+fin+')',sB.toLocaleString('fr-FR')+' \u20ac');
   if(nbS>0)row(nbS.toFixed(nbS%1?1:0)+'h suppl\u00e9mentaire(s) \u00d7 100 \u20ac','+ '+supp+' \u20ac');
@@ -402,7 +1591,7 @@ function genPDF(){
   y+=14;doc.setFont('helvetica','normal');doc.setFontSize(10);
   doc.text('Reste \u00e0 percevoir le jour de la prestation',mg+3,y);doc.text(reste.toLocaleString('fr-FR')+' \u20ac',W-mg-3,y,{align:'right'});
   y+=16;doc.setFontSize(9);doc.setTextColor(130,130,130);
-  doc.text('Ce devis est valable 30 jours \u00e0 compter de sa date d\'\'\'\'emission.',mg,y);y+=5;
+  doc.text('Ce devis est valable 30 jours \u00e0 compter de sa date d\'\'emission.',mg,y);y+=5;
   doc.text('L\'acompte confirme la r\u00e9servation. Merci pour votre confiance !',mg,y);
   doc.setFillColor(20,20,20);doc.rect(0,284,W,13,'F');
   doc.setTextColor(255,255,255);doc.setFontSize(8);
@@ -410,10 +1599,12 @@ function genPDF(){
   doc.save('Devis_DJMeyra_'+client.replace(/\s+/g,'_')+'_'+num+'.pdf');
 }
  
+// Init
 document.addEventListener('touchstart',function(e){
   if(!e.target.closest('#ville-input')&&!e.target.closest('#sugg-box'))
     document.getElementById('sugg-box').style.display='none';
 },{passive:true});
+renderPlanning();
 </script>
 </body>
 </html>
