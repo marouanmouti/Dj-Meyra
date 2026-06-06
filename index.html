@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>DJ Meyra — Devis</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f2f2f7;color:#1c1c1e;padding:16px 16px 40px}
+h1{font-size:22px;font-weight:700;margin-bottom:2px}
+.sub{font-size:13px;color:#8e8e93;margin-bottom:18px}
+.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px}
+.stitle{font-size:11px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.pbtn{background:#f2f2f7;border:2px solid transparent;border-radius:12px;padding:14px 10px;cursor:pointer;text-align:left;width:100%;min-height:60px;display:flex;flex-direction:column;justify-content:center;-webkit-appearance:none}
+.pbtn.active{background:#e8f0fe;border-color:#4a90e2}
+.pn{font-size:15px;font-weight:600;color:#1c1c1e}
+.pp{font-size:11px;color:#8e8e93;margin-top:3px}
+.pbtn.active .pn{color:#1a56db}
+.pbtn.active .pp{color:#4a90e2}
+.flabel{font-size:13px;color:#8e8e93;margin-bottom:5px;margin-top:10px}
+.flabel:first-child{margin-top:0}
+input[type=text],input[type=date],input[type=time]{width:100%;font-size:16px;padding:12px 14px;border-radius:10px;border:1.5px solid #e5e5ea;background:#f9f9f9;color:#1c1c1e;-webkit-appearance:none;outline:none}
+input:focus{border-color:#4a90e2;background:#fff}
+.dbadge{display:inline-flex;align-items:center;gap:6px;background:#f2f2f7;border-radius:10px;padding:9px 14px;font-size:14px;color:#1c1c1e;margin-top:10px}
+.supp-note{margin-top:8px;font-size:13px;color:#ff9500;display:none}
+.sugg-box{background:#fff;border:1.5px solid #e5e5ea;border-radius:12px;margin-top:6px;overflow:hidden;display:none;max-height:280px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.sitem{padding:13px 14px;font-size:14px;cursor:pointer;color:#1c1c1e;border-bottom:1px solid #f2f2f7;line-height:1.35}
+.sitem:last-child{border-bottom:none}
+.sitem:active{background:#f2f2f7}
+.sname{font-weight:500}
+.sdetail{font-size:12px;color:#8e8e93;margin-top:2px}
+.kmbox{display:flex;align-items:center;gap:10px;margin-top:10px;padding:12px 14px;background:#f9f9f9;border-radius:10px;border:1.5px solid #e5e5ea}
+.hotel-note{margin-top:8px;font-size:13px;color:#ff9500;display:none}
+.dline{display:flex;justify-content:space-between;align-items:flex-start;font-size:14px;padding:8px 0;border-bottom:1px solid #f2f2f7;color:#8e8e93;gap:8px}
+.dline:last-child{border-bottom:none}
+.dline.main{color:#1c1c1e;font-weight:600}
+.dline span:last-child{text-align:right;flex-shrink:0}
+.totbox{background:#1c1c1e;border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:12px;display:none}
+.abox{background:#eaf5ea;border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:8px;display:none}
+.mgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px;display:none}
+.metric{background:#f9f9f9;border-radius:10px;padding:12px;text-align:center}
+.ml{font-size:11px;color:#8e8e93;margin-bottom:4px}
+.mv{font-size:18px;font-weight:700;color:#1c1c1e}
+.pdfbtn{width:100%;padding:16px;font-size:16px;font-weight:600;background:#1c1c1e;border:none;border-radius:12px;cursor:pointer;color:#fff;margin-top:12px;display:none;align-items:center;justify-content:center;gap:8px;-webkit-appearance:none}
+.pdfbtn:active{opacity:.8}
+.resetbtn{width:100%;padding:13px;font-size:14px;font-weight:500;background:#f2f2f7;border:none;border-radius:12px;cursor:pointer;color:#8e8e93;margin-top:8px;-webkit-appearance:none}
+.empty-note{font-size:13px;color:#c7c7cc;text-align:center;padding:8px 0}
+.no-result{font-size:13px;color:#8e8e93;padding:12px 14px;text-align:center}
+</style>
+</head>
+<body>
+
+<h1>DJ Meyra</h1>
+<p class="sub">06.66.15.35.83 — Mulhouse</p>
+
+<div class="card">
+  <p class="stitle">Client</p>
+  <div class="flabel">Nom du client</div>
+  <input type="text" id="nom-client" placeholder="Ex : Dupont Marie" oninput="upd()" autocorrect="off" autocapitalize="words">
+  <div class="flabel">Date de la prestation</div>
+  <input type="date" id="date-presta" oninput="upd()">
+</div>
+
+<div class="card">
+  <p class="stitle">Type de prestation</p>
+  <div class="pgrid">
+    <button class="pbtn" data-base="1200" data-label="Mariage" onclick="selP(this)"><span class="pn">Mariage</span><span class="pp">1 200 € — 6h</span></button>
+    <button class="pbtn" data-base="800" data-label="Kina" onclick="selP(this)"><span class="pn">Kina</span><span class="pp">800 € — 6h</span></button>
+    <button class="pbtn" data-base="800" data-label="Fiançailles" onclick="selP(this)"><span class="pn">Fiançailles</span><span class="pp">800 € — 6h</span></button>
+    <button class="pbtn" data-base="500" data-label="Anniversaire" onclick="selP(this)"><span class="pn">Anniversaire</span><span class="pp">500 € — 6h</span></button>
+    <button class="pbtn" data-base="600" data-label="Autre" onclick="selP(this)" style="grid-column:span 2"><span class="pn">Autre</span><span class="pp">600 € — 6h</span></button>
+  </div>
+</div>
+
+<div class="card">
+  <p class="stitle">Horaires</p>
+  <div class="flabel">Heure de début</div>
+  <input type="time" id="h-debut" value="18:00" oninput="upd()">
+  <div class="flabel">Heure de fin</div>
+  <input type="time" id="h-fin" value="00:00" oninput="upd()">
+  <div class="dbadge">⏳ <span id="dur-txt">6h de prestation</span></div>
+  <div class="supp-note" id="supp-info">⚡ <span id="supp-txt"></span></div>
+</div>
+
+<div class="card">
+  <p class="stitle">Lieu de la prestation</p>
+  <input type="text" id="ville-input" placeholder="Tapez une ville..." oninput="onVI()" autocomplete="off" autocorrect="off" autocapitalize="words">
+  <div class="sugg-box" id="sugg-box"></div>
+  <div class="kmbox" id="km-box" style="display:none">
+    <div>
+      <div style="font-size:17px;font-weight:700;color:#1c1c1e" id="km-num">—</div>
+      <div style="font-size:11px;color:#8e8e93">depuis Mulhouse</div>
+    </div>
+    <div style="margin-left:auto;font-size:15px;font-weight:700;color:#34c759" id="km-frais">0 €</div>
+  </div>
+  <div class="hotel-note" id="hotel-info">🏨 Nuit d'hôtel incluse dans les frais</div>
+</div>
+
+<div class="card">
+  <p class="stitle">Récapitulatif</p>
+  <div id="detail-wrap"><p class="empty-note">Sélectionnez une prestation pour voir le total</p></div>
+  <div class="totbox" id="tot-box"><span style="font-size:15px;font-weight:600;color:#fff">Total à facturer</span><span style="font-size:28px;font-weight:700;color:#fff" id="total-amt">—</span></div>
+  <div class="abox" id="ac-box"><span style="font-size:13px;font-weight:600;color:#1a7f37">Acompte 25 %</span><span style="font-size:20px;font-weight:700;color:#1a7f37" id="acompte-amt">—</span></div>
+  <div class="mgrid" id="metric-box">
+    <div class="metric"><div class="ml">Reste à percevoir</div><div class="mv" id="reste-amt">—</div></div>
+    <div class="metric"><div class="ml">Durée totale</div><div class="mv" id="dur-recap">—</div></div>
+  </div>
+  <button class="pdfbtn" id="pdf-btn" onclick="genPDF()">📄 Télécharger le devis PDF</button>
+  <button class="resetbtn" onclick="reset()">Réinitialiser</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+var sB=0,sL='',sF=0,sK=0,sH=0,sC='',dNum=null;
+var BAR=[{max:50,f:0,h:0},{max:100,f:50,h:0},{max:200,f:150,h:0},{max:300,f:200,h:0},{max:400,f:400,h:1},{max:600,f:500,h:1},{max:800,f:650,h:1}];
+
+// Base de villes avec distance routière depuis Mulhouse (km)
+var VILLES=[
+  {n:"Mulhouse",r:"Haut-Rhin",km:0},{n:"Colmar",r:"Haut-Rhin",km:40},{n:"Freiburg-im-Breisgau",r:"Allemagne",km:45},
+  {n:"Wittelsheim",r:"Haut-Rhin",km:10},{n:"Lutterbach",r:"Haut-Rhin",km:5},{n:"Illzach",r:"Haut-Rhin",km:5},
+  {n:"Riedisheim",r:"Haut-Rhin",km:4},{n:"Brunstatt",r:"Haut-Rhin",km:6},{n:"Kingersheim",r:"Haut-Rhin",km:8},
+  {n:"Wittenheim",r:"Haut-Rhin",km:10},{n:"Rixheim",r:"Haut-Rhin",km:8},{n:"Habsheim",r:"Haut-Rhin",km:10},
+  {n:"Sausheim",r:"Haut-Rhin",km:7},{n:"Baldersheim",r:"Haut-Rhin",km:12},{n:"Pfastatt",r:"Haut-Rhin",km:5},
+  {n:"Delle",r:"Territoire de Belfort",km:30},{n:"Altkirch",r:"Haut-Rhin",km:20},{n:"Cernay",r:"Haut-Rhin",km:15},
+  {n:"Thann",r:"Haut-Rhin",km:20},{n:"Guebwiller",r:"Haut-Rhin",km:25},{n:"Ensisheim",r:"Haut-Rhin",km:20},
+  {n:"Sierentz",r:"Haut-Rhin",km:15},{n:"Saint-Louis",r:"Haut-Rhin",km:20},{n:"Huningue",r:"Haut-Rhin",km:22},
+  {n:"Hésingue",r:"Haut-Rhin",km:18},{n:"Blotzheim",r:"Haut-Rhin",km:18},{n:"Bartenheim",r:"Haut-Rhin",km:16},
+  {n:"Magny-Vernois",r:"Haute-Saône",km:20},{n:"Bethoncourt",r:"Doubs",km:40},{n:"Montbéliard",r:"Doubs",km:45},
+  {n:"Belfort",r:"Territoire de Belfort",km:35},{n:"Héricourt",r:"Haute-Saône",km:30},
+  {n:"Strasbourg",r:"Bas-Rhin",km:110},{n:"Mulhouse",r:"Haut-Rhin",km:0},
+  {n:"Strasbourg Meinau",r:"Bas-Rhin",km:115},{n:"Hautpierre Strasbourg",r:"Bas-Rhin",km:115},
+  {n:"Boofzheim",r:"Bas-Rhin",km:85},{n:"Lisle-d'Abeau",r:"Isère",km:380},
+  {n:"Besançon",r:"Doubs",km:130},{n:"Vesoul",r:"Haute-Saône",km:85},
+  {n:"Gray",r:"Haute-Saône",km:130},{n:"Dampierre-sur-Salon",r:"Haute-Saône",km:130},
+  {n:"Luxeuil-les-Bains",r:"Haute-Saône",km:85},{n:"Lure",r:"Haute-Saône",km:55},
+  {n:"Epinal",r:"Vosges",km:120},{n:"Nancy",r:"Meurthe-et-Moselle",km:190},
+  {n:"Metz",r:"Moselle",km:210},{n:"Dijon",r:"Côte-d'Or",km:220},
+  {n:"Lyon",r:"Auvergne-Rhône-Alpes",km:340},{n:"Paris",r:"Île-de-France",km:530},
+  {n:"Marseille",r:"Bouches-du-Rhône",km:660},{n:"Nice",r:"Alpes-Maritimes",km:730},
+  {n:"Bordeaux",r:"Gironde",km:790},{n:"Toulouse",r:"Haute-Garonne",km:700},
+  {n:"Nantes",r:"Loire-Atlantique",km:750},{n:"Rennes",r:"Ille-et-Vilaine",km:830},
+  {n:"Lille",r:"Nord",km:570},{n:"Reims",r:"Marne",km:400},
+  {n:"Grenoble",r:"Isère",km:390},{n:"Montpellier",r:"Hérault",km:620},
+  {n:"Annecy",r:"Haute-Savoie",km:300},{n:"Chambéry",r:"Savoie",km:330},
+  {n:"Brest",r:"Finistère",km:1000},{n:"Clermont-Ferrand",r:"Puy-de-Dôme",km:520},
+  {n:"Orléans",r:"Loiret",km:540},{n:"Tours",r:"Indre-et-Loire",km:600},
+  {n:"Beauvais",r:"Oise",km:590},{n:"Amiens",r:"Somme",km:560},
+  {n:"Caen",r:"Calvados",km:750},{n:"Rouen",r:"Seine-Maritime",km:620},
+  {n:"Le Havre",r:"Seine-Maritime",km:680},{n:"Nîmes",r:"Gard",km:590},
+  {n:"Avignon",r:"Vaucluse",km:580},{n:"Aix-en-Provence",r:"Bouches-du-Rhône",km:640},
+  {n:"Toulon",r:"Var",km:700},{n:"Perpignan",r:"Pyrénées-Orientales",km:750},
+  {n:"Pau",r:"Pyrénées-Atlantiques",km:830},{n:"Biarritz",r:"Pyrénées-Atlantiques",km:890},
+  {n:"Angoulême",r:"Charente",km:720},{n:"Limoges",r:"Haute-Vienne",km:640},
+  {n:"Poitiers",r:"Vienne",km:660},{n:"Le Mans",r:"Sarthe",km:680},
+  {n:"Angers",r:"Maine-et-Loire",km:700},{n:"Troyes",r:"Aube",km:340},
+  {n:"Châlons-en-Champagne",r:"Marne",km:380},{n:"Verdun",r:"Meuse",km:270},
+  {n:"Bar-le-Duc",r:"Meuse",km:240},{n:"Chaumont",r:"Haute-Marne",km:200},
+  {n:"Langres",r:"Haute-Marne",km:170},{n:"Auxerre",r:"Yonne",km:380},
+  {n:"Chalon-sur-Saône",r:"Saône-et-Loire",km:260},{n:"Mâcon",r:"Saône-et-Loire",km:295},
+  {n:"Bourg-en-Bresse",r:"Ain",km:270},{n:"Villefranche-sur-Saône",r:"Rhône",km:310},
+  {n:"Lons-le-Saunier",r:"Jura",km:150},{n:"Dole",r:"Jura",km:140},
+  {n:"Pontarlier",r:"Doubs",km:120},{n:"Morteau",r:"Doubs",km:90},
+  {n:"Maîche",r:"Doubs",km:70},{n:"Audincourt",r:"Doubs",km:45},
+  {n:"Sochaux",r:"Doubs",km:45},{n:"Grand-Charmont",r:"Doubs",km:45},
+  {n:"Valentigney",r:"Doubs",km:50},{n:"Baume-les-Dames",r:"Doubs",km:100},
+  {n:"Ornans",r:"Doubs",km:120},{n:"Sainte-Marie-aux-Mines",r:"Haut-Rhin",km:55},
+  {n:"Ribeauvillé",r:"Haut-Rhin",km:55},{n:"Sélestat",r:"Bas-Rhin",km:70},
+  {n:"Obernai",r:"Bas-Rhin",km:90},{n:"Haguenau",r:"Bas-Rhin",km:140},
+  {n:"Saverne",r:"Bas-Rhin",km:130},{n:"Molsheim",r:"Bas-Rhin",km:100},
+  {n:"Erstein",r:"Bas-Rhin",km:90},{n:"Munster",r:"Haut-Rhin",km:35},
+  {n:"Masevaux",r:"Haut-Rhin",km:25},{n:"Dannemarie",r:"Haut-Rhin",km:25},
+  {n:"Ferrette",r:"Haut-Rhin",km:35},{n:"Hirsingue",r:"Haut-Rhin",km:20},
+  {n:"Illfurth",r:"Haut-Rhin",km:12},{n:"Landser",r:"Haut-Rhin",km:10},
+  {n:"Zimmersheim",r:"Haut-Rhin",km:8},{n:"Staffelfelden",r:"Haut-Rhin",km:8},
+  {n:"Morschwiller-le-Bas",r:"Haut-Rhin",km:7},{n:"Pulversheim",r:"Haut-Rhin",km:15},
+  {n:"Bollwiller",r:"Haut-Rhin",km:18},{n:"Rouffach",r:"Haut-Rhin",km:30},
+  {n:"Turckheim",r:"Haut-Rhin",km:42},{n:"Wintzenheim",r:"Haut-Rhin",km:38},
+  {n:"Eguisheim",r:"Haut-Rhin",km:35},{n:"Kaysersberg",r:"Haut-Rhin",km:48},
+  {n:"Lapoutroie",r:"Haut-Rhin",km:55},{n:"Fraize",r:"Vosges",km:80},
+  {n:"Saint-Dié-des-Vosges",r:"Vosges",km:100},{n:"Gérardmer",r:"Vosges",km:90},
+  {n:"Remiremont",r:"Vosges",km:75},{n:"Thionville",r:"Moselle",km:235},
+  {n:"Sarrebourg",r:"Moselle",km:160},{n:"Sarreguemines",r:"Moselle",km:195},
+  {n:"Forbach",r:"Moselle",km:215},{n:"Karlsruhe",r:"Allemagne",km:120},
+  {n:"Stuttgart",r:"Allemagne",km:200},{n:"Mannheim",r:"Allemagne",km:160},
+  {n:"Heidelberg",r:"Allemagne",km:165},{n:"Frankfurt",r:"Allemagne",km:290},
+  {n:"Düsseldorf",r:"Allemagne",km:470},{n:"Hamburg",r:"Allemagne",km:750},
+  {n:"München",r:"Allemagne",km:380},{n:"Berlin",r:"Allemagne",km:850},
+  {n:"Offenburg",r:"Allemagne",km:70},{n:"Lahr",r:"Allemagne",km:65},
+  {n:"Konstanz",r:"Allemagne",km:110},{n:"Ulm",r:"Allemagne",km:250},
+  {n:"Bâle",r:"Suisse",km:35},{n:"Basel",r:"Suisse",km:35},
+  {n:"Zurich",r:"Suisse",km:200},{n:"Berne",r:"Suisse",km:210},
+  {n:"Genève",r:"Suisse",km:330},{n:"Lausanne",r:"Suisse",km:290},
+  {n:"Lucerne",r:"Suisse",km:250},{n:"Winterthur",r:"Suisse",km:215},
+  {n:"Saint-Gall",r:"Suisse",km:220},{n:"Buggingen",r:"Allemagne",km:50},
+  {n:"Zwingen",r:"Suisse",km:40},{n:"Bruxelles",r:"Belgique",km:540},
+  {n:"Liège",r:"Belgique",km:460},{n:"Luxembourg",r:"Luxembourg",km:300},
+  {n:"Lancrans",r:"Ain",km:220},{n:"Oyonnax",r:"Ain",km:250},
+  {n:"Ambérieu-en-Bugey",r:"Ain",km:290},{n:"Privas",r:"Ardèche",km:470},
+  {n:"Valence",r:"Drôme",km:450},{n:"Romans-sur-Isère",r:"Drôme",km:420},
+  {n:"Vienne",r:"Isère",km:360},{n:"Bourgoin-Jallieu",r:"Isère",km:370},
+  {n:"Villeurbanne",r:"Rhône",km:340},{n:"Caluire-et-Cuire",r:"Rhône",km:345},
+  {n:"Vénissieux",r:"Rhône",km:345},{n:"Saint-Étienne",r:"Loire",km:395},
+  {n:"Roanne",r:"Loire",km:360},{n:"Moulins",r:"Allier",km:440},
+  {n:"Vichy",r:"Allier",km:470},{n:"Aurillac",r:"Cantal",km:600},
+  {n:"Rodez",r:"Aveyron",km:640},{n:"Albi",r:"Tarn",km:680},
+  {n:"Castres",r:"Tarn",km:700},{n:"Narbonne",r:"Aude",km:690},
+  {n:"Carcassonne",r:"Aude",km:690},{n:"Béziers",r:"Hérault",km:650},
+  {n:"Sète",r:"Hérault",km:630},{n:"Arles",r:"Bouches-du-Rhône",km:600},
+  {n:"Istres",r:"Bouches-du-Rhône",km:640},{n:"Martigues",r:"Bouches-du-Rhône",km:650},
+  {n:"Aubagne",r:"Bouches-du-Rhône",km:660},{n:"Fréjus",r:"Var",km:710},
+  {n:"Antibes",r:"Alpes-Maritimes",km:730},{n:"Cannes",r:"Alpes-Maritimes",km:730},
+  {n:"Grasse",r:"Alpes-Maritimes",km:725},{n:"Draguignan",r:"Var",km:695},
+  {n:"Gap",r:"Hautes-Alpes",km:500},{n:"Briançon",r:"Hautes-Alpes",km:470},
+  {n:"Embrun",r:"Hautes-Alpes",km:490},{n:"Digne-les-Bains",r:"Alpes-de-Haute-Provence",km:570},
+  {n:"Manosque",r:"Alpes-de-Haute-Provence",km:600},{n:"Salon-de-Provence",r:"Bouches-du-Rhône",km:620},
+  {n:"Carpentras",r:"Vaucluse",km:570},{n:"Orange",r:"Vaucluse",km:560},
+  {n:"Pont-Saint-Esprit",r:"Gard",km:540},{n:"Alès",r:"Gard",km:560},
+  {n:"Millau",r:"Aveyron",km:600},{n:"Montauban",r:"Tarn-et-Garonne",km:720},
+  {n:"Agen",r:"Lot-et-Garonne",km:750},{n:"Périgueux",r:"Dordogne",km:720},
+  {n:"Bergerac",r:"Dordogne",km:750},{n:"Saintes",r:"Charente-Maritime",km:730},
+  {n:"La Rochelle",r:"Charente-Maritime",km:730},{n:"Niort",r:"Deux-Sèvres",km:680},
+  {n:"Cholet",r:"Maine-et-Loire",km:720},{n:"Saint-Nazaire",r:"Loire-Atlantique",km:770},
+  {n:"Lorient",r:"Morbihan",km:850},{n:"Vannes",r:"Morbihan",km:820},
+  {n:"Quimper",r:"Finistère",km:900},{n:"Saint-Brieuc",r:"Côtes-d'Armor",km:870},
+  {n:"Morlaix",r:"Finistère",km:930},{n:"Cherbourg",r:"Manche",km:850},
+  {n:"Saint-Malo",r:"Ille-et-Vilaine",km:790},{n:"Saint-Lô",r:"Manche",km:790},
+  {n:"Alençon",r:"Orne",km:710},{n:"Chartres",r:"Eure-et-Loir",km:570},
+  {n:"Évreux",r:"Eure",km:620},{n:"Versailles",r:"Yvelines",km:540},
+  {n:"Créteil",r:"Val-de-Marne",km:535},{n:"Saint-Denis",r:"Seine-Saint-Denis",km:540},
+  {n:"Argenteuil",r:"Val-d'Oise",km:545},{n:"Montreuil",r:"Seine-Saint-Denis",km:535},
+  {n:"Vitry-sur-Seine",r:"Val-de-Marne",km:535},{n:"Colombes",r:"Hauts-de-Seine",km:545},
+  {n:"Sedan",r:"Ardennes",km:370},{n:"Charleville-Mézières",r:"Ardennes",km:360},
+  {n:"Soissons",r:"Aisne",km:470},{n:"Laon",r:"Aisne",km:440},
+  {n:"Valenciennes",r:"Nord",km:560},{n:"Douai",r:"Nord",km:555},
+  {n:"Lens",r:"Pas-de-Calais",km:560},{n:"Arras",r:"Pas-de-Calais",km:540},
+  {n:"Calais",r:"Pas-de-Calais",km:640},{n:"Dunkerque",r:"Nord",km:620},
+  {n:"Boulogne-sur-Mer",r:"Pas-de-Calais",km:620}
+];
+
+function normalise(s){
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[-']/g,' ').trim();
+}
+
+function gF(km){for(var i=0;i<BAR.length;i++)if(km<=BAR[i].max)return BAR[i];return{f:650,h:1};}
+function gDN(){if(dNum)return dNum;var d=new Date();dNum='DM-'+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+Math.floor(Math.random()*900+100);return dNum;}
+function fmt(n){return n.toLocaleString('fr-FR')+' €';}
+
+function selP(btn){
+  document.querySelectorAll('.pbtn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');sB=parseInt(btn.dataset.base);sL=btn.dataset.label;upd();
+}
+
+function cD(d,f){
+  var dm=parseInt(d.split(':')[0])*60+parseInt(d.split(':')[1]);
+  var fm=parseInt(f.split(':')[0])*60+parseInt(f.split(':')[1]);
+  if(fm<=dm)fm+=1440;return(fm-dm)/60;
+}
+
+function onVI(){
+  var v=document.getElementById('ville-input').value.trim();
+  var box=document.getElementById('sugg-box');
+  if(v.length<2){box.style.display='none';return;}
+  var q=normalise(v);
+  var matches=VILLES.filter(function(c){return normalise(c.n).indexOf(q)===0||normalise(c.r).indexOf(q)===0;});
+  if(!matches.length) matches=VILLES.filter(function(c){return normalise(c.n).indexOf(q)!==-1;});
+  matches=matches.slice(0,6);
+  if(!matches.length){box.innerHTML='<div class="no-result">Aucune ville trouvée</div>';box.style.display='block';return;}
+  var html='';
+  matches.forEach(function(c){
+    var b=gF(c.km);
+    var fs=c.km===0?'Local (inclus)':b.f===0?'Inclus':'+ '+fmt(b.f);
+    html+='<div class="sitem" onclick="selCity(\''+c.n.replace(/'/g,"\\'")+'\','+c.km+')">'
+      +'<div class="sname">'+c.n+'</div>'
+      +'<div class="sdetail">'+c.r+' — '+c.km+' km — Frais : '+fs+'</div>'
+      +'</div>';
+  });
+  box.innerHTML=html;box.style.display='block';
+}
+
+function selCity(ville,km){
+  document.getElementById('ville-input').value=ville;
+  document.getElementById('sugg-box').style.display='none';
+  sC=ville;sK=km;
+  var b=gF(km);sF=b.f;sH=b.h;
+  document.getElementById('km-box').style.display='flex';
+  document.getElementById('km-num').textContent=km+' km';
+  document.getElementById('km-frais').textContent=km===0?'Local':fmt(b.f);
+  document.getElementById('hotel-info').style.display=b.h?'block':'none';
+  upd();
+}
+
+function upd(){
+  var deb=document.getElementById('h-debut').value||'18:00';
+  var fin=document.getElementById('h-fin').value||'00:00';
+  var h=cD(deb,fin);
+  var hd=Number.isInteger(h)?h+'h':h.toFixed(1)+'h';
+  document.getElementById('dur-txt').textContent=hd+' de prestation';
+  document.getElementById('dur-recap').textContent=hd;
+  var nbS=Math.max(0,h-6);
+  var si=document.getElementById('supp-info');
+  if(nbS>0){si.style.display='block';document.getElementById('supp-txt').textContent=nbS.toFixed(nbS%1?1:0)+'h supp. × 100 € = '+fmt(Math.round(nbS*100));}
+  else si.style.display='none';
+  if(!sB)return;
+  var supp=Math.round(nbS*100),total=sB+supp+sF,ac=Math.round(total*.25),reste=total-ac;
+  var client=document.getElementById('nom-client').value;
+  var dv=document.getElementById('date-presta').value;
+  var ds=dv?new Date(dv+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}):'';
+  var html='';
+  if(client)html+='<div class="dline main"><span>Client</span><span>'+client+'</span></div>';
+  if(ds)html+='<div class="dline"><span>Date</span><span>'+ds+'</span></div>';
+  html+='<div class="dline main"><span>'+sL+'</span><span>'+fmt(sB)+'</span></div>';
+  html+='<div class="dline"><span style="color:#c7c7cc">Forfait 6h ('+deb+' → '+fin+')</span><span style="color:#c7c7cc">inclus</span></div>';
+  if(nbS>0)html+='<div class="dline"><span>'+nbS.toFixed(nbS%1?1:0)+'h supp. × 100 €</span><span>+ '+fmt(supp)+'</span></div>';
+  if(sF>0){
+    var det='Essence + péages'+(sH?' + hôtel':'')+(sF>=200?' + dérangement':'');
+    html+='<div class="dline"><span>Déplacement ('+sK+' km)<br><span style="font-size:11px;color:#c7c7cc">'+det+'</span></span><span>+ '+fmt(sF)+'</span></div>';
+  } else if(sC){
+    html+='<div class="dline"><span>Déplacement</span><span style="color:#34c759">Local (inclus)</span></div>';
+  } else {
+    html+='<div class="dline"><span>Déplacement</span><span style="color:#c7c7cc">—</span></div>';
+  }
+  document.getElementById('detail-wrap').innerHTML=html;
+  document.getElementById('total-amt').textContent=fmt(total);
+  document.getElementById('acompte-amt').textContent=fmt(ac);
+  document.getElementById('reste-amt').textContent=fmt(reste);
+  document.getElementById('tot-box').style.display='flex';
+  document.getElementById('ac-box').style.display='flex';
+  document.getElementById('metric-box').style.display='grid';
+  document.getElementById('pdf-btn').style.display='flex';
+}
+
+function reset(){
+  sB=0;sL='';sF=0;sK=0;sH=0;sC='';dNum=null;
+  document.querySelectorAll('.pbtn').forEach(function(b){b.classList.remove('active');});
+  ['nom-client','date-presta','ville-input'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('h-debut').value='18:00';
+  document.getElementById('h-fin').value='00:00';
+  document.getElementById('sugg-box').style.display='none';
+  document.getElementById('km-box').style.display='none';
+  document.getElementById('hotel-info').style.display='none';
+  document.getElementById('supp-info').style.display='none';
+  document.getElementById('dur-txt').textContent='6h de prestation';
+  document.getElementById('detail-wrap').innerHTML='<p class="empty-note">Sélectionnez une prestation pour voir le total</p>';
+  document.getElementById('tot-box').style.display='none';
+  document.getElementById('ac-box').style.display='none';
+  document.getElementById('metric-box').style.display='none';
+  document.getElementById('pdf-btn').style.display='none';
+}
+
+function genPDF(){
+  if(!sB){alert('Veuillez sélectionner une prestation.');return;}
+  var jsPDF=window.jspdf.jsPDF;
+  var doc=new jsPDF({unit:'mm',format:'a4'});
+  var W=210,mg=18,y=18;
+  var client=document.getElementById('nom-client').value||'—';
+  var dv=document.getElementById('date-presta').value;
+  var ds=dv?new Date(dv+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}):'—';
+  var deb=document.getElementById('h-debut').value||'18:00';
+  var fin=document.getElementById('h-fin').value||'00:00';
+  var h=cD(deb,fin),nbS=Math.max(0,h-6),supp=Math.round(nbS*100);
+  var total=sB+supp+sF,ac=Math.round(total*.25),reste=total-ac;
+  var num=gDN(),today=new Date().toLocaleDateString('fr-FR');
+  doc.setFillColor(20,20,20);doc.rect(0,0,W,42,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(26);doc.setFont('helvetica','bold');doc.text('DJ MEYRA',mg,20);
+  doc.setFontSize(10);doc.setFont('helvetica','normal');
+  doc.text('06.66.15.35.83',mg,29);doc.text('Mulhouse, France',mg,36);
+  doc.text('Devis n\u00b0 '+num,W-mg,20,{align:'right'});
+  doc.text('\u00c9mis le '+today,W-mg,27,{align:'right'});
+  y=52;doc.setTextColor(20,20,20);
+  doc.setFontSize(12);doc.setFont('helvetica','bold');doc.text('Client',mg,y);y+=7;
+  doc.setFont('helvetica','normal');doc.setFontSize(10);
+  doc.text('Nom : '+client,mg,y);y+=5;
+  doc.text('Date : '+ds,mg,y);y+=5;
+  doc.text('Horaires : '+deb+' \u2192 '+fin,mg,y);y+=5;
+  if(sC)doc.text('Lieu : '+sC,mg,y);
+  y+=12;
+  doc.setFillColor(240,240,240);doc.rect(mg,y,W-mg*2,8,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(10);
+  doc.text('Prestation',mg+3,y+5.5);doc.text('Montant',W-mg-3,y+5.5,{align:'right'});
+  y+=12;
+  function row(a,b){doc.setFont('helvetica','normal');doc.setFontSize(10);doc.text(a,mg+3,y);doc.text(b,W-mg-3,y,{align:'right'});y+=7;}
+  row(sL+' \u2014 forfait 6h ('+deb+' \u2192 '+fin+')',sB.toLocaleString('fr-FR')+' \u20ac');
+  if(nbS>0)row(nbS.toFixed(nbS%1?1:0)+'h suppl\u00e9mentaire(s) \u00d7 100 \u20ac','+ '+supp+' \u20ac');
+  if(sF>0)row('D\u00e9placement '+sK+' km'+(sH?' (h\u00f4tel inclus)':''),'+ '+sF+' \u20ac');
+  y+=2;doc.setDrawColor(200,200,200);doc.line(mg,y,W-mg,y);y+=6;
+  doc.setFillColor(20,20,20);doc.rect(mg,y,W-mg*2,12,'F');
+  doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(13);
+  doc.text('TOTAL',mg+4,y+8);doc.text(total.toLocaleString('fr-FR')+' \u20ac',W-mg-4,y+8,{align:'right'});
+  y+=16;doc.setTextColor(20,20,20);
+  doc.setFillColor(230,248,234);doc.rect(mg,y,W-mg*2,10,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(11);
+  doc.text('Acompte \u00e0 verser (25 %)',mg+3,y+6.5);doc.text(ac.toLocaleString('fr-FR')+' \u20ac',W-mg-3,y+6.5,{align:'right'});
+  y+=14;doc.setFont('helvetica','normal');doc.setFontSize(10);
+  doc.text('Reste \u00e0 percevoir le jour de la prestation',mg+3,y);doc.text(reste.toLocaleString('fr-FR')+' \u20ac',W-mg-3,y,{align:'right'});
+  y+=16;doc.setFontSize(9);doc.setTextColor(130,130,130);
+  doc.text('Ce devis est valable 30 jours \u00e0 compter de sa date d\'\'\'\'emission.',mg,y);y+=5;
+  doc.text('L\'acompte confirme la r\u00e9servation. Merci pour votre confiance !',mg,y);
+  doc.setFillColor(20,20,20);doc.rect(0,284,W,13,'F');
+  doc.setTextColor(255,255,255);doc.setFontSize(8);
+  doc.text('DJ MEYRA \u2014 06.66.15.35.83 \u2014 Mulhouse, France',W/2,292,{align:'center'});
+  doc.save('Devis_DJMeyra_'+client.replace(/\s+/g,'_')+'_'+num+'.pdf');
+}
+
+document.addEventListener('touchstart',function(e){
+  if(!e.target.closest('#ville-input')&&!e.target.closest('#sugg-box'))
+    document.getElementById('sugg-box').style.display='none';
+},{passive:true});
+</script>
+</body>
+</html>
