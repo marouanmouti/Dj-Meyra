@@ -757,9 +757,9 @@ function genContrat(id){
   var adresse=p.adresse||'';
   var lieuComplet=adresse?(lieu+' — '+adresse):lieu;
   var ds=p.date?new Date(p.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}):'_______________';
-  var horaires=(p.hdebut&&p.hfin)?p.hdebut+' → '+p.hfin:'_______________';
-  var montant=p.montant?p.montant.toLocaleString('fr-FR')+' €':'________________';
-  var acompte=p.acompte?p.acompte.toLocaleString('fr-FR')+' €':'________________';
+  var horaires=(p.hdebut&&p.hfin)?p.hdebut+' \u00e0 '+p.hfin:'_______________';
+  var montant=p.montant?(function(n){var s=String(Math.round(n));return s.replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' €';})(p.montant):'________________';
+  var acompte=p.acompte?(function(n){var s=String(Math.round(n));return s.replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' €';})(p.acompte):'________________';
   var today=new Date().toLocaleDateString('fr-FR');
 
   // Fonctions utilitaires
@@ -786,7 +786,7 @@ function genContrat(id){
     ['Client :',client+'    Tél : '+tel],
     ['Lieu :',lieuComplet],
     ['Date :',ds],
-    ['Horaires :',horaires+'   (au-delà : 100 € / heure supplémentaire)'],
+    ['Horaires :',horaires+'   (au-delà des horaires : facturation 100 €/h)'],
   ];
   rows.forEach(function(row){
     fillRect(mg,y-4,42,9,235,235,235);
@@ -807,7 +807,7 @@ function genContrat(id){
   y+=8;
   var lignes=[
     ['Forfait DJ - Animation de soirée','01',montant],
-    ['Frais de déplacement','01','________________'],
+    ['','',''],
     ['','',''],
     ['','',''],
   ];
@@ -873,10 +873,10 @@ function genContrat(id){
 
   // COL 1
   cy1=artTitle("Art. 1 : CHAMP D'APPLICATION",col1x,cy1);
-  cy1=artBody("Les présentes CGV s'appliquent à toutes prestations de DJ MEYRA (BALCI Deniz), Auto-Entrepreneur, 3 rue d'Ottmarsheim, 68100 Mulhouse. En signant, le CLIENT accepte intégralement ces conditions.",col1x,cy1,colW);
+  cy1=artBody("Les présentes CGV s'appliquent à toutes les prestations de DJ MEYRA (BALCI Deniz), Auto-Entrepreneur, 3 rue d'Ottmarsheim, 68100 Mulhouse. En signant, le CLIENT accepte intégralement ces conditions.",col1x,cy1,colW);
   cy1+=3;
   cy1=artTitle("Art. 2 : DURÉE DE LA PRESTATION",col1x,cy1);
-  cy1=artBody("La durée est stipulée au contrat et ne comprend pas les temps de montage/démontage. Toute heure supplémentaire commencée est intégralement due à 100 €/heure. DJ MEYRA peut refuser des heures supplémentaires sans indemnité.",col1x,cy1,colW);
+  cy1=artBody("La durée est stipulée au contrat et ne comprend pas les temps de montage et de démontage. Toute heure supplémentaire commencée est intégralement due à 100 €/heure. DJ MEYRA peut refuser des heures supplémentaires sans indemnité.",col1x,cy1,colW);
   cy1+=3;
   cy1=artTitle("Art. 3 : MODALITÉS DE PAIEMENT",col1x,cy1);
   cy1=artBody("Paiement par espèces ou virement bancaire.",col1x,cy1,colW);
