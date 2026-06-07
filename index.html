@@ -365,7 +365,6 @@ input:focus,select:focus,textarea:focus{border-color:#4a90e2;background:#fff}
 var prestations=JSON.parse(localStorage.getItem('djmeyra_v2')||'[]');
 // Callback quand Firebase envoie des données plus récentes
 window._onFirebaseUpdate = function(data) {
-  // On merge : Firebase est la source de vérité
   prestations = data;
   localStorage.setItem('djmeyra_v2', JSON.stringify(prestations));
   renderPlanning();
@@ -385,7 +384,14 @@ function showPage(p){
   document.getElementById('page-'+p).classList.add('active');
   [{devis:0,planning:1,finance:2}[p]].forEach(function(i){document.querySelectorAll('.nav-btn')[i].classList.add('active')});
   if(p==='planning')renderPlanning();
-  if(p==='finance')renderFinance();
+  if(p==='finance'){
+    // Utiliser les données Firebase si disponibles
+    if(window._firebaseData&&window._firebaseData.length>0){
+      prestations=window._firebaseData;
+      localStorage.setItem('djmeyra_v2',JSON.stringify(prestations));
+    }
+    renderFinance();
+  }
 }
  
 // DEVIS
