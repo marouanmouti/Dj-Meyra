@@ -684,29 +684,30 @@ function renderFinance(){
   document.getElementById('fin-annee').textContent='Année '+y;
   if(!prestations||!Array.isArray(prestations))prestations=[];
   var yStr=String(y);
-  var conf=prestations.filter(function(p){return p&&p.statut==='confirme'&&p.date&&p.date.startsWith(yStr);});
-  var att=prestations.filter(function(p){return p&&p.statut==='attente'&&p.date&&p.date.startsWith(yStr);});
-  var total=conf.reduce(function(s,p){return s+(p.montant||0);},0);
-  var totalAtt=att.reduce(function(s,p){return s+(p.montant||0);},0);
+  var conf=prestations.filter(function(p){return p&&p.statut==='confirme'&&p.date&&String(p.date).indexOf(yStr)===0;});
+  var att=prestations.filter(function(p){return p&&p.statut==='attente'&&p.date&&String(p.date).indexOf(yStr)===0;});
+  var total=conf.reduce(function(s,p){return s+(Number(p.montant)||0);},0);
   var all=conf.concat(att);
-  var nbMoisActifs=Object.keys(byMoisTemp).length||1;
-  var moyenneMensuelle=nbMoisActifs>0?Math.round(total/nbMoisActifs):0;
+ 
+  // Grouper par mois — AVANT les calculs qui en dépendent
+  var mois=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  var byMois={};
+  var byMoisConf={};
+  all.sort(function(a,b){return String(a.date).localeCompare(String(b.date));}).forEach(function(p){
+    var m=parseInt(String(p.date).split('-')[1])-1;
+    if(isNaN(m))return;
+    if(!byMois[m])byMois[m]=[];
+    byMois[m].push(p);
+    if(p.statut==='confirme')byMoisConf[m]=1;
+  });
+ 
+  var moyenneMensuelle=total>0?Math.round(total/12):0;
+ 
   if(document.getElementById('fin-total'))document.getElementById('fin-total').textContent=fmt(total);
   if(document.getElementById('fin-nb-total'))document.getElementById('fin-nb-total').textContent=conf.length+' confirmée(s) · '+att.length+' en attente';
   if(document.getElementById('fin-moyenne'))document.getElementById('fin-moyenne').textContent=fmt(moyenneMensuelle);
   if(document.getElementById('fin-nb-conf'))document.getElementById('fin-nb-conf').textContent=conf.length+att.length;
   if(document.getElementById('fin-moy-presta'))document.getElementById('fin-moy-presta').textContent=conf.length?fmt(Math.round(total/conf.length)):'—';
- 
-  // Grouper par mois
-  var mois=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-  var byMois={};
-  var byMoisTemp={};
-  all.sort(function(a,b){return a.date.localeCompare(b.date);}).forEach(function(p){
-    var m=parseInt(p.date.split('-')[1])-1;
-    if(!byMois[m])byMois[m]=[];
-    byMois[m].push(p);
-    if(p.statut==='confirme')byMoisTemp[m]=1;
-  });
  
   var html='';
   if(!all.length){html='<p class="empty-note">Aucune prestation cette année</p>';}
