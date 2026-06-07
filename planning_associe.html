@@ -45,6 +45,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .empty-note{font-size:13px;color:#c7c7cc;text-align:center;padding:20px 0}
 .lecture-seule{background:#fff8e1;border-radius:10px;padding:10px 14px;font-size:13px;color:#b8860b;margin-bottom:12px;text-align:center}
 select{font-size:15px;font-weight:700;border:none;background:none;color:#1c1c1e;cursor:pointer;padding:4px;-webkit-appearance:auto}
+ 
+/* MODAL DETAIL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;display:none;align-items:flex-end}
+.modal-overlay.open{display:flex}
+.modal{background:#f2f2f7;border-radius:22px 22px 0 0;padding:20px 16px 44px;width:100%;max-height:85vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.modal-title{font-size:18px;font-weight:700}
+.modal-close{background:none;border:none;font-size:26px;cursor:pointer;color:#8e8e93}
+.detail-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #e5e5ea;font-size:14px}
+.detail-row:last-child{border-bottom:none}
+.detail-icon{font-size:18px;flex-shrink:0;width:24px;text-align:center}
+.detail-label{font-size:11px;color:#8e8e93;margin-bottom:2px}
+.detail-val{font-size:14px;color:#1c1c1e;font-weight:500}
+.libre-msg{text-align:center;padding:20px 0;color:#8e8e93;font-size:14px}
 </style>
 </head>
 <body>
@@ -130,7 +144,7 @@ function render(){
     var p=prestations.find(function(x){return x.date===ds&&x.statut!=='annule';});
     var isTod=today.getFullYear()===y&&today.getMonth()===m&&today.getDate()===d;
     var cls='cal-day '+(p?(p.statut==='confirme'?'reserve':'attente'):'libre')+(isTod?' today':'');
-    html+='<div class="'+cls+'">'+d+(p?'<div class="cal-dot"></div>':'')+'</div>';
+    html+='<div class="'+cls+'" onclick="clickJour(\''+ds+'\')" style="cursor:pointer">'+d+(p?'<div class="cal-dot"></div>':'')+'</div>';
   }
   document.getElementById('cal-grid').innerHTML=html;
   var sorted=[...prestations].filter(function(p){return p.statut!=='annule';})
@@ -152,6 +166,45 @@ function render(){
   document.getElementById('liste-prestations').innerHTML=lh;
 }
 render();
+ 
+function clickJour(dateStr){
+  var p=prestations.find(function(x){return x.date===dateStr&&x.statut!=='annule';});
+  var modal=document.getElementById('modal-detail');
+  var content=document.getElementById('modal-detail-content');
+  var title=document.getElementById('modal-detail-title');
+  if(!p){
+    // Jour libre
+    var ds=new Date(dateStr+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+    title.textContent='📅 '+ds;
+    content.innerHTML='<div class="libre-msg">🟢 Ce jour est disponible</div>';
+  } else {
+    var ds=new Date(p.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+    var bc=p.statut==='confirme'?'confirme':'attente';
+    var bt=p.statut==='confirme'?'Confirmé':'En attente';
+    var horaires=(p.hdebut&&p.hfin)?p.hdebut+' → '+p.hfin:'Non renseigné';
+    title.textContent=p.type;
+    var html='';
+    html+='<span class="badge '+bc+'" style="margin-bottom:14px;display:inline-block">'+bt+'</span>';
+    html+='<div class="detail-row"><span class="detail-icon">👤</span><div><div class="detail-label">Client</div><div class="detail-val">'+p.client+'</div></div></div>';
+    if(p.tel)html+='<div class="detail-row"><span class="detail-icon">📞</span><div><div class="detail-label">Téléphone</div><div class="detail-val">'+p.tel+'</div></div></div>';
+    html+='<div class="detail-row"><span class="detail-icon">📅</span><div><div class="detail-label">Date</div><div class="detail-val">'+ds+'</div></div></div>';
+    html+='<div class="detail-row"><span class="detail-icon">⏰</span><div><div class="detail-label">Horaires</div><div class="detail-val">'+horaires+'</div></div></div>';
+    if(p.ville)html+='<div class="detail-row"><span class="detail-icon">📍</span><div><div class="detail-label">Ville</div><div class="detail-val">'+p.ville+'</div></div></div>';
+    if(p.adresse)html+='<div class="detail-row"><span class="detail-icon">🏛</span><div><div class="detail-label">Adresse de la salle</div><div class="detail-val">'+p.adresse+'</div></div></div>';
+    if(p.notes)html+='<div class="detail-row"><span class="detail-icon">📝</span><div><div class="detail-label">Notes</div><div class="detail-val">'+p.notes+'</div></div></div>';
+    content.innerHTML=html;
+  }
+  modal.classList.add('open');
+}
+ 
+function closeDetail(){
+  document.getElementById('modal-detail').classList.remove('open');
+}
+ 
+// Fermer en cliquant sur le fond
+document.getElementById('modal-detail').addEventListener('click',function(e){
+  if(e.target===this)closeDetail();
+});
 </script>
  
 <script type="module">
@@ -185,6 +238,17 @@ onValue(ref(db,'planning'), function(snapshot){
   document.getElementById('sync-status').textContent='Hors ligne';
 });
 </script>
+ 
+<!-- MODAL DETAIL -->
+<div class="modal-overlay" id="modal-detail">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-detail-title">Détail</span>
+      <button class="modal-close" onclick="closeDetail()">✕</button>
+    </div>
+    <div id="modal-detail-content"></div>
+  </div>
+</div>
 </body>
 </html>
  
