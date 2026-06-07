@@ -193,7 +193,16 @@ input:focus,select:focus,textarea:focus{border-color:#4a90e2;background:#fff}
     <div class="card">
       <div class="cal-header">
         <button class="cal-nav" onclick="calNav(-1)">‹</button>
-        <span class="cal-title" id="cal-title">—</span>
+        <div style="display:flex;gap:6px;align-items:center">
+          <select id="cal-select-mois" onchange="calSelectMois()" style="font-size:15px;font-weight:700;border:none;background:none;color:#1c1c1e;cursor:pointer;padding:4px;-webkit-appearance:auto">
+            <option value="0">Janvier</option><option value="1">Février</option><option value="2">Mars</option>
+            <option value="3">Avril</option><option value="4">Mai</option><option value="5">Juin</option>
+            <option value="6">Juillet</option><option value="7">Août</option><option value="8">Septembre</option>
+            <option value="9">Octobre</option><option value="10">Novembre</option><option value="11">Décembre</option>
+          </select>
+          <select id="cal-select-annee" onchange="calSelectAnnee()" style="font-size:15px;font-weight:700;border:none;background:none;color:#1c1c1e;cursor:pointer;padding:4px;-webkit-appearance:auto">
+          </select>
+        </div>
         <button class="cal-nav" onclick="calNav(1)">›</button>
       </div>
       <div class="cal-grid" id="cal-grid"></div>
@@ -454,10 +463,25 @@ function setVue(v){
   renderPlanning();
 }
 function calNav(dir){calDate=new Date(calDate.getFullYear(),calDate.getMonth()+dir,1);renderPlanning();}
+function calSelectMois(){calDate.setMonth(parseInt(document.getElementById('cal-select-mois').value));renderPlanning();}
+function calSelectAnnee(){calDate.setFullYear(parseInt(document.getElementById('cal-select-annee').value));renderPlanning();}
+function clickJour(dateStr){
+  var p=prestations.find(function(x){return x.date===dateStr&&x.statut!=='annule';});
+  if(p){openModal(p.id);}
+  else{openModal(null,dateStr);}
+}
 function renderPlanning(){
   var y=calDate.getFullYear(),m=calDate.getMonth();
   var mois=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-  document.getElementById('cal-title').textContent=mois[m]+' '+y;
+  // Sélecteurs mois/année
+  var selMois=document.getElementById('cal-select-mois');
+  if(selMois)selMois.value=m;
+  var selAnnee=document.getElementById('cal-select-annee');
+  if(selAnnee){
+    var anneeMin=2024,anneeMax=new Date().getFullYear()+3,aopts='';
+    for(var a=anneeMin;a<=anneeMax;a++)aopts+='<option value="'+a+'"'+(a===y?' selected':'')+'>'+a+'</option>';
+    selAnnee.innerHTML=aopts;
+  }
   var conf=prestations.filter(function(p){return p.statut==='confirme';}).length;
   var att=prestations.filter(function(p){return p.statut==='attente';}).length;
   document.getElementById('planning-subtitle').textContent=conf+' confirmée(s) · '+att+' en attente';
@@ -472,7 +496,7 @@ function renderPlanning(){
     var p=prestations.find(function(x){return x.date===ds&&x.statut!=='annule';});
     var isTod=today.getFullYear()===y&&today.getMonth()===m&&today.getDate()===d;
     var cls='cal-day '+(p?(p.statut==='confirme'?'reserve':'attente'):'libre')+(isTod?' today':'');
-    html+='<div class="'+cls+'">'+d+(p?'<div class="cal-dot"></div>':'')+'</div>';
+    html+='<div class="'+cls+'" onclick="clickJour(\''+ds+'\')">'  +d+(p?'<div class="cal-dot"></div>':'')+'</div>';
   }
   document.getElementById('cal-grid').innerHTML=html;
   // Liste
@@ -509,7 +533,7 @@ function updateAcompteAuto(){
   var m=parseInt(document.getElementById('m-montant').value)||0;
   document.getElementById('m-acompte').value=m?Math.round(m*.25):'';
 }
-function openModal(id){
+function openModal(id,datePreset){
   document.getElementById('modal').classList.add('open');
   if(id){
     var p=prestations.find(function(x){return x.id===id;});
@@ -534,7 +558,7 @@ function openModal(id){
     document.getElementById('modal-save-btn').textContent='Enregistrer';
     document.getElementById('m-id').value='';
     ['m-client','m-tel','m-ville','m-adresse','m-montant','m-acompte','m-notes'].forEach(function(id){document.getElementById(id).value='';});
-    document.getElementById('m-date').value='';
+    document.getElementById('m-date').value=datePreset||'';
     document.getElementById('m-hdebut').value='18:00';
     document.getElementById('m-hfin').value='00:00';
     document.getElementById('m-type').value='Kina';
