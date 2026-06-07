@@ -304,11 +304,59 @@ input:focus,select:focus,textarea:focus{border-color:#4a90e2;background:#fff}
   </div>
 </div>
  
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+ 
+  const firebaseConfig = {
+    apiKey: "AIzaSyBv_0pZASNBoVNlQ4-ztKsXwVrIN0dMQ-U",
+    authDomain: "dj-meyra.firebaseapp.com",
+    databaseURL: "https://dj-meyra-default-rtdb.firebaseio.com",
+    projectId: "dj-meyra",
+    storageBucket: "dj-meyra.firebasestorage.app",
+    messagingSenderId: "161733120497",
+    appId: "1:161733120497:web:6d51fac4eb4d5730abf450"
+  };
+ 
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+ 
+  // Sync prestations vers Firebase à chaque modification
+  window.syncToFirebase = function(data) {
+    set(ref(db, 'planning'), data);
+  };
+ 
+  // Écouter les changements Firebase en temps réel
+  onValue(ref(db, 'planning'), function(snapshot) {
+    var data = snapshot.val();
+    if (data && Array.isArray(data)) {
+      window._firebaseData = data;
+      if (window._firebaseReady) window._onFirebaseUpdate(data);
+    }
+  });
+ 
+  window._firebaseReady = false;
+  window.addEventListener('load', function() {
+    window._firebaseReady = true;
+  });
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 var prestations=JSON.parse(localStorage.getItem('djmeyra_v2')||'[]');
+// Callback quand Firebase envoie des données plus récentes
+window._onFirebaseUpdate = function(data) {
+  // On merge : Firebase est la source de vérité
+  prestations = data;
+  localStorage.setItem('djmeyra_v2', JSON.stringify(prestations));
+  renderPlanning();
+  renderFinance();
+};
 var acomptesRecus=JSON.parse(localStorage.getItem('djmeyra_ac')||'{}');
-function saveData(){localStorage.setItem('djmeyra_v2',JSON.stringify(prestations));localStorage.setItem('djmeyra_ac',JSON.stringify(acomptesRecus));}
+function saveData(){
+  localStorage.setItem('djmeyra_v2',JSON.stringify(prestations));
+  localStorage.setItem('djmeyra_ac',JSON.stringify(acomptesRecus));
+  if(window.syncToFirebase) window.syncToFirebase(prestations);
+}
  
 // NAV
 function showPage(p){
