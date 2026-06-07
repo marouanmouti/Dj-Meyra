@@ -191,6 +191,8 @@ function clickJour(dateStr){
     html+='<div class="detail-row"><span class="detail-icon">⏰</span><div><div class="detail-label">Horaires</div><div class="detail-val">'+horaires+'</div></div></div>';
     if(p.ville)html+='<div class="detail-row"><span class="detail-icon">📍</span><div><div class="detail-label">Ville</div><div class="detail-val">'+p.ville+'</div></div></div>';
     if(p.adresse)html+='<div class="detail-row"><span class="detail-icon">🏛</span><div><div class="detail-label">Adresse de la salle</div><div class="detail-val">'+p.adresse+'</div></div></div>';
+    if(p.montant)html+='<div class="detail-row"><span class="detail-icon">💰</span><div><div class="detail-label">Montant total</div><div class="detail-val">'+fmt(p.montant)+'</div></div></div>';
+    if(p.acompte)html+='<div class="detail-row"><span class="detail-icon">💳</span><div><div class="detail-label">Acompte (25%)</div><div class="detail-val">'+fmt(p.acompte)+'</div></div></div>';
     if(p.notes)html+='<div class="detail-row"><span class="detail-icon">📝</span><div><div class="detail-label">Notes</div><div class="detail-val">'+p.notes+'</div></div></div>';
     content.innerHTML=html;
   }
