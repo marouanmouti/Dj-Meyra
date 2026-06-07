@@ -225,10 +225,6 @@ input:focus,select:focus,textarea:focus{border-color:#4a90e2;background:#fff}
     <span id="fin-annee" style="font-size:17px;font-weight:700">—</span>
     <button onclick="finNav(1)" style="background:none;border:none;font-size:26px;color:#1a56db;cursor:pointer;padding:2px 10px">›</button>
   </div>
-  <!-- DEBUG TEMP -->
-  <div id="debug-box" style="background:#fff3cd;border-radius:12px;padding:12px;margin-bottom:10px;font-size:12px;color:#856404;display:none"></div>
-  <button onclick="debugFinance()" style="width:100%;padding:10px;border-radius:10px;border:1px solid #e5e5ea;background:#fff;font-size:13px;margin-bottom:10px;cursor:pointer">🔍 Diagnostiquer</button>
- 
   <!-- CA Total -->
   <div style="background:#1c1c1e;border-radius:16px;padding:20px;margin-bottom:10px">
     <div style="font-size:12px;color:#8e8e93;margin-bottom:6px">Chiffre d'affaires total</div>
@@ -682,27 +678,14 @@ function savePrestation(){
 // FINANCE
 var anneeFinance=new Date().getFullYear();
 function finNav(dir){anneeFinance+=dir;renderFinance();}
-function debugFinance(){
-  var box=document.getElementById('debug-box');
-  box.style.display='block';
-  var fb=window._firebaseData;
-  var ls=JSON.parse(localStorage.getItem('djmeyra_v2')||'[]');
-  var info='';
-  info+='Firebase data: '+(fb?'OUI ('+fb.length+' items)':'NON / vide')+'\n';
-  info+='LocalStorage: '+ls.length+' items\n';
-  info+='prestations actuel: '+prestations.length+' items\n';
-  info+='Année filtrée: '+anneeFinance+'\n';
-  if(prestations.length>0){
-    info+='1ère presta: '+JSON.stringify(prestations[0]).substring(0,100);
-  }
-  box.textContent=info;
-}
+ 
 function renderFinance(){
   var y=anneeFinance;
   document.getElementById('fin-annee').textContent='Année '+y;
   if(!prestations||!Array.isArray(prestations))prestations=[];
-  var conf=prestations.filter(function(p){return p&&p.statut==='confirme'&&p.date&&p.date.startsWith(y);});
-  var att=prestations.filter(function(p){return p&&p.statut==='attente'&&p.date&&p.date.startsWith(y);});
+  var yStr=String(y);
+  var conf=prestations.filter(function(p){return p&&p.statut==='confirme'&&p.date&&p.date.startsWith(yStr);});
+  var att=prestations.filter(function(p){return p&&p.statut==='attente'&&p.date&&p.date.startsWith(yStr);});
   var total=conf.reduce(function(s,p){return s+(p.montant||0);},0);
   var totalAtt=att.reduce(function(s,p){return s+(p.montant||0);},0);
   var all=conf.concat(att);
