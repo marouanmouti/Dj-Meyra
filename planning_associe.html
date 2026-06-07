@@ -90,41 +90,24 @@ select{font-size:15px;font-weight:700;border:none;background:none;color:#1c1c1e;
   <div id="liste-prestations"></div>
 </div>
  
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
- 
-const firebaseConfig = {
-  apiKey: "AIzaSyBv_0pZASNBoVNlQ4-ztKsXwVrIN0dMQ-U",
-  authDomain: "dj-meyra.firebaseapp.com",
-  databaseURL: "https://dj-meyra-default-rtdb.firebaseio.com",
-  projectId: "dj-meyra",
-  storageBucket: "dj-meyra.firebasestorage.app",
-  messagingSenderId: "161733120497",
-  appId: "1:161733120497:web:6d51fac4eb4d5730abf450"
-};
- 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-var prestations = [];
-var calDate = new Date();
-var vue = 'cal';
+<script>
+var prestations=[];
+var calDate=new Date();
  
 function fmt(n){return n.toLocaleString('fr-FR')+' €';}
  
 function calNav(dir){calDate=new Date(calDate.getFullYear(),calDate.getMonth()+dir,1);render();}
 function calSelectMois(){calDate.setMonth(parseInt(document.getElementById('cal-select-mois').value));render();}
 function calSelectAnnee(){calDate.setFullYear(parseInt(document.getElementById('cal-select-annee').value));render();}
-window.calNav=calNav;window.calSelectMois=calSelectMois;window.calSelectAnnee=calSelectAnnee;
  
 function setVue(v){
-  vue=v;
   document.getElementById('vue-cal').style.display=v==='cal'?'block':'none';
   document.getElementById('vue-list').style.display=v==='list'?'block':'none';
-  document.querySelectorAll('.vue-toggle button').forEach(function(b,i){b.classList.toggle('active',(v==='cal'&&i===0)||(v==='list'&&i===1));});
+  document.querySelectorAll('.vue-toggle button').forEach(function(b,i){
+    b.classList.toggle('active',(v==='cal'&&i===0)||(v==='list'&&i===1));
+  });
   render();
 }
-window.setVue=setVue;
  
 function render(){
   var y=calDate.getFullYear(),m=calDate.getMonth();
@@ -133,10 +116,10 @@ function render(){
   var selAnnee=document.getElementById('cal-select-annee');
   if(selAnnee){
     var opts='';
-    for(var a=2024;a<=new Date().getFullYear()+3;a++)opts+='<option value="'+a+'"'+(a===y?' selected':'')+'>'+a+'</option>';
+    for(var a=2024;a<=new Date().getFullYear()+3;a++)
+      opts+='<option value="'+a+'"'+(a===y?' selected':'')+'>'+a+'</option>';
     selAnnee.innerHTML=opts;
   }
-  // Calendrier
   var first=new Date(y,m,1).getDay();first=(first+6)%7;
   var days=new Date(y,m+1,0).getDate(),today=new Date();
   var jours=['L','M','M','J','V','S','D'],html='';
@@ -150,8 +133,8 @@ function render(){
     html+='<div class="'+cls+'">'+d+(p?'<div class="cal-dot"></div>':'')+'</div>';
   }
   document.getElementById('cal-grid').innerHTML=html;
-  // Liste
-  var sorted=[...prestations].filter(function(p){return p.statut!=='annule';}).sort(function(a,b){return a.date.localeCompare(b.date);});
+  var sorted=[...prestations].filter(function(p){return p.statut!=='annule';})
+    .sort(function(a,b){return a.date.localeCompare(b.date);});
   var lh='';
   if(!sorted.length)lh='<p class="empty-note">Aucune prestation</p>';
   sorted.forEach(function(p){
@@ -168,23 +151,39 @@ function render(){
   });
   document.getElementById('liste-prestations').innerHTML=lh;
 }
+render();
+</script>
  
-// Écoute Firebase en temps réel
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+ 
+const firebaseConfig = {
+  apiKey: "AIzaSyBv_0pZASNBoVNlQ4-ztKsXwVrIN0dMQ-U",
+  authDomain: "dj-meyra.firebaseapp.com",
+  databaseURL: "https://dj-meyra-default-rtdb.firebaseio.com",
+  projectId: "dj-meyra",
+  storageBucket: "dj-meyra.firebasestorage.app",
+  messagingSenderId: "161733120497",
+  appId: "1:161733120497:web:6d51fac4eb4d5730abf450"
+};
+ 
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+ 
 onValue(ref(db,'planning'), function(snapshot){
   var data=snapshot.val();
   document.getElementById('sync-status').textContent='Synchronisé ✓';
   if(data&&Array.isArray(data)){
+    window.prestations=data;
     prestations=data;
-    render();
   } else {
     prestations=[];
-    render();
   }
-}, function(error){
+  render();
+}, function(){
   document.getElementById('sync-status').textContent='Hors ligne';
 });
- 
-render();
 </script>
 </body>
 </html>
