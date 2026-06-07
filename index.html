@@ -669,19 +669,19 @@ function finNav(dir){anneeFinance+=dir;renderFinance();}
 function renderFinance(){
   var y=anneeFinance;
   document.getElementById('fin-annee').textContent='Année '+y;
-  var conf=prestations.filter(function(p){return p.statut==='confirme'&&p.date.startsWith(y);});
-  var att=prestations.filter(function(p){return p.statut==='attente'&&p.date.startsWith(y);});
-  var total=conf.reduce(function(s,p){return s+p.montant;},0);
-  var totalAtt=att.reduce(function(s,p){return s+p.montant;},0);
+  if(!prestations||!Array.isArray(prestations))prestations=[];
+  var conf=prestations.filter(function(p){return p&&p.statut==='confirme'&&p.date&&p.date.startsWith(y);});
+  var att=prestations.filter(function(p){return p&&p.statut==='attente'&&p.date&&p.date.startsWith(y);});
+  var total=conf.reduce(function(s,p){return s+(p.montant||0);},0);
+  var totalAtt=att.reduce(function(s,p){return s+(p.montant||0);},0);
   var all=conf.concat(att);
   var nbMoisActifs=Object.keys(byMoisTemp).length||1;
-  var moyenneMensuelle=Math.round(total/nbMoisActifs);
-  var moyennePresta=all.length?Math.round(total/conf.length||0):0;
-  document.getElementById('fin-total').textContent=fmt(total);
-  document.getElementById('fin-nb-total').textContent=conf.length+' confirmée(s) · '+att.length+' en attente';
-  document.getElementById('fin-moyenne').textContent=fmt(moyenneMensuelle);
-  document.getElementById('fin-nb-conf').textContent=conf.length+att.length;
-  document.getElementById('fin-moy-presta').textContent=conf.length?fmt(Math.round(total/conf.length)):'—';
+  var moyenneMensuelle=nbMoisActifs>0?Math.round(total/nbMoisActifs):0;
+  if(document.getElementById('fin-total'))document.getElementById('fin-total').textContent=fmt(total);
+  if(document.getElementById('fin-nb-total'))document.getElementById('fin-nb-total').textContent=conf.length+' confirmée(s) · '+att.length+' en attente';
+  if(document.getElementById('fin-moyenne'))document.getElementById('fin-moyenne').textContent=fmt(moyenneMensuelle);
+  if(document.getElementById('fin-nb-conf'))document.getElementById('fin-nb-conf').textContent=conf.length+att.length;
+  if(document.getElementById('fin-moy-presta'))document.getElementById('fin-moy-presta').textContent=conf.length?fmt(Math.round(total/conf.length)):'—';
  
   // Grouper par mois
   var mois=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
@@ -697,8 +697,8 @@ function renderFinance(){
   var html='';
   if(!all.length){html='<p class="empty-note">Aucune prestation cette année</p>';}
   Object.keys(byMois).sort(function(a,b){return a-b;}).forEach(function(m){
-    var ps=byMois[m];
-    var totalMois=ps.reduce(function(s,p){return s+p.montant;},0);
+    var ps=byMois[m]||[];
+    var totalMois=ps.reduce(function(s,p){return s+(p.montant||0);},0);
     html+='<div style="margin-bottom:14px">';
     html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
       +'<span style="font-size:13px;font-weight:700;color:#1c1c1e">'+mois[m]+'</span>'
@@ -785,4 +785,3 @@ renderPlanning();
 </script>
 </body>
 </html>
- 
