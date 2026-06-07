@@ -742,6 +742,192 @@ function renderFinance(){
   document.getElementById('acompte-list').innerHTML=html;
 }
  
+// CONTRAT PDF
+function genContrat(id){
+  var p=prestations.find(function(x){return x.id===id;});
+  if(!p){alert('Prestation introuvable.');return;}
+  var jsPDF=window.jspdf.jsPDF;
+  var doc=new jsPDF({unit:'mm',format:'a4'});
+  var W=210,mg=18,y=0;
+  var client=p.client||'___________________________';
+  var tel=p.tel||'_______________';
+  var lieu=p.ville||(p.adresse?'':'')||'___________________________';
+  var adresse=p.adresse||'';
+  var lieuComplet=adresse?(lieu+' — '+adresse):lieu;
+  var ds=p.date?new Date(p.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}):'_______________';
+  var horaires=(p.hdebut&&p.hfin)?p.hdebut+' → '+p.hfin:'_______________';
+  var montant=p.montant?p.montant.toLocaleString('fr-FR')+' €':'________________';
+  var acompte=p.acompte?p.acompte.toLocaleString('fr-FR')+' €':'________________';
+  var today=new Date().toLocaleDateString('fr-FR');
+ 
+  // Fonctions utilitaires
+  function setFont(name,style,size){doc.setFont(name,style);doc.setFontSize(size);}
+  function txt(text,x,yy,opts){doc.text(text,x,yy,opts||{});}
+  function line(x1,y1,x2,y2){doc.line(x1,y1,x2,y2);}
+  function rect(x,yy,w,h,style){doc.rect(x,yy,w,h,style);}
+  function fillRect(x,yy,w,h,r,g,b){doc.setFillColor(r,g,b);doc.rect(x,yy,w,h,'F');}
+ 
+  // ── PAGE 1 ──────────────────────────────────────────────────
+  // EN-TÊTE
+  doc.setTextColor(30,30,30);
+  setFont('helvetica','bold',11);txt('DJ MEYRA',mg,18);
+  setFont('helvetica','normal',8.5);
+  txt("3 rue d'Ottmarsheim · 68100 Mulhouse",mg,24);
+  txt('Tél. 06.66.15.35.83 · SIRET : 880287066',mg,29);
+  setFont('helvetica','bold',15);
+  txt('CONTRAT DE PRESTATION DJ',W/2+15,22,{align:'center'});
+  doc.setDrawColor(30,30,30);doc.setLineWidth(0.8);line(mg,33,W-mg,33);
+ 
+  // INFOS PRESTATION
+  y=42;
+  var rows=[
+    ['Client :',client+'    Tél : '+tel],
+    ['Lieu :',lieuComplet],
+    ['Date :',ds],
+    ['Horaires :',horaires+'   (au-delà : 100 € / heure supplémentaire)'],
+  ];
+  rows.forEach(function(row){
+    fillRect(mg,y-4,42,9,235,235,235);
+    doc.setDrawColor(180,180,180);doc.setLineWidth(0.3);
+    rect(mg,y-4,42,9);rect(mg,y-4,W-mg*2,9);
+    setFont('helvetica','bold',8.5);txt(row[0],mg+2,y+1);
+    setFont('helvetica','normal',8.5);txt(row[1],mg+44,y+1);
+    y+=9;
+  });
+ 
+  // TABLEAU MONTANTS
+  y+=5;
+  fillRect(mg,y,W-mg*2,8,210,210,210);
+  doc.setDrawColor(150,150,150);doc.setLineWidth(0.3);
+  setFont('helvetica','bold',8.5);
+  txt('Désignation',mg+2,y+5.5);txt('Qté',mg+103,y+5.5,{align:'center'});txt('Montant',W-mg-2,y+5.5,{align:'right'});
+  rect(mg,y,W-mg*2,8);line(mg+95,y,mg+95,y+8);line(mg+115,y,mg+115,y+8);
+  y+=8;
+  var lignes=[
+    ['Forfait DJ - Animation de soirée','01',montant],
+    ['Frais de déplacement','01','________________'],
+    ['','',''],
+    ['','',''],
+  ];
+  lignes.forEach(function(l){
+    rect(mg,y,W-mg*2,8);line(mg+95,y,mg+95,y+8);line(mg+115,y,mg+115,y+8);
+    setFont('helvetica','normal',8.5);
+    txt(l[0],mg+2,y+5.5);txt(l[1],mg+103,y+5.5,{align:'center'});txt(l[2],W-mg-2,y+5.5,{align:'right'});
+    y+=8;
+  });
+  fillRect(mg,y,W-mg*2,8,230,230,230);
+  rect(mg,y,W-mg*2,8);line(mg+115,y,mg+115,y+8);
+  setFont('helvetica','bold',8.5);
+  txt('MONTANT TOTAL TTC',mg+2,y+5.5);txt(montant,W-mg-2,y+5.5,{align:'right'});
+  y+=10;
+ 
+  // ACOMPTE
+  doc.setDrawColor(150,150,150);rect(mg,y,W/2-mg-5,9);
+  setFont('helvetica','bold',8.5);txt('Acompte versé à la signature : ',mg+2,y+6);
+  setFont('helvetica','normal',8.5);txt(acompte,mg+2+55,y+6);
+  rect(W/2-3,y,W/2-mg+3,9);
+  setFont('helvetica','bold',8.5);txt('Mode de règlement : ',W/2,y+6);
+  setFont('helvetica','normal',8.5);txt('Espèces ou Virement',W/2+40,y+6);
+  y+=11;
+  setFont('helvetica','normal',7.5);doc.setTextColor(130,130,130);
+  txt('TVA non applicable, art. 293B du CGI',mg,y);
+  doc.setTextColor(30,30,30);
+  y+=8;
+ 
+  // SIGNATURES PAGE 1
+  doc.setDrawColor(30,30,30);doc.setLineWidth(0.5);line(mg,y,W-mg,y);y+=7;
+  setFont('helvetica','normal',9);txt('Fait à Mulhouse, le '+today,mg,y);y+=8;
+  setFont('helvetica','bold',9);txt('Signature du prestataire',mg,y);txt('Signature du client',W/2+5,y);
+  setFont('helvetica','normal',8.5);
+  txt('Pour DJ MEYRA — BALCI Deniz',mg,y+5);txt('avec mention « Lu et approuvé »',W/2+5,y+5);
+  y+=30;
+  doc.setDrawColor(180,180,180);doc.setLineWidth(0.3);line(mg,y,W/2-5,y);line(W/2+5,y,W-mg,y);
+  doc.setLineWidth(0.5);doc.setDrawColor(30,30,30);
+  line(mg,280,W-mg,280);
+  setFont('helvetica','normal',7.5);doc.setTextColor(130,130,130);
+  txt('DJ MEYRA — BALCI Deniz — 06.66.15.35.83 — 3 rue d'Ottmarsheim, 68100 Mulhouse — SIRET : 880287066',W/2,285,{align:'center'});
+ 
+  // ── PAGE 2 : CGV ────────────────────────────────────────────
+  doc.addPage();
+  doc.setTextColor(30,30,30);
+  setFont('helvetica','bold',12);txt('CONDITIONS GÉNÉRALES DE VENTE',W/2,18,{align:'center'});
+  doc.setDrawColor(30,30,30);doc.setLineWidth(1);line(mg,22,W-mg,22);
+  doc.setLineWidth(0.3);
+ 
+  var col1x=mg,col2x=W/2+2,colW=W/2-mg-4;
+  var cy1=30,cy2=30;
+ 
+  function artTitle(titre,cx,cy){
+    setFont('helvetica','bold',9);doc.setTextColor(30,30,30);
+    doc.text(titre,cx,cy);
+    return cy+6;
+  }
+  function artBody(text,cx,cy,cw){
+    setFont('helvetica','normal',8);doc.setTextColor(50,50,50);
+    var lines=doc.splitTextToSize(text,cw);
+    doc.text(lines,cx,cy);
+    return cy+lines.length*4.5+1;
+  }
+ 
+  // COL 1
+  cy1=artTitle("Art. 1 : CHAMP D'APPLICATION",col1x,cy1);
+  cy1=artBody("Les présentes CGV s'appliquent à toutes prestations de DJ MEYRA (BALCI Deniz), Auto-Entrepreneur, 3 rue d'Ottmarsheim, 68100 Mulhouse. En signant, le CLIENT accepte intégralement ces conditions.",col1x,cy1,colW);
+  cy1+=3;
+  cy1=artTitle("Art. 2 : DURÉE DE LA PRESTATION",col1x,cy1);
+  cy1=artBody("La durée est stipulée au contrat et ne comprend pas les temps de montage/démontage. Toute heure supplémentaire commencée est intégralement due à 100 €/heure. DJ MEYRA peut refuser des heures supplémentaires sans indemnité.",col1x,cy1,colW);
+  cy1+=3;
+  cy1=artTitle("Art. 3 : MODALITÉS DE PAIEMENT",col1x,cy1);
+  cy1=artBody("Paiement par espèces ou virement bancaire.",col1x,cy1,colW);
+  cy1=artBody("L'acompte versé est EN AUCUN CAS REMBOURSABLE, sauf décès d'un membre de la famille directe (père, mère, frère, sœur, conjoint, enfant).",col1x,cy1,colW);
+  cy1=artBody("Le CLIENT peut demander le report à une autre date, sous réserve de disponibilité de DJ MEYRA, sans frais supplémentaires.",col1x,cy1,colW);
+  cy1=artBody("La réservation n'est validée qu'à réception de l'acompte. Le solde est dû en fin de prestation. Tout défaut de paiement entraîne une pénalité de 5 fois le taux d'intérêt légal.",col1x,cy1,colW);
+  cy1+=3;
+  cy1=artTitle("Art. 4 : OBLIGATIONS DE DJ MEYRA",col1x,cy1);
+  cy1=artBody("- Fournir le matériel nécessaire (sonorisation, éclairages, animation) selon le devis.",col1x,cy1,colW);
+  cy1=artBody("- Se présenter au lieu de la prestation 1 à 3 heures avant le début pour l'installation.",col1x,cy1,colW);
+  cy1=artBody("- Respecter la puissance sonore maximale (100 dB en soirée, décret n°2017-1244).",col1x,cy1,colW);
+ 
+  // COL 2
+  cy2=artTitle("Art. 5 : OBLIGATIONS DU CLIENT",col2x,cy2);
+  cy2=artBody("- Permettre l'accès à DJ MEYRA au minimum 2 heures avant le début.",col2x,cy2,colW);
+  cy2=artBody("- Organiser l'événement dans une salle en parfait état de fonctionnement.",col2x,cy2,colW);
+  cy2=artBody("- Fournir un emplacement minimum 6 m × 4 m avec prises électriques 220 V (16-20 A).",col2x,cy2,colW);
+  cy2=artBody("- Fournir gratuitement repas et boisson non alcolisée pendant l'événement.",col2x,cy2,colW);
+  cy2=artBody("- Garantir le remboursement intégral en cas de destruction ou vol du matériel.",col2x,cy2,colW);
+  cy2+=3;
+  cy2=artTitle("Art. 6 : CLAUSE MÉTÉO ET FORCE MAJEURE",col2x,cy2);
+  cy2=artBody("En cas de prestation en extérieur, si les conditions météo rendent la prestation impossible, les parties conviennent de reporter à une date disponible. L'acompte reste acquis à DJ MEYRA.",col2x,cy2,colW);
+  cy2+=3;
+  cy2=artTitle("Art. 7 : RÉSILIATION DU CONTRAT",col2x,cy2);
+  cy2=artBody("L'acompte versé ne sera en aucun cas remboursé, quelle que soit la date d'annulation. Le CLIENT peut demander un report sous réserve de disponibilité.",col2x,cy2,colW);
+  cy2=artBody("DJ MEYRA peut rompre le contrat en cas de mauvais traitements, menaces, dégradations ou non-respect des obligations. Aucun remboursement ne sera accordé.",col2x,cy2,colW);
+  cy2+=3;
+  cy2=artTitle("Art. 8 : LITIGES",col2x,cy2);
+  cy2=artBody("En cas de litige, les parties s'engagent à rechercher une solution amiable. À défaut, les tribunaux de Mulhouse sont seuls compétents.",col2x,cy2,colW);
+ 
+  // Ligne de séparation verticale CGV
+  var maxCy=Math.max(cy1,cy2)+5;
+  doc.setDrawColor(180,180,180);doc.setLineWidth(0.3);
+  line(W/2,28,W/2,maxCy);
+ 
+  // SIGNATURES PAGE 2
+  var sy=maxCy+6;
+  doc.setDrawColor(30,30,30);doc.setLineWidth(0.5);line(mg,sy,W-mg,sy);sy+=7;
+  setFont('helvetica','normal',9);doc.setTextColor(30,30,30);
+  txt('Fait à Mulhouse, le '+today,mg,sy);sy+=8;
+  setFont('helvetica','bold',9);txt('Signature du prestataire',mg,sy);txt('Signature du client',W/2+5,sy);
+  setFont('helvetica','normal',8.5);
+  txt('Pour DJ MEYRA — BALCI Deniz',mg,sy+5);txt('avec mention « Lu et approuvé »',W/2+5,sy+5);
+  sy+=28;
+  doc.setDrawColor(180,180,180);doc.setLineWidth(0.3);
+  line(mg,sy,W/2-5,sy);line(W/2+5,sy,W-mg,sy);
+  doc.setLineWidth(0.5);doc.setDrawColor(30,30,30);line(mg,280,W-mg,280);
+  setFont('helvetica','normal',7.5);doc.setTextColor(130,130,130);
+  txt('DJ MEYRA — BALCI Deniz — 06.66.15.35.83 — 3 rue d'Ottmarsheim, 68100 Mulhouse — SIRET : 880287066',W/2,285,{align:'center'});
+ 
+  doc.save('Contrat_DJMeyra_'+client.replace(/\s+/g,'_')+'.pdf');
+}
+ 
 // PDF
 function genPDF(){
   if(!sB){alert('Veuillez sélectionner une prestation.');return;}
