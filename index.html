@@ -225,14 +225,34 @@ input:focus,select:focus,textarea:focus{border-color:#4a90e2;background:#fff}
     <span id="fin-annee" style="font-size:17px;font-weight:700">—</span>
     <button onclick="finNav(1)" style="background:none;border:none;font-size:26px;color:#1a56db;cursor:pointer;padding:2px 10px">›</button>
   </div>
-  <div class="fin-stat"><div class="label">Chiffre d'affaires total</div><div class="amount" id="fin-total">0 €</div></div>
-  <div class="fin-grid">
-    <div class="fin-card"><div class="fl">Acomptes reçus</div><div class="fv green" id="fin-acomptes">0 €</div></div>
-    <div class="fin-card"><div class="fl">Reste à encaisser</div><div class="fv orange" id="fin-reste">0 €</div></div>
-    <div class="fin-card"><div class="fl">Confirmées</div><div class="fv" id="fin-nb-conf">0</div></div>
-    <div class="fin-card"><div class="fl">En attente</div><div class="fv orange" id="fin-nb-att">0</div></div>
+  <!-- CA Total -->
+  <div style="background:#1c1c1e;border-radius:16px;padding:20px;margin-bottom:10px">
+    <div style="font-size:12px;color:#8e8e93;margin-bottom:6px">Chiffre d'affaires total</div>
+    <div style="font-size:36px;font-weight:700;color:#fff" id="fin-total">0 €</div>
+    <div style="font-size:12px;color:#8e8e93;margin-top:4px" id="fin-nb-total">0 prestation(s)</div>
   </div>
-  <div class="card"><p class="stitle">Suivi des acomptes</p><div id="acompte-list"><p class="empty-note">Aucune prestation</p></div></div>
+ 
+  <!-- 3 métriques -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px">
+    <div style="background:#e8f0fe;border-radius:14px;padding:12px;text-align:center">
+      <div style="font-size:11px;color:#1a56db;margin-bottom:4px;font-weight:500">Moy. / mois</div>
+      <div style="font-size:16px;font-weight:700;color:#1a56db" id="fin-moyenne">0 €</div>
+    </div>
+    <div style="background:#f2f2f7;border-radius:14px;padding:12px;text-align:center">
+      <div style="font-size:11px;color:#8e8e93;margin-bottom:4px;font-weight:500">Prestations</div>
+      <div style="font-size:18px;font-weight:700;color:#1c1c1e" id="fin-nb-conf">0</div>
+    </div>
+    <div style="background:#f2f2f7;border-radius:14px;padding:12px;text-align:center">
+      <div style="font-size:11px;color:#8e8e93;margin-bottom:4px;font-weight:500">Moy. / presta</div>
+      <div style="font-size:16px;font-weight:700;color:#1c1c1e" id="fin-moy-presta">0 €</div>
+    </div>
+  </div>
+ 
+  <!-- Liste par mois -->
+  <div class="card">
+    <p class="stitle">Détail par mois</p>
+    <div id="acompte-list"><p class="empty-note">Aucune prestation</p></div>
+  </div>
 </div>
  
 <!-- MODAL AJOUT/EDIT -->
@@ -646,26 +666,60 @@ function renderFinance(){
   var conf=prestations.filter(function(p){return p.statut==='confirme'&&p.date.startsWith(y);});
   var att=prestations.filter(function(p){return p.statut==='attente'&&p.date.startsWith(y);});
   var total=conf.reduce(function(s,p){return s+p.montant;},0);
-  var totalAc=conf.reduce(function(s,p){return s+(acomptesRecus[p.id]?p.acompte:0);},0);
+  var totalAtt=att.reduce(function(s,p){return s+p.montant;},0);
+  var all=conf.concat(att);
+  var nbMoisActifs=Object.keys(byMoisTemp).length||1;
+  var moyenneMensuelle=Math.round(total/nbMoisActifs);
+  var moyennePresta=all.length?Math.round(total/conf.length||0):0;
   document.getElementById('fin-total').textContent=fmt(total);
-  document.getElementById('fin-acomptes').textContent=fmt(totalAc);
-  document.getElementById('fin-reste').textContent=fmt(total-totalAc);
-  document.getElementById('fin-nb-conf').textContent=conf.length;
-  document.getElementById('fin-nb-att').textContent=att.length;
+  document.getElementById('fin-nb-total').textContent=conf.length+' confirmée(s) · '+att.length+' en attente';
+  document.getElementById('fin-moyenne').textContent=fmt(moyenneMensuelle);
+  document.getElementById('fin-nb-conf').textContent=conf.length+att.length;
+  document.getElementById('fin-moy-presta').textContent=conf.length?fmt(Math.round(total/conf.length)):'—';
+ 
+  // Grouper par mois
+  var mois=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  var byMois={};
+  var byMoisTemp={};
+  all.sort(function(a,b){return a.date.localeCompare(b.date);}).forEach(function(p){
+    var m=parseInt(p.date.split('-')[1])-1;
+    if(!byMois[m])byMois[m]=[];
+    byMois[m].push(p);
+    if(p.statut==='confirme')byMoisTemp[m]=1;
+  });
+ 
   var html='';
-  if(!conf.length)html='<p class="empty-note">Aucune prestation confirmée</p>';
-  conf.sort(function(a,b){return a.date.localeCompare(b.date);}).forEach(function(p){
-    var ds=new Date(p.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'short'});
-    var recu=!!acomptesRecus[p.id];
-    html+='<div class="acompte-item">'
-      +'<div class="acompte-info"><div class="acompte-name">'+p.client+'</div><div class="acompte-detail">'+ds+' · '+p.type+'</div></div>'
-      +'<span class="acompte-amount">'+fmt(p.acompte)+'</span>'
-      +'<button class="toggle'+(recu?' on':'')+'" onclick="toggleAcompte('+p.id+')"></button>'
+  if(!all.length){html='<p class="empty-note">Aucune prestation cette année</p>';}
+  Object.keys(byMois).sort(function(a,b){return a-b;}).forEach(function(m){
+    var ps=byMois[m];
+    var totalMois=ps.reduce(function(s,p){return s+p.montant;},0);
+    html+='<div style="margin-bottom:14px">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
+      +'<span style="font-size:13px;font-weight:700;color:#1c1c1e">'+mois[m]+'</span>'
+      +'<span style="font-size:13px;font-weight:600;color:#1a56db">'+fmt(totalMois)+'</span>'
       +'</div>';
+    ps.forEach(function(p){
+      var ds=new Date(p.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'short'});
+      var isConf=p.statut==='confirme';
+      var badgeBg=isConf?'#e8fbe8':'#fff8e1';
+      var badgeCol=isConf?'#1a7f37':'#b8860b';
+      var badgeTxt=isConf?'Confirmé':'En attente';
+      html+='<div style="background:#f9f9f9;border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px">'
+        +'<div style="flex:1;min-width:0">'
+        +'<div style="font-size:14px;font-weight:600;color:#1c1c1e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+p.client+'</div>'
+        +'<div style="font-size:12px;color:#8e8e93;margin-top:2px">'+ds+' · '+p.type+'</div>'
+        +'<div style="margin-top:4px"><span style="font-size:11px;font-weight:600;background:'+badgeBg+';color:'+badgeCol+';padding:2px 8px;border-radius:6px">'+badgeTxt+'</span></div>'
+        +'</div>'
+        +'<div style="text-align:right;flex-shrink:0">'
+        +'<div style="font-size:15px;font-weight:700;color:#1c1c1e">'+fmt(p.montant)+'</div>'
+        +'<div style="font-size:11px;color:#8e8e93;margin-top:2px">Ac. '+fmt(p.acompte)+'</div>'
+        +'</div>'
+        +'</div>';
+    });
+    html+='</div>';
   });
   document.getElementById('acompte-list').innerHTML=html;
 }
-function toggleAcompte(id){acomptesRecus[id]=!acomptesRecus[id];saveData();renderFinance();}
  
 // PDF
 function genPDF(){
