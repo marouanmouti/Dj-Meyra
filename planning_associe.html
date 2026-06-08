@@ -586,7 +586,7 @@ function searchV(q){
   var box=document.getElementById('sugg-box');
   if(!m.length){box.innerHTML='<div class="no-result">Aucune ville trouvée</div>';box.style.display='block';return;}
   var html='';
-  m.forEach(function(c){
+  m.forEach(function(c,i){
     var b=gF(c.km);var fs=c.km===0?'Inclus':'+ '+fmt(b.f);
     box['_v'+i]=c;
     html+='<div class="sitem" onclick="pickVille('+i+')"><div class="sname">'+c.n+'</div><div class="sdetail">'+c.r+' — '+c.km+' km — '+fs+'</div></div>';
