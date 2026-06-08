@@ -171,7 +171,15 @@ input:focus,select:focus,textarea:focus{border-color:#4a90e2;background:#fff}
     <p class="stitle">Récapitulatif</p>
     <div id="detail-wrap"><p class="empty-note">Sélectionnez une prestation pour voir le total</p></div>
     <div id="tot-box" style="display:none" class="totbox"><span style="font-size:15px;font-weight:600;color:#fff">Total à facturer</span><span style="font-size:28px;font-weight:700;color:#fff" id="total-amt">—</span></div>
-    <div id="ac-box" style="display:none" class="abox"><span style="font-size:13px;font-weight:600;color:#1a7f37">Acompte 25 %</span><span style="font-size:20px;font-weight:700;color:#1a7f37" id="acompte-amt">—</span></div>
+    <div id="ac-box" style="display:none;margin-top:8px">
+      <div style="background:#eaf5ea;border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:13px;font-weight:600;color:#1a7f37">Acompte</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <input type="number" id="acompte-input" min="0" oninput="updAcompte()" style="font-size:18px;font-weight:700;color:#1a7f37;width:100px;text-align:right;border:none;background:transparent;-webkit-appearance:none;outline:none">
+          <span style="font-size:14px;color:#1a7f37;font-weight:600">€</span>
+        </div>
+      </div>
+    </div>
     <div id="metric-box" style="display:none" class="mgrid2">
       <div class="metric"><div class="ml">Reste à percevoir</div><div class="mv" id="reste-amt">—</div></div>
       <div class="metric"><div class="ml">Durée totale</div><div class="mv" id="dur-recap">—</div></div>
@@ -445,8 +453,11 @@ function upd(){
   if(remise>0)html+='<div class="dline" style="color:#cc0000"><span>Remise</span><span>- '+fmt(remise)+'</span></div>';
   document.getElementById('detail-wrap').innerHTML=html;
   document.getElementById('total-amt').textContent=fmt(total);
-  document.getElementById('acompte-amt').textContent=fmt(ac);
-  document.getElementById('reste-amt').textContent=fmt(reste);
+  // Pré-remplir acompte à 25% seulement si vide ou si le total a changé
+  var acInput=document.getElementById('acompte-input');
+  if(!acInput._userEdited){acInput.value=ac;}
+  var acVal=Math.max(0,parseInt(acInput.value)||ac);
+  document.getElementById('reste-amt').textContent=fmt(Math.max(0,total-acVal));
   ['tot-box','ac-box','metric-box','planning-btn','pdf-btn'].forEach(function(id){
     var el=document.getElementById(id);
     el.style.display=id==='metric-box'?'grid':'flex';
@@ -462,10 +473,17 @@ function ajouterAuPlanning(){
   prestations.push({id:Date.now(),client:client,tel:document.getElementById('tel-client').value.trim(),date:date,hdebut:deb,hfin:fin,type:sL,ville:sC||'',adresse:'',montant:total,acompte:ac,statut:'confirme',notes:''});
   saveData();alert('✅ Ajouté au planning !');
 }
+function updAcompte(){
+  var acInput=document.getElementById('acompte-input');
+  acInput._userEdited=true;
+  var total=parseInt(document.getElementById('total-amt').textContent.replace(/[^0-9]/g,''))||0;
+  var acVal=Math.max(0,parseInt(acInput.value)||0);
+  document.getElementById('reste-amt').textContent=fmt(Math.max(0,total-acVal));
+}
 function reset(){
   sB=0;sL='';sF=0;sK=0;sH=0;sC='';dNum=null;
   document.querySelectorAll('.pbtn').forEach(function(b){b.classList.remove('active')});
-  ['nom-client','tel-client','date-presta','ville-input','remise-input'].forEach(function(id){document.getElementById(id).value='';});
+  ['nom-client','tel-client','date-presta','ville-input','remise-input','acompte-input'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('h-debut').value='18:00';document.getElementById('h-fin').value='00:00';
   document.getElementById('sugg-box').style.display='none';document.getElementById('km-box').style.display='none';
   document.getElementById('hotel-info').style.display='none';document.getElementById('supp-info').style.display='none';
@@ -949,7 +967,10 @@ function genPDF(){
   var deb=document.getElementById('h-debut').value||'18:00',fin=document.getElementById('h-fin').value||'00:00';
   var h=cD(deb,fin),nbS=Math.max(0,h-6),supp=Math.round(nbS*100);
   var remise=Math.max(0,parseInt(document.getElementById('remise-input').value)||0);
-  var total=Math.max(0,sB+supp+sF-remise),ac=Math.round(total*.25),reste=total-ac;
+  var total=Math.max(0,sB+supp+sF-remise);
+  var acInput=document.getElementById('acompte-input');
+  var ac=acInput&&acInput.value?Math.max(0,parseInt(acInput.value)||0):Math.round(total*.25);
+  var reste=total-ac;
   var num=gDN(),today=new Date().toLocaleDateString('fr-FR');
   doc.setFillColor(20,20,20);doc.rect(0,0,W,42,'F');
   doc.setTextColor(255,255,255);doc.setFontSize(26);doc.setFont('helvetica','bold');doc.text('DJ MEYRA',mg,20);
