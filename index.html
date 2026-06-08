@@ -176,6 +176,10 @@ input:focus,select:focus,textarea:focus{border-color:#4a90e2;background:#fff}
       <div class="metric"><div class="ml">Reste à percevoir</div><div class="mv" id="reste-amt">—</div></div>
       <div class="metric"><div class="ml">Durée totale</div><div class="mv" id="dur-recap">—</div></div>
     </div>
+    <div id="remise-box" style="display:none;margin-top:10px">
+      <div class="flabel">Remise (€)</div>
+      <input type="number" id="remise-input" placeholder="Ex: 50" min="0" oninput="upd()" style="font-size:16px;width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid #e5e5ea;background:#f9f9f9;color:#1c1c1e;-webkit-appearance:none;outline:none">
+    </div>
     <button class="btn-success" id="planning-btn" style="display:none" onclick="ajouterAuPlanning()">📅 Ajouter au planning</button>
     <button class="btn-primary" id="pdf-btn" style="display:none" onclick="genPDF()">📄 Télécharger le devis PDF</button>
     <button class="btn-secondary" onclick="reset()">Réinitialiser</button>
@@ -423,7 +427,8 @@ function upd(){
   var nbS=Math.max(0,h-6),si=document.getElementById('supp-info');
   if(nbS>0){si.style.display='block';document.getElementById('supp-txt').textContent=nbS.toFixed(nbS%1?1:0)+'h supp. × 100 € = '+fmt(Math.round(nbS*100));}else si.style.display='none';
   if(!sB)return;
-  var supp=Math.round(nbS*100),total=sB+supp+sF,ac=Math.round(total*.25),reste=total-ac;
+  var remise=Math.max(0,parseInt(document.getElementById('remise-input').value)||0);
+  var supp=Math.round(nbS*100),total=Math.max(0,sB+supp+sF-remise),ac=Math.round(total*.25),reste=total-ac;
   var client=document.getElementById('nom-client').value,dv=document.getElementById('date-presta').value;
   var ds=dv?new Date(dv+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}):'';
   var html='';
@@ -437,6 +442,7 @@ function upd(){
   if(sF>0){var det='Essence + péages'+(sH?' + hôtel':'')+(sF>=400?' + dérangement':'');html+='<div class="dline"><span>Déplacement ('+sK+' km)<br><span style="font-size:11px;color:#c7c7cc">'+det+'</span></span><span>+ '+fmt(sF)+'</span></div>';}
   else if(sC)html+='<div class="dline"><span>Déplacement</span><span style="color:#34c759">Local (inclus)</span></div>';
   else html+='<div class="dline"><span>Déplacement</span><span style="color:#c7c7cc">—</span></div>';
+  if(remise>0)html+='<div class="dline" style="color:#cc0000"><span>Remise</span><span>- '+fmt(remise)+'</span></div>';
   document.getElementById('detail-wrap').innerHTML=html;
   document.getElementById('total-amt').textContent=fmt(total);
   document.getElementById('acompte-amt').textContent=fmt(ac);
@@ -445,6 +451,7 @@ function upd(){
     var el=document.getElementById(id);
     el.style.display=id==='metric-box'?'grid':'flex';
   });
+  document.getElementById('remise-box').style.display='block';
 }
 function ajouterAuPlanning(){
   var client=document.getElementById('nom-client').value,date=document.getElementById('date-presta').value;
@@ -458,7 +465,7 @@ function ajouterAuPlanning(){
 function reset(){
   sB=0;sL='';sF=0;sK=0;sH=0;sC='';dNum=null;
   document.querySelectorAll('.pbtn').forEach(function(b){b.classList.remove('active')});
-  ['nom-client','tel-client','date-presta','ville-input'].forEach(function(id){document.getElementById(id).value='';});
+  ['nom-client','tel-client','date-presta','ville-input','remise-input'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('h-debut').value='18:00';document.getElementById('h-fin').value='00:00';
   document.getElementById('sugg-box').style.display='none';document.getElementById('km-box').style.display='none';
   document.getElementById('hotel-info').style.display='none';document.getElementById('supp-info').style.display='none';
@@ -941,7 +948,8 @@ function genPDF(){
   var ds=dv?new Date(dv+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}):'—';
   var deb=document.getElementById('h-debut').value||'18:00',fin=document.getElementById('h-fin').value||'00:00';
   var h=cD(deb,fin),nbS=Math.max(0,h-6),supp=Math.round(nbS*100);
-  var total=sB+supp+sF,ac=Math.round(total*.25),reste=total-ac;
+  var remise=Math.max(0,parseInt(document.getElementById('remise-input').value)||0);
+  var total=Math.max(0,sB+supp+sF-remise),ac=Math.round(total*.25),reste=total-ac;
   var num=gDN(),today=new Date().toLocaleDateString('fr-FR');
   doc.setFillColor(20,20,20);doc.rect(0,0,W,42,'F');
   doc.setTextColor(255,255,255);doc.setFontSize(26);doc.setFont('helvetica','bold');doc.text('DJ MEYRA',mg,20);
@@ -960,6 +968,7 @@ function genPDF(){
   function row(a,b){doc.setFont('helvetica','normal');doc.setFontSize(10);doc.text(a,mg+3,y);doc.text(b,W-mg-3,y,{align:'right'});y+=7;}
   row('Forfait DJ - Animation de soir\u00e9e ('+deb+' \u00e0 '+fin+')',(function(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ');})(total)+' \u20ac');
   if(sF>0)row('Frais de d\u00e9placement','Inclus');
+  if(remise>0)row('Remise','- '+(function(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ');})(remise)+' \u20ac');
   y+=2;doc.setDrawColor(200,200,200);doc.line(mg,y,W-mg,y);y+=6;
   doc.setFillColor(20,20,20);doc.rect(mg,y,W-mg*2,12,'F');
   doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(13);
