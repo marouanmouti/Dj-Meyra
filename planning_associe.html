@@ -334,10 +334,12 @@ function searchV(q){
   var html='';
   m.forEach(function(c){
     var b=gF(c.km);var fs=c.km===0?'Inclus':'+ '+fmt(b.f);
-    html+='<div class="sitem" onclick="selCity(''+c.n.replace(/'/g,"\'")+'','+c.km+')"><div class="sname">'+c.n+'</div><div class="sdetail">'+c.r+' — '+c.km+' km — '+fs+'</div></div>';
+    box['_v'+i]=c;
+    html+='<div class="sitem" onclick="pickVille('+i+')"><div class="sname">'+c.n+'</div><div class="sdetail">'+c.r+' — '+c.km+' km — '+fs+'</div></div>';
   });
   box.innerHTML=html;box.style.display='block';
 }
+function pickVille(i){var box=document.getElementById('sugg-box');var c=box['_v'+i];if(c)selCity(c.n,c.km);}
 function selCity(ville,km){
   document.getElementById('ville-input').value=ville;document.getElementById('sugg-box').style.display='none';
   sC=ville;sK=km;var b=gF(km);sF=b.f;sH=b.h;
@@ -391,8 +393,8 @@ function genPDF(){
   y+=14;doc.setFont('helvetica','normal');doc.setFontSize(10);
   doc.text('Reste à percevoir le jour de la prestation',mg+3,y);doc.text(fmtPDF(reste)+' €',W-mg-3,y,{align:'right'});
   y+=16;doc.setFontSize(9);doc.setTextColor(130,130,130);
-  doc.text('Ce devis est valable 30 jours à compter de sa date d'emission.',mg,y);y+=5;
-  doc.text('L'acompte confirme la réservation. Merci pour votre confiance !',mg,y);
+  doc.text('Ce devis est valable 30 jours à compter de sa date d\'emission.',mg,y);y+=5;
+  doc.text('L\'acompte confirme la réservation. Merci pour votre confiance !',mg,y);
   doc.setFillColor(20,20,20);doc.rect(0,284,W,13,'F');
   doc.setTextColor(255,255,255);doc.setFontSize(8);
   doc.text('DJ MEYRA — 06.66.15.35.83 — Mulhouse, France',W/2,292,{align:'center'});
@@ -431,7 +433,7 @@ function renderPlanning(){
     var p=prestations.find(function(x){return x&&x.date===ds&&x.statut!=='annule';});
     var isTod=today.getFullYear()===y&&today.getMonth()===m&&today.getDate()===d;
     var cls='cal-day '+(p?(p.statut==='confirme'?'reserve':'attente'):'libre')+(isTod?' today':'');
-    html+='<div class="'+cls+'" onclick="clickJour(''+ds+'')">'+d+(p?'<div class="cal-dot"></div>':'')+'</div>';
+    html+='<div class="'+cls+'" onclick="clickJour(\''+ds+'\')">'  +d+(p?'<div class="cal-dot"></div>':'')+'</div>';
   }
   document.getElementById('cal-grid').innerHTML=html;
   var sorted=[...prestations].filter(function(p){return p&&p.statut!=='annule';}).sort(function(a,b){return String(a.date).localeCompare(String(b.date));});
