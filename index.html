@@ -958,8 +958,7 @@ function genPDF(){
   doc.setFont('helvetica','bold');doc.setFontSize(10);
   doc.text('Prestation',mg+3,y+5.5);doc.text('Montant',W-mg-3,y+5.5,{align:'right'});y+=12;
   function row(a,b){doc.setFont('helvetica','normal');doc.setFontSize(10);doc.text(a,mg+3,y);doc.text(b,W-mg-3,y,{align:'right'});y+=7;}
-  row(sL+' - forfait 6h ('+deb+' \u00e0 '+fin+')',(function(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ');})(sB)+' \u20ac');
-  if(nbS>0)row(nbS.toFixed(nbS%1?1:0)+'h suppl\u00e9mentaire(s) \u00d7 100 \u20ac','+ '+supp+' \u20ac');
+  row('Forfait DJ - Animation de soir\u00e9e ('+deb+' \u00e0 '+fin+')',(function(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ');})(total)+' \u20ac');
   if(sF>0)row('Frais de d\u00e9placement','Inclus');
   y+=2;doc.setDrawColor(200,200,200);doc.line(mg,y,W-mg,y);y+=6;
   doc.setFillColor(20,20,20);doc.rect(mg,y,W-mg*2,12,'F');
