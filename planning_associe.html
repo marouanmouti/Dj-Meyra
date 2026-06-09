@@ -757,16 +757,23 @@ function actionDemande(idx,action){
 function devisDepuisDemande(idx){
   var d=allDemandes[idx];if(!d)return;
   showPage('devis');
-  document.getElementById('nom-client').value=d.nom||'';
-  document.getElementById('tel-client').value=d.tel||'';
-  document.getElementById('insta-client').value=d.instagram||'';
-  document.getElementById('date-presta').value=d.date||'';
-  document.getElementById('ville-input').value=d.ville||'';
-  var types={Mariage:1200,Kina:800,'Fiançailles':800,Anniversaire:500,Autre:600};
-  document.querySelectorAll('.pbtn').forEach(function(b){
-    if(b.dataset.label===d.type){b.classList.add('active');sB=types[d.type]||600;sL=d.type;}
-  });
-  upd();
+  setTimeout(function(){
+    document.getElementById('nom-client').value=d.nom||'';
+    document.getElementById('tel-client').value=d.tel||'';
+    document.getElementById('insta-client').value=d.instagram||'';
+    document.getElementById('date-presta').value=d.date||'';
+    document.getElementById('ville-input').value=d.ville||'';
+    var types={Mariage:1200,Kina:800,'Fiànçailles':800,Anniversaire:500,Autre:600};
+    var types2={Mariage:1200,Kina:800,'Fiançailles':800,Anniversaire:500,Autre:600};
+    document.querySelectorAll('.pbtn').forEach(function(b){
+      if(b.dataset.label===d.type){
+        b.classList.add('active');
+        sB=types2[d.type]||600;
+        sL=d.type;
+      }
+    });
+    upd();
+  },100);
 }
 
 // PLANNING
@@ -864,12 +871,11 @@ renderPlanning();
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, set, onValue, update, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 const firebaseConfig={apiKey:"AIzaSyBv_0pZASNBoVNlQ4-ztKsXwVrIN0dMQ-U",authDomain:"dj-meyra.firebaseapp.com",databaseURL:"https://dj-meyra-default-rtdb.firebaseio.com",projectId:"dj-meyra",storageBucket:"dj-meyra.firebasestorage.app",messagingSenderId:"161733120497",appId:"1:161733120497:web:6d51fac4eb4d5730abf450"};
 const app=initializeApp(firebaseConfig);
 const db=getDatabase(app);
-import { update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-import { push as fbPush } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
 
 onValue(ref(db,'demandes'),function(snapshot){
   var data=snapshot.val();
