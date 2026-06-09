@@ -105,6 +105,7 @@ select{font-size:15px;font-weight:700;border:none;background:none;color:#1c1c1e;
 <nav class="nav">
   <button class="nav-btn active" onclick="showPage('devis')"><span class="icon">📄</span>Devis</button>
   <button class="nav-btn" onclick="showPage('planning')"><span class="icon">📅</span>Planning</button>
+  <button class="nav-btn" onclick="showPage('demandes')"><span class="icon">📥</span><span id="nav-demandes-label">Demandes</span></button>
 </nav>
 
 <!-- PAGE DEVIS -->
@@ -116,6 +117,8 @@ select{font-size:15px;font-weight:700;border:none;background:none;color:#1c1c1e;
     <input type="text" id="nom-client" placeholder="Ex : Dupont Marie" oninput="upd()" autocorrect="off" autocapitalize="words">
     <div class="flabel">Téléphone</div>
     <input type="tel" id="tel-client" placeholder="06 00 00 00 00">
+    <div class="flabel">Instagram</div>
+    <input type="text" id="insta-client" placeholder="@nom_instagram" autocorrect="off" autocapitalize="none">
     <div class="flabel">Date de la prestation</div>
     <input type="date" id="date-presta" oninput="upd()">
   </div>
@@ -220,6 +223,20 @@ select{font-size:15px;font-weight:700;border:none;background:none;color:#1c1c1e;
   </div>
 </div>
 
+
+<!-- PAGE DEMANDES -->
+<div class="page" id="page-demandes">
+  <div class="page-header"><h1>Demandes</h1><p id="demandes-subtitle">Chargement...</p></div>
+  <div style="display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px">
+    <button onclick="filtrerDemandes('tous')" id="f-tous" style="flex-shrink:0;padding:7px 14px;border-radius:20px;border:none;font-size:13px;font-weight:600;cursor:pointer;background:#1c1c1e;color:#fff">Toutes</button>
+    <button onclick="filtrerDemandes('nouveau')" id="f-nouveau" style="flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid #e5e5ea;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#1c1c1e">Nouvelles</button>
+    <button onclick="filtrerDemandes('en_attente')" id="f-en_attente" style="flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid #e5e5ea;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#1c1c1e">En attente</button>
+    <button onclick="filtrerDemandes('confirme')" id="f-confirme" style="flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid #e5e5ea;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#1c1c1e">Confirmées</button>
+    <button onclick="filtrerDemandes('refuse')" id="f-refuse" style="flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid #e5e5ea;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#1c1c1e">Refusées</button>
+  </div>
+  <div id="demandes-list"><p style="font-size:13px;color:#c7c7cc;text-align:center;padding:30px 0">Chargement...</p></div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 // ── NAVIGATION ──────────────────────────────────────────────────────────────
@@ -227,7 +244,9 @@ function showPage(p){
   document.querySelectorAll('.page').forEach(function(x){x.classList.remove('active')});
   document.querySelectorAll('.nav-btn').forEach(function(x){x.classList.remove('active')});
   document.getElementById('page-'+p).classList.add('active');
-  [{devis:0,planning:1}[p]].forEach(function(i){document.querySelectorAll('.nav-btn')[i].classList.add('active')});
+  var idx={devis:0,planning:1,demandes:2}[p];
+  document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+  if(p==='demandes')renderDemandes('tous');
 }
 
 // ── DEVIS ───────────────────────────────────────────────────────────────────
@@ -257,6 +276,7 @@ function upd(){
   var html='';
   if(client)html+='<div class="dline main"><span>Client</span><span>'+client+'</span></div>';
   if(tel)html+='<div class="dline"><span>Téléphone</span><span>'+tel+'</span></div>';
+  if(insta)html+='<div class="dline"><span>Instagram</span><span>'+insta+'</span></div>';
   if(ds)html+='<div class="dline"><span>Date</span><span>'+ds+'</span></div>';
   html+='<div class="dline main"><span>'+sL+'</span><span>'+fmt(sB)+'</span></div>';
   html+='<div class="dline"><span style="color:#c7c7cc">Forfait 6h ('+deb+' → '+fin+')</span><span style="color:#c7c7cc">inclus</span></div>';
@@ -286,7 +306,7 @@ function updAcompte(){
 function reset(){
   sB=0;sL='';sF=0;sK=0;sH=0;sC='';dNum=null;
   document.querySelectorAll('.pbtn').forEach(function(b){b.classList.remove('active')});
-  ['nom-client','tel-client','date-presta','ville-input','remise-input','acompte-input'].forEach(function(id){document.getElementById(id).value='';});
+  ['nom-client','tel-client','insta-client','date-presta','ville-input','remise-input','acompte-input'].forEach(function(id){document.getElementById(id).value='';});
   var ai=document.getElementById('acompte-input');if(ai)ai._userEdited=false;
   document.getElementById('h-debut').value='18:00';document.getElementById('h-fin').value='00:00';
   document.getElementById('sugg-box').style.display='none';document.getElementById('km-box').style.display='none';
@@ -610,6 +630,7 @@ function genPDF(){
   var W=210,mg=18,y=18;
   var client=document.getElementById('nom-client').value||'—';
   var telClient=document.getElementById('tel-client').value;
+  var instaClient=document.getElementById('insta-client').value;
   var dv=document.getElementById('date-presta').value;
   var ds=dv?new Date(dv+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}):'—';
   var deb=document.getElementById('h-debut').value||'18:00',fin=document.getElementById('h-fin').value||'00:00';
@@ -658,7 +679,97 @@ function genPDF(){
   doc.save('Devis_DJMeyra_'+client.replace(/\s+/g,'_')+'_'+num+'.pdf');
 }
 
-// ── PLANNING ─────────────────────────────────────────────────────────────────
+// ── DEMANDES
+var allDemandes=[];
+var filtreActuel='tous';
+
+function filtrerDemandes(f){
+  filtreActuel=f;
+  var btns=['tous','nouveau','en_attente','confirme','refuse'];
+  btns.forEach(function(b){
+    var el=document.getElementById('f-'+b);
+    if(el){el.style.background=b===f?'#1c1c1e':'#fff';el.style.color=b===f?'#fff':'#1c1c1e';el.style.border=b===f?'none':'1.5px solid #e5e5ea';}
+  });
+  renderDemandes(f);
+}
+
+function renderDemandes(filtre){
+  var list=document.getElementById('demandes-list');
+  if(!list)return;
+  var filtered=filtre==='tous'?allDemandes:allDemandes.filter(function(d){return d.statut===filtre;});
+  filtered.sort(function(a,b){return b.id-a.id;});
+  var nouvelles=allDemandes.filter(function(d){return d.statut==='nouveau';}).length;
+  var label=document.getElementById('nav-demandes-label');
+  if(label)label.textContent=nouvelles>0?'Dem. ('+nouvelles+')':'Demandes';
+  document.getElementById('demandes-subtitle').textContent=allDemandes.length+' demande(s) au total';
+  if(!filtered.length){list.innerHTML='<p style="font-size:13px;color:#c7c7cc;text-align:center;padding:30px 0">Aucune demande</p>';return;}
+  var html='';
+  filtered.forEach(function(d,di){
+    var ds=d.date?new Date(d.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}):'—';
+    var dateOccupee=prestations.some(function(p){return p.date===d.date&&p.statut!=='annule';});
+    var statutLabel={nouveau:'🆕 Nouvelle',en_attente:'⏳ En attente',confirme:'✅ Confirmée',refuse:'❌ Refusée'}[d.statut]||'Nouvelle';
+    var statutBg={nouveau:'#e8f0fe',en_attente:'#fff8e1',confirme:'#e8fbe8',refuse:'#ffe5e5'}[d.statut]||'#e8f0fe';
+    var statutCol={nouveau:'#1a56db',en_attente:'#b8860b',confirme:'#1a7f37',refuse:'#cc0000'}[d.statut]||'#1a56db';
+    var bordCol={nouveau:'#4a90e2',en_attente:'#ff9500',confirme:'#34c759',refuse:'#ff3b30'}[d.statut]||'#4a90e2';
+    html+='<div style="background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;border-left:5px solid '+bordCol+'">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">';
+    html+='<div><p style="font-size:15px;font-weight:700;margin:0">'+d.nom+'</p>';
+    html+='<p style="font-size:12px;color:#8e8e93;margin:2px 0 0">'+d.type+' · '+ds+'</p></div>';
+    html+='<span style="font-size:11px;font-weight:600;background:'+statutBg+';color:'+statutCol+';padding:3px 8px;border-radius:6px">'+statutLabel+'</span>';
+    html+='</div>';
+    if(d.tel)html+='<p style="font-size:13px;color:#8e8e93;margin-bottom:3px">📞 '+d.tel+'</p>';
+    if(d.instagram)html+='<p style="font-size:13px;color:#8e8e93;margin-bottom:3px">📸 '+d.instagram+'</p>';
+    if(d.ville)html+='<p style="font-size:13px;color:#8e8e93;margin-bottom:3px">📍 '+d.ville+'</p>';
+    if(d.message)html+='<p style="font-size:13px;color:#c7c7cc;margin-bottom:8px;font-style:italic">💬 '+d.message+'</p>';
+    html+='<div style="display:inline-flex;align-items:center;gap:6px;margin-bottom:10px;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:600;background:'+(dateOccupee?'#ffe5e5':'#e8fbe8')+';color:'+(dateOccupee?'#cc0000':'#1a7f37')+'">';
+    html+=(dateOccupee?'🔴 Date occupée':'🟢 Date libre')+'</div>';
+    if(d.statut!=='confirme'&&d.statut!=='refuse'){
+      html+='<div style="display:flex;gap:6px;margin-top:8px">';
+      html+='<button onclick="actionDemande('+di+',\'confirme\')" style="flex:1;padding:9px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:#e8fbe8;color:#1a7f37">✅ Confirmer</button>';
+      html+='<button onclick="actionDemande('+di+',\'en_attente\')" style="flex:1;padding:9px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:#fff8e1;color:#b8860b">⏳ En attente</button>';
+      html+='<button onclick="actionDemande('+di+',\'refuse\')" style="flex:1;padding:9px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:#ffe5e5;color:#cc0000">❌ Refuser</button>';
+      html+='</div>';
+    }
+    if(d.statut==='confirme'||d.statut==='en_attente'){
+      html+='<button onclick="devisDepuisDemande('+di+')" style="width:100%;margin-top:8px;padding:10px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;background:#e8f0fe;color:#1a56db">📄 Créer un devis</button>';
+    }
+    html+='</div>';
+  });
+  list.innerHTML=html;
+}
+
+function actionDemande(idx,action){
+  var d=allDemandes[idx];if(!d)return;
+  var key=d.firebaseKey;
+  if(window._updateDemande)window._updateDemande(key,action);
+  allDemandes[idx].statut=action;
+  if(action==='confirme'){
+    var exists=prestations.some(function(p){return p.date===d.date&&p.statut!=='annule';});
+    if(exists&&!confirm('Cette date est déjà occupée. Confirmer quand même ?'))return;
+    if(window._addPrestation){
+      var presta={id:Date.now(),client:d.nom,tel:d.tel||'',instagram:d.instagram||'',date:d.date,hdebut:'18:00',hfin:'00:00',type:d.type,ville:d.ville||'',adresse:'',montant:0,acompte:0,statut:'confirme',notes:d.message||''};
+      window._addPrestation(presta);
+    }
+  }
+  renderDemandes(filtreActuel);
+}
+
+function devisDepuisDemande(idx){
+  var d=allDemandes[idx];if(!d)return;
+  showPage('devis');
+  document.getElementById('nom-client').value=d.nom||'';
+  document.getElementById('tel-client').value=d.tel||'';
+  document.getElementById('insta-client').value=d.instagram||'';
+  document.getElementById('date-presta').value=d.date||'';
+  document.getElementById('ville-input').value=d.ville||'';
+  var types={Mariage:1200,Kina:800,'Fiançailles':800,Anniversaire:500,Autre:600};
+  document.querySelectorAll('.pbtn').forEach(function(b){
+    if(b.dataset.label===d.type){b.classList.add('active');sB=types[d.type]||600;sL=d.type;}
+  });
+  upd();
+}
+
+// PLANNING
 var prestations=[],calDate=new Date();
 
 function fmt2(n){return n.toLocaleString('fr-FR')+' €';}
@@ -732,6 +843,7 @@ function clickJour(dateStr){
     html+='<div class="detail-row"><span class="detail-icon">⏰</span><div><div class="detail-label">Horaires</div><div class="detail-val">'+horaires+'</div></div></div>';
     if(p.ville)html+='<div class="detail-row"><span class="detail-icon">📍</span><div><div class="detail-label">Ville</div><div class="detail-val">'+p.ville+'</div></div></div>';
     if(p.adresse)html+='<div class="detail-row"><span class="detail-icon">🏛</span><div><div class="detail-label">Adresse</div><div class="detail-val">'+p.adresse+'</div></div></div>';
+    if(p.instagram)html+='<div class="detail-row"><span class="detail-icon">📸</span><div><div class="detail-label">Instagram</div><div class="detail-val">'+p.instagram+'</div></div></div>';
     if(p.montant)html+='<div class="detail-row"><span class="detail-icon">💰</span><div><div class="detail-label">Montant total</div><div class="detail-val">'+fmt2(p.montant)+'</div></div></div>';
     if(p.acompte)html+='<div class="detail-row"><span class="detail-icon">💳</span><div><div class="detail-label">Acompte</div><div class="detail-val">'+fmt2(p.acompte)+'</div></div></div>';
     if(p.notes)html+='<div class="detail-row"><span class="detail-icon">📝</span><div><div class="detail-label">Notes</div><div class="detail-val">'+p.notes+'</div></div></div>';
@@ -756,6 +868,28 @@ import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10
 const firebaseConfig={apiKey:"AIzaSyBv_0pZASNBoVNlQ4-ztKsXwVrIN0dMQ-U",authDomain:"dj-meyra.firebaseapp.com",databaseURL:"https://dj-meyra-default-rtdb.firebaseio.com",projectId:"dj-meyra",storageBucket:"dj-meyra.firebasestorage.app",messagingSenderId:"161733120497",appId:"1:161733120497:web:6d51fac4eb4d5730abf450"};
 const app=initializeApp(firebaseConfig);
 const db=getDatabase(app);
+import { update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { push as fbPush } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+onValue(ref(db,'demandes'),function(snapshot){
+  var data=snapshot.val();
+  var arr=[];
+  if(data){Object.keys(data).forEach(function(key){var d=data[key];if(d){d.firebaseKey=key;arr.push(d);}});}
+  allDemandes=arr;
+  var nouvelles=arr.filter(function(d){return d.statut==='nouveau';}).length;
+  var label=document.getElementById('nav-demandes-label');
+  if(label)label.textContent=nouvelles>0?'Dem. ('+nouvelles+')':'Demandes';
+  var page=document.getElementById('page-demandes');
+  if(page&&page.classList.contains('active'))renderDemandes(filtreActuel);
+});
+
+window._updateDemande=function(key,statut){update(ref(db,'demandes/'+key),{statut:statut});};
+window._addPrestation=function(p){
+  var arr=Array.isArray(prestations)?[...prestations]:[...Object.values(prestations)];
+  arr.push(p);
+  set(ref(db,'planning'),arr);
+};
+
 onValue(ref(db,'planning'),function(snapshot){
   var data=snapshot.val();
   document.getElementById('sync-status').textContent='Synchronisé ✓';
