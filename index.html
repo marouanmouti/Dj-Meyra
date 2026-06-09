@@ -343,7 +343,7 @@ input:focus,select:focus,textarea:focus{border-color:#4a90e2;background:#fff}
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  import { getDatabase, ref, set, onValue, update, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBv_0pZASNBoVNlQ4-ztKsXwVrIN0dMQ-U",
@@ -386,7 +386,7 @@ input:focus,select:focus,textarea:focus{border-color:#4a90e2;background:#fff}
   });
 
   // Écouter les demandes en temps réel
-  import { update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
   onValue(ref(db, 'demandes'), function(snapshot) {
     var data = snapshot.val();
     var arr = [];
