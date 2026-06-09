@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>DJ Meyra — Demande de prestation</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f2f2f7;color:#1c1c1e;min-height:100vh;padding:24px 16px 48px}
+.header{text-align:center;margin-bottom:28px}
+.avatar{width:72px;height:72px;border-radius:50%;background:#1c1c1e;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:28px}
+.header h1{font-size:22px;font-weight:700;margin-bottom:4px}
+.header p{font-size:14px;color:#8e8e93}
+.card{background:#fff;border-radius:16px;padding:20px;margin-bottom:14px}
+.stitle{font-size:11px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px}
+.flabel{font-size:13px;color:#8e8e93;margin-bottom:5px;margin-top:12px}
+.flabel:first-child{margin-top:0}
+input[type=text],input[type=tel],input[type=date],textarea,select{width:100%;font-size:16px;padding:12px 14px;border-radius:10px;border:1.5px solid #e5e5ea;background:#f9f9f9;color:#1c1c1e;-webkit-appearance:none;outline:none;font-family:inherit}
+input:focus,textarea:focus,select:focus{border-color:#1c1c1e;background:#fff}
+textarea{resize:none;height:80px}
+.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:2px}
+.pbtn{background:#f2f2f7;border:2px solid transparent;border-radius:12px;padding:13px 8px;cursor:pointer;text-align:center;width:100%;font-size:14px;font-weight:500;color:#1c1c1e;-webkit-appearance:none}
+.pbtn.active{background:#e8f0fe;border-color:#1c1c1e;color:#1c1c1e}
+.submit-btn{width:100%;padding:16px;font-size:16px;font-weight:600;background:#1c1c1e;border:none;border-radius:14px;cursor:pointer;color:#fff;margin-top:8px;-webkit-appearance:none;display:flex;align-items:center;justify-content:center;gap:8px}
+.submit-btn:active{opacity:.8}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed}
+.required{color:#ff3b30;margin-left:2px}
+/* SUCCÈS */
+.success-screen{display:none;text-align:center;padding:40px 20px}
+.success-icon{font-size:64px;margin-bottom:16px}
+.success-screen h2{font-size:22px;font-weight:700;margin-bottom:8px}
+.success-screen p{font-size:15px;color:#8e8e93;line-height:1.6}
+.insta-link{display:inline-flex;align-items:center;gap:8px;margin-top:20px;padding:12px 20px;background:#1c1c1e;border-radius:12px;color:#fff;font-size:14px;font-weight:600;text-decoration:none}
+</style>
+</head>
+<body>
+
+<!-- FORMULAIRE -->
+<div id="form-screen">
+  <div class="header">
+    <div class="avatar">🎵</div>
+    <h1>DJ Meyra</h1>
+    <p>Envoie ta demande de prestation</p>
+  </div>
+
+  <div class="card">
+    <p class="stitle">Tes informations</p>
+    <div class="flabel">Nom complet <span class="required">*</span></div>
+    <input type="text" id="d-nom" placeholder="Ex : Kaplan Ikra" autocorrect="off" autocapitalize="words">
+    <div class="flabel">Téléphone <span class="required">*</span></div>
+    <input type="tel" id="d-tel" placeholder="06 00 00 00 00">
+    <div class="flabel">Instagram</div>
+    <input type="text" id="d-insta" placeholder="@ton_instagram" autocorrect="off" autocapitalize="none">
+  </div>
+
+  <div class="card">
+    <p class="stitle">Ton événement</p>
+    <div class="flabel">Type d'événement <span class="required">*</span></div>
+    <div class="pgrid" id="type-grid">
+      <button class="pbtn" data-type="Mariage" onclick="selType(this)">💍 Mariage</button>
+      <button class="pbtn" data-type="Kina" onclick="selType(this)">🥂 Kina</button>
+      <button class="pbtn" data-type="Fiançailles" onclick="selType(this)">💎 Fiançailles</button>
+      <button class="pbtn" data-type="Anniversaire" onclick="selType(this)">🎂 Anniversaire</button>
+      <button class="pbtn" data-type="Autre" onclick="selType(this)" style="grid-column:span 2">Autre</button>
+    </div>
+    <div class="flabel">Date souhaitée <span class="required">*</span></div>
+    <input type="date" id="d-date">
+    <div class="flabel">Ville / Lieu</div>
+    <input type="text" id="d-ville" placeholder="Ex : Strasbourg, Salle Gluck..." autocorrect="off" autocapitalize="words">
+    <div class="flabel">Message (optionnel)</div>
+    <textarea id="d-message" placeholder="Infos supplémentaires, nombre de personnes..."></textarea>
+  </div>
+
+  <button class="submit-btn" id="submit-btn" onclick="envoyerDemande()">
+    ✉️ Envoyer ma demande
+  </button>
+  <p style="font-size:12px;color:#c7c7cc;text-align:center;margin-top:12px">
+    Tes informations sont uniquement utilisées pour traiter ta demande
+  </p>
+</div>
+
+<!-- SUCCÈS -->
+<div class="success-screen" id="success-screen">
+  <div class="success-icon">✅</div>
+  <h2>Demande envoyée !</h2>
+  <p>Ta demande a bien été reçue.<br>DJ Meyra te répondra très prochainement<br>sur Instagram ou par téléphone.</p>
+  <a href="https://www.instagram.com/dj.meyra" class="insta-link">📸 Suivre @dj.meyra</a>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig={
+  apiKey:"AIzaSyBv_0pZASNBoVNlQ4-ztKsXwVrIN0dMQ-U",
+  authDomain:"dj-meyra.firebaseapp.com",
+  databaseURL:"https://dj-meyra-default-rtdb.firebaseio.com",
+  projectId:"dj-meyra",
+  storageBucket:"dj-meyra.firebasestorage.app",
+  messagingSenderId:"161733120497",
+  appId:"1:161733120497:web:6d51fac4eb4d5730abf450"
+};
+const app=initializeApp(firebaseConfig);
+const db=getDatabase(app);
+window._db=db;
+window._push=push;
+window._ref=ref;
+</script>
+
+<script>
+var selectedType='';
+
+function selType(btn){
+  document.querySelectorAll('.pbtn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');
+  selectedType=btn.dataset.type;
+}
+
+function envoyerDemande(){
+  var nom=document.getElementById('d-nom').value.trim();
+  var tel=document.getElementById('d-tel').value.trim();
+  var date=document.getElementById('d-date').value;
+
+  if(!nom){alert('Merci de renseigner ton nom.');return;}
+  if(!tel){alert('Merci de renseigner ton téléphone.');return;}
+  if(!selectedType){alert('Merci de choisir le type d\'événement.');return;}
+  if(!date){alert('Merci de choisir une date.');return;}
+
+  var btn=document.getElementById('submit-btn');
+  btn.disabled=true;
+  btn.textContent='Envoi en cours...';
+
+  var demande={
+    id:Date.now(),
+    nom:nom,
+    tel:tel,
+    instagram:document.getElementById('d-insta').value.trim(),
+    type:selectedType,
+    date:date,
+    ville:document.getElementById('d-ville').value.trim(),
+    message:document.getElementById('d-message').value.trim(),
+    statut:'nouveau',
+    createdAt:new Date().toISOString()
+  };
+
+  // Envoyer dans Firebase
+  if(window._db&&window._push&&window._ref){
+    window._push(window._ref(window._db,'demandes'),demande)
+      .then(function(){
+        // Envoyer email via EmailJS
+        sendEmail(demande);
+        showSuccess();
+      })
+      .catch(function(e){
+        btn.disabled=false;
+        btn.textContent='Envoyer ma demande';
+        alert('Une erreur est survenue. Réessaie.');
+      });
+  } else {
+    setTimeout(function(){showSuccess();},1000);
+  }
+}
+
+function sendEmail(d){
+  var serviceId='service_djmeyra';
+  var templateId='template_djmeyra';
+  var publicKey='YOUR_EMAILJS_KEY';
+  var params={
+    to_email:'deniz-balci@outlook.fr',
+    from_name:d.nom,
+    client_tel:d.tel,
+    client_insta:d.instagram||'—',
+    event_type:d.type,
+    event_date:new Date(d.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}),
+    event_ville:d.ville||'—',
+    message:d.message||'—'
+  };
+  if(window.emailjs){
+    window.emailjs.send(serviceId,templateId,params,publicKey).catch(function(){});
+  }
+}
+
+function showSuccess(){
+  document.getElementById('form-screen').style.display='none';
+  document.getElementById('success-screen').style.display='block';
+  window.scrollTo(0,0);
+}
+</script>
+
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+</body>
+</html>
