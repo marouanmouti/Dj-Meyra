@@ -11,7 +11,7 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f2f2f7;color:#1c1c1e;padding-bottom:80px}
 .nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e5ea;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
-.nav-btn{flex:1;padding:10px 0 8px;cursor:pointer;border:none;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:#8e8e93}
+.nav-btn{flex:1;padding:10px 0 8px;cursor:pointer;border:none;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:#8e8e93;-webkit-appearance:none}
 .nav-btn.active{color:#1a56db}
 .nav-btn .icon{font-size:22px}
 .page{display:none;padding:16px 16px 20px}
@@ -48,175 +48,170 @@ input:focus,select:focus,textarea:focus{border-color:#4a90e2;background:#fff}
 .dline.main{color:#1c1c1e;font-weight:600}
 .dline span:last-child{text-align:right;flex-shrink:0}
 .totbox{background:#1c1c1e;border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:12px}
-.abox{background:#eaf5ea;border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.abox{border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:8px}
 .mgrid2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
 .metric{background:#f9f9f9;border-radius:10px;padding:12px;text-align:center}
 .ml{font-size:11px;color:#8e8e93;margin-bottom:4px}
 .mv{font-size:18px;font-weight:700;color:#1c1c1e}
-.btn-primary{width:100%;padding:15px;font-size:15px;font-weight:600;background:#1c1c1e;border:none;border-radius:12px;cursor:pointer;color:#fff;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px;-webkit-appearance:none}
-.btn-primary:active{opacity:.8}
-.btn-secondary{width:100%;padding:12px;font-size:14px;font-weight:500;background:#f2f2f7;border:none;border-radius:12px;cursor:pointer;color:#8e8e93;margin-top:8px;-webkit-appearance:none}
-.btn-success{width:100%;padding:15px;font-size:15px;font-weight:600;background:#34c759;border:none;border-radius:12px;cursor:pointer;color:#fff;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px;-webkit-appearance:none}
-.empty-note{font-size:13px;color:#c7c7cc;text-align:center;padding:16px 0}
+.btn-ok{width:100%;padding:15px;font-size:15px;font-weight:600;border:none;border-radius:12px;cursor:pointer;color:#fff;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px;-webkit-appearance:none}
+.btn-ok:active{opacity:.8}
+.btn-grey{width:100%;padding:12px;font-size:14px;font-weight:500;background:#f2f2f7;border:none;border-radius:12px;cursor:pointer;color:#8e8e93;margin-top:8px;-webkit-appearance:none}
 .no-result{font-size:13px;color:#8e8e93;padding:12px 14px;text-align:center}
-/* CALENDRIER */
+.empty-note{font-size:13px;color:#c7c7cc;text-align:center;padding:16px 0}
+/* CAL */
 .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .cal-nav{background:none;border:none;font-size:26px;cursor:pointer;padding:2px 10px;color:#1a56db}
-.cal-title{font-size:17px;font-weight:700}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-.cal-day-name{text-align:center;font-size:11px;font-weight:600;color:#8e8e93;padding:4px 0}
-.cal-day{text-align:center;padding:7px 2px;border-radius:8px;font-size:14px;min-height:36px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px}
+.cal-dn{text-align:center;font-size:11px;font-weight:600;color:#8e8e93;padding:4px 0}
+.cal-day{text-align:center;padding:7px 2px;border-radius:8px;font-size:14px;min-height:36px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;cursor:pointer}
 .cal-day.libre{background:#e8fbe8;color:#1a7f37}
 .cal-day.reserve{background:#ffe5e5;color:#cc0000;font-weight:700}
 .cal-day.attente{background:#fff8e1;color:#b8860b;font-weight:700}
 .cal-day.today{outline:2px solid #1a56db;outline-offset:-1px}
 .cal-dot{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.7}
-/* LISTE */
-.presta-item{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;border-left:5px solid #e5e5ea}
-.presta-item.confirme{border-left-color:#34c759}
-.presta-item.attente{border-left-color:#ff9500}
-.presta-item.annule{border-left-color:#ff3b30;opacity:.6}
-.presta-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px}
-.presta-type{font-size:15px;font-weight:700}
-.presta-montant{font-size:15px;font-weight:700;color:#1a56db}
-.presta-row{font-size:13px;color:#8e8e93;margin-bottom:2px}
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;display:none;align-items:flex-end}
+.overlay.open{display:flex}
+.modal{background:#f2f2f7;border-radius:22px 22px 0 0;padding:20px 16px 44px;width:100%;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.modal-title{font-size:18px;font-weight:700}
+.modal-close{background:none;border:none;font-size:26px;cursor:pointer;color:#8e8e93;line-height:1}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ssep{font-size:11px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:.06em;margin:14px 0 8px}
+/* PRESTA */
+.pi{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;border-left:5px solid #e5e5ea}
+.pi.confirme{border-left-color:#34c759}
+.pi.attente{border-left-color:#ff9500}
+.pi.annule{border-left-color:#ff3b30;opacity:.6}
+.pi-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px}
+.pi-type{font-size:15px;font-weight:700}
+.pi-montant{font-size:15px;font-weight:700;color:#1a56db}
+.pi-row{font-size:13px;color:#8e8e93;margin-bottom:2px}
 .badge{display:inline-block;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:600;margin-top:5px}
 .badge.confirme{background:#e8fbe8;color:#1a7f37}
 .badge.attente{background:#fff8e1;color:#b8860b}
 .badge.annule{background:#ffe5e5;color:#cc0000}
-.presta-actions{display:flex;gap:6px;margin-top:10px}
-.presta-actions button{flex:1;padding:9px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;-webkit-appearance:none}
+.pact{display:flex;gap:6px;margin-top:10px}
+.pact button{flex:1;padding:9px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;-webkit-appearance:none}
 .btn-edit{background:#f2f2f7;color:#1c1c1e}
-.btn-delete{background:#ffe5e5;color:#cc0000}
+.btn-del{background:#ffe5e5;color:#cc0000}
 /* FINANCE */
 .fin-stat{background:#1c1c1e;border-radius:14px;padding:16px;margin-bottom:10px;color:#fff}
-.fin-stat .label{font-size:12px;color:#8e8e93;margin-bottom:4px}
-.fin-stat .amount{font-size:30px;font-weight:700}
-.fin-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}
-.fin-card{background:#fff;border-radius:14px;padding:14px;text-align:center}
+.fin-stat .fl{font-size:12px;color:#8e8e93;margin-bottom:4px}
+.fin-stat .fv{font-size:30px;font-weight:700}
+.fin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.fin-card{background:#fff;border-radius:14px;padding:12px;text-align:center}
 .fin-card .fl{font-size:11px;color:#8e8e93;margin-bottom:4px}
-.fin-card .fv{font-size:20px;font-weight:700;color:#1c1c1e}
-.fin-card .fv.green{color:#34c759}
-.fin-card .fv.orange{color:#ff9500}
-.acompte-item{background:#fff;border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
-.acompte-info{flex:1;min-width:0}
-.acompte-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.acompte-detail{font-size:12px;color:#8e8e93;margin-top:2px}
-.acompte-amount{font-size:13px;font-weight:700;color:#1a56db;flex-shrink:0}
-.toggle{width:48px;height:28px;background:#e5e5ea;border-radius:14px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;border:none}
-.toggle.on{background:#34c759}
-.toggle::after{content:'';position:absolute;width:22px;height:22px;background:#fff;border-radius:50%;top:3px;left:3px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.toggle.on::after{left:23px}
-/* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;display:none;align-items:flex-end}
-.modal-overlay.open{display:flex}
-.modal{background:#f2f2f7;border-radius:22px 22px 0 0;padding:20px 16px 44px;width:100%;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-.modal-title{font-size:18px;font-weight:700}
-.modal-close{background:none;border:none;font-size:26px;cursor:pointer;color:#8e8e93;line-height:1}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.section-sep{font-size:11px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:.06em;margin:14px 0 8px}
+.fin-card .fv{font-size:16px;font-weight:700;color:#1c1c1e}
+/* DEMANDES */
+.dem-item{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px}
+.dem-row{font-size:13px;color:#8e8e93;margin-bottom:3px}
+.dem-actions{display:flex;gap:6px;margin-top:10px}
+.dem-actions button{flex:1;padding:9px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;-webkit-appearance:none}
+.filter-bar{display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px}
+.filter-btn{flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid #e5e5ea;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#1c1c1e;-webkit-appearance:none}
+.filter-btn.active{background:#1c1c1e;color:#fff;border-color:#1c1c1e}
+select{-webkit-appearance:auto}
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <button class="nav-btn active" onclick="showPage('devis')"><span class="icon">📄</span>Devis</button>
-  <button class="nav-btn" onclick="showPage('planning')"><span class="icon">📅</span>Planning</button>
-  <button class="nav-btn" onclick="showPage('finance')"><span class="icon">💰</span>Finance</button>
-  <button class="nav-btn" onclick="showPage('demandes')"><span class="icon">📥</span><span id="nav-demandes-label">Demandes</span></button>
+  <button class="nav-btn active" onclick="goTo('devis')"><span class="icon">📄</span>Devis</button>
+  <button class="nav-btn" onclick="goTo('planning')"><span class="icon">📅</span>Planning</button>
+  <button class="nav-btn" onclick="goTo('finance')"><span class="icon">💰</span>Finance</button>
+  <button class="nav-btn" onclick="goTo('demandes')"><span class="icon">📥</span><span id="nav-dem">Demandes</span></button>
 </nav>
 
-<!-- DEVIS -->
+<!-- ═══════════ DEVIS ═══════════ -->
 <div class="page active" id="page-devis">
   <div class="page-header"><h1>DJ Meyra</h1><p>06.66.15.35.83 — Mulhouse</p></div>
   <div class="card">
     <p class="stitle">Client</p>
     <div class="flabel">Nom du client</div>
-    <input type="text" id="nom-client" placeholder="Ex : Dupont Marie" oninput="upd()" autocorrect="off" autocapitalize="words">
+    <input type="text" id="d-nom" placeholder="Ex : Dupont Marie" oninput="calcDevis()" autocorrect="off" autocapitalize="words">
     <div class="flabel">Téléphone</div>
-    <input type="tel" id="tel-client" placeholder="06 00 00 00 00">
+    <input type="tel" id="d-tel" placeholder="06 00 00 00 00">
     <div class="flabel">Instagram</div>
-    <input type="text" id="insta-client" placeholder="@nom_instagram" autocorrect="off" autocapitalize="none">
+    <input type="text" id="d-insta" placeholder="@nom_instagram" autocorrect="off" autocapitalize="none">
     <div class="flabel">Date de la prestation</div>
-    <input type="date" id="date-presta" oninput="upd()">
+    <input type="date" id="d-date" oninput="calcDevis()">
   </div>
   <div class="card">
     <p class="stitle">Type de prestation</p>
     <div class="pgrid">
-      <button class="pbtn" data-base="1200" data-label="Mariage" onclick="selP(this)"><span class="pn">Mariage</span><span class="pp">1 200 € — 6h</span></button>
-      <button class="pbtn" data-base="800" data-label="Kina" onclick="selP(this)"><span class="pn">Kina</span><span class="pp">800 € — 6h</span></button>
-      <button class="pbtn" data-base="800" data-label="Fiançailles" onclick="selP(this)"><span class="pn">Fiançailles</span><span class="pp">800 € — 6h</span></button>
-      <button class="pbtn" data-base="500" data-label="Anniversaire" onclick="selP(this)"><span class="pn">Anniversaire</span><span class="pp">500 € — 6h</span></button>
-      <button class="pbtn" data-base="600" data-label="Autre" onclick="selP(this)" style="grid-column:span 2"><span class="pn">Autre</span><span class="pp">600 € — 6h</span></button>
+      <button class="pbtn" data-base="1200" data-label="Mariage" onclick="selPresta(this)"><span class="pn">Mariage</span><span class="pp">1 200 € — 6h</span></button>
+      <button class="pbtn" data-base="800" data-label="Kina" onclick="selPresta(this)"><span class="pn">Kina</span><span class="pp">800 € — 6h</span></button>
+      <button class="pbtn" data-base="800" data-label="Fiançailles" onclick="selPresta(this)"><span class="pn">Fiançailles</span><span class="pp">800 € — 6h</span></button>
+      <button class="pbtn" data-base="500" data-label="Anniversaire" onclick="selPresta(this)"><span class="pn">Anniversaire</span><span class="pp">500 € — 6h</span></button>
+      <button class="pbtn" data-base="600" data-label="Autre" onclick="selPresta(this)" style="grid-column:span 2"><span class="pn">Autre</span><span class="pp">600 € — 6h</span></button>
     </div>
   </div>
   <div class="card">
     <p class="stitle">Horaires</p>
     <div class="flabel">Heure de début</div>
-    <input type="time" id="h-debut" value="18:00" oninput="upd()">
+    <input type="time" id="d-hdebut" value="18:00" oninput="calcDevis()">
     <div class="flabel">Heure de fin</div>
-    <input type="time" id="h-fin" value="00:00" oninput="upd()">
-    <div class="dbadge">⏳ <span id="dur-txt">6h de prestation</span></div>
-    <div class="supp-note" id="supp-info">⚡ <span id="supp-txt"></span></div>
+    <input type="time" id="d-hfin" value="00:00" oninput="calcDevis()">
+    <div class="dbadge">⏳ <span id="d-dur">6h de prestation</span></div>
+    <div class="supp-note" id="d-supp">⚡ <span id="d-supp-txt"></span></div>
   </div>
   <div class="card">
-    <p class="stitle">Lieu de la prestation</p>
-    <input type="text" id="ville-input" placeholder="Tapez une ville..." oninput="onVI()" autocomplete="off" autocorrect="off" autocapitalize="words">
-    <div class="sugg-box" id="sugg-box"></div>
-    <div class="kmbox" id="km-box" style="display:none">
-      <div><div style="font-size:17px;font-weight:700" id="km-num">—</div><div style="font-size:11px;color:#8e8e93">depuis Mulhouse</div></div>
-      <div style="margin-left:auto;font-size:15px;font-weight:700;color:#34c759" id="km-frais">0 €</div>
+    <p class="stitle">Lieu</p>
+    <input type="text" id="d-ville" placeholder="Tapez une ville..." oninput="rechercheVille()" autocomplete="off" autocorrect="off" autocapitalize="words">
+    <div class="sugg-box" id="d-sugg"></div>
+    <div class="kmbox" id="d-kmbox" style="display:none">
+      <div><div style="font-size:17px;font-weight:700" id="d-km">—</div><div style="font-size:11px;color:#8e8e93">depuis Mulhouse</div></div>
+      <div style="margin-left:auto;font-size:15px;font-weight:700;color:#34c759" id="d-kmfrais">0 €</div>
     </div>
-    <div class="hotel-note" id="hotel-info">🏨 Nuit d'hôtel incluse dans les frais</div>
+    <div class="hotel-note" id="d-hotel">🏨 Nuit d'hôtel incluse dans les frais</div>
   </div>
   <div class="card">
     <p class="stitle">Récapitulatif</p>
-    <div id="detail-wrap"><p class="empty-note">Sélectionnez une prestation pour voir le total</p></div>
-    <div id="tot-box" style="display:none" class="totbox"><span style="font-size:15px;font-weight:600;color:#fff">Total à facturer</span><span style="font-size:28px;font-weight:700;color:#fff" id="total-amt">—</span></div>
-    <div id="ac-box" style="display:none;margin-top:8px">
+    <div id="d-recap"><p class="empty-note">Sélectionnez une prestation pour voir le total</p></div>
+    <div id="d-totbox" style="display:none" class="totbox"><span style="font-size:15px;font-weight:600;color:#fff">Total à facturer</span><span style="font-size:28px;font-weight:700;color:#fff" id="d-total">—</span></div>
+    <div id="d-acbox" style="display:none;margin-top:8px">
       <div style="background:#eaf5ea;border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
         <span style="font-size:13px;font-weight:600;color:#1a7f37">Acompte</span>
         <div style="display:flex;align-items:center;gap:8px">
-          <input type="number" id="acompte-input" min="0" oninput="updAcompte()" style="font-size:18px;font-weight:700;color:#1a7f37;width:100px;text-align:right;border:none;background:transparent;-webkit-appearance:none;outline:none">
+          <input type="number" id="d-acompte" min="0" oninput="updReste()" style="font-size:18px;font-weight:700;color:#1a7f37;width:100px;text-align:right;border:none;background:transparent;-webkit-appearance:none;outline:none">
           <span style="font-size:14px;color:#1a7f37;font-weight:600">€</span>
         </div>
       </div>
     </div>
-    <div id="metric-box" style="display:none" class="mgrid2">
-      <div class="metric"><div class="ml">Reste à percevoir</div><div class="mv" id="reste-amt">—</div></div>
-      <div class="metric"><div class="ml">Durée totale</div><div class="mv" id="dur-recap">—</div></div>
+    <div id="d-metbox" style="display:none" class="mgrid2">
+      <div class="metric"><div class="ml">Reste à percevoir</div><div class="mv" id="d-reste">—</div></div>
+      <div class="metric"><div class="ml">Durée totale</div><div class="mv" id="d-duree">—</div></div>
     </div>
-    <div id="remise-box" style="display:none;margin-top:10px">
+    <div id="d-rembox" style="display:none;margin-top:10px">
       <div class="flabel">Remise (€)</div>
-      <input type="number" id="remise-input" placeholder="Ex: 50" min="0" oninput="upd()" style="font-size:16px;width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid #e5e5ea;background:#f9f9f9;color:#1c1c1e;-webkit-appearance:none;outline:none">
+      <input type="number" id="d-remise" placeholder="Ex: 50" min="0" oninput="calcDevis()">
     </div>
-    <button class="btn-success" id="planning-btn" style="display:none" onclick="ajouterAuPlanning()">📅 Ajouter au planning</button>
-    <button class="btn-primary" id="pdf-btn" style="display:none" onclick="genPDF()">📄 Télécharger le devis PDF</button>
-    <button class="btn-secondary" onclick="reset()">Réinitialiser</button>
+    <button class="btn-ok" id="d-planning-btn" style="display:none;background:#34c759" onclick="ajouterPlanning()">📅 Ajouter au planning</button>
+    <button class="btn-ok" id="d-pdf-btn" style="display:none;background:#1c1c1e" onclick="genPDF()">📄 Télécharger le devis PDF</button>
+    <button class="btn-grey" onclick="resetDevis()">Réinitialiser</button>
   </div>
 </div>
 
-<!-- PLANNING -->
+<!-- ═══════════ PLANNING ═══════════ -->
 <div class="page" id="page-planning">
-  <div class="page-header"><h1>Planning</h1><p id="planning-subtitle">—</p></div>
+  <div class="page-header"><h1>Planning</h1><p id="pl-sub">—</p></div>
   <div style="display:flex;gap:8px;margin-bottom:12px">
-    <button onclick="setVue('cal')" id="btn-vue-cal" style="flex:1;padding:10px;border-radius:10px;border:none;font-size:14px;font-weight:600;background:#1c1c1e;color:#fff;cursor:pointer">📅 Calendrier</button>
-    <button onclick="setVue('list')" id="btn-vue-list" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid #e5e5ea;font-size:14px;font-weight:600;background:#fff;color:#1c1c1e;cursor:pointer">📋 Liste</button>
+    <button onclick="setVue('cal')" id="btn-cal" style="flex:1;padding:10px;border-radius:10px;border:none;font-size:14px;font-weight:600;background:#1c1c1e;color:#fff;cursor:pointer">📅 Calendrier</button>
+    <button onclick="setVue('list')" id="btn-list" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid #e5e5ea;font-size:14px;font-weight:600;background:#fff;color:#1c1c1e;cursor:pointer">📋 Liste</button>
   </div>
   <div id="vue-cal">
     <div class="card">
       <div class="cal-header">
         <button class="cal-nav" onclick="calNav(-1)">‹</button>
         <div style="display:flex;gap:6px;align-items:center">
-          <select id="cal-select-mois" onchange="calSelectMois()" style="font-size:15px;font-weight:700;border:none;background:none;color:#1c1c1e;cursor:pointer;padding:4px;-webkit-appearance:auto">
+          <select id="cal-mois" onchange="calApply()">
             <option value="0">Janvier</option><option value="1">Février</option><option value="2">Mars</option>
             <option value="3">Avril</option><option value="4">Mai</option><option value="5">Juin</option>
             <option value="6">Juillet</option><option value="7">Août</option><option value="8">Septembre</option>
             <option value="9">Octobre</option><option value="10">Novembre</option><option value="11">Décembre</option>
           </select>
-          <select id="cal-select-annee" onchange="calSelectAnnee()" style="font-size:15px;font-weight:700;border:none;background:none;color:#1c1c1e;cursor:pointer;padding:4px;-webkit-appearance:auto">
-          </select>
+          <select id="cal-annee" onchange="calApply()"></select>
         </div>
         <button class="cal-nav" onclick="calNav(1)">›</button>
       </div>
@@ -228,11 +223,11 @@ input:focus,select:focus,textarea:focus{border-color:#4a90e2;background:#fff}
       <span style="font-size:12px;background:#fff8e1;color:#b8860b;padding:5px 10px;border-radius:8px;font-weight:500">🟡 En attente</span>
     </div>
   </div>
-  <div id="vue-list" style="display:none"><div id="liste-prestations"></div></div>
-  <button class="btn-primary" onclick="openModal(null)">+ Ajouter une prestation</button>
+  <div id="vue-list" style="display:none"><div id="pl-list"></div></div>
+  <button class="btn-ok" style="background:#1c1c1e" onclick="ouvrirModal(null)">+ Ajouter une prestation</button>
 </div>
 
-<!-- FINANCE -->
+<!-- ═══════════ FINANCE ═══════════ -->
 <div class="page" id="page-finance">
   <div class="page-header"><h1>Finance</h1></div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
@@ -240,309 +235,226 @@ input:focus,select:focus,textarea:focus{border-color:#4a90e2;background:#fff}
     <span id="fin-annee" style="font-size:17px;font-weight:700">—</span>
     <button onclick="finNav(1)" style="background:none;border:none;font-size:26px;color:#1a56db;cursor:pointer;padding:2px 10px">›</button>
   </div>
-  <!-- CA Total -->
-  <div style="background:#1c1c1e;border-radius:16px;padding:20px;margin-bottom:10px">
-    <div style="font-size:12px;color:#8e8e93;margin-bottom:6px">Chiffre d'affaires total</div>
-    <div style="font-size:36px;font-weight:700;color:#fff" id="fin-total">0 €</div>
-    <div style="font-size:12px;color:#8e8e93;margin-top:4px" id="fin-nb-total">0 prestation(s)</div>
+  <div class="fin-stat"><div class="fl">Chiffre d'affaires total</div><div class="fv" id="fin-total">0 €</div><div style="font-size:12px;color:#8e8e93;margin-top:4px" id="fin-sub">—</div></div>
+  <div class="fin-grid">
+    <div class="fin-card"><div class="fl">Moy. / mois</div><div class="fv" id="fin-moy" style="color:#1a56db">0 €</div></div>
+    <div class="fin-card"><div class="fl">Prestations</div><div class="fv" id="fin-nb">0</div></div>
+    <div class="fin-card"><div class="fl">Moy. / presta</div><div class="fv" id="fin-moyp">0 €</div></div>
   </div>
-
-  <!-- 3 métriques -->
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px">
-    <div style="background:#e8f0fe;border-radius:14px;padding:12px;text-align:center">
-      <div style="font-size:11px;color:#1a56db;margin-bottom:4px;font-weight:500">Moy. / mois</div>
-      <div style="font-size:16px;font-weight:700;color:#1a56db" id="fin-moyenne">0 €</div>
-    </div>
-    <div style="background:#f2f2f7;border-radius:14px;padding:12px;text-align:center">
-      <div style="font-size:11px;color:#8e8e93;margin-bottom:4px;font-weight:500">Prestations</div>
-      <div style="font-size:18px;font-weight:700;color:#1c1c1e" id="fin-nb-conf">0</div>
-    </div>
-    <div style="background:#f2f2f7;border-radius:14px;padding:12px;text-align:center">
-      <div style="font-size:11px;color:#8e8e93;margin-bottom:4px;font-weight:500">Moy. / presta</div>
-      <div style="font-size:16px;font-weight:700;color:#1c1c1e" id="fin-moy-presta">0 €</div>
-    </div>
-  </div>
-
-  <!-- Liste par mois -->
-  <div class="card">
-    <p class="stitle">Détail par mois</p>
-    <div id="acompte-list"><p class="empty-note">Aucune prestation</p></div>
-  </div>
+  <div class="card"><p class="stitle">Détail par mois</p><div id="fin-detail"><p class="empty-note">Aucune prestation</p></div></div>
 </div>
 
-<!-- MODAL AJOUT/EDIT -->
-<div class="modal-overlay" id="modal">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="modal-title" id="modal-title">Ajouter une prestation</span>
-      <button class="modal-close" onclick="closeModal()">✕</button>
-    </div>
-
-    <div class="section-sep">👤 Informations client</div>
-    <div class="flabel">Nom du client *</div>
-    <input type="text" id="m-client" placeholder="Nom Prénom" autocorrect="off" autocapitalize="words">
-    <div class="flabel">Téléphone</div>
-    <input type="tel" id="m-tel" placeholder="06 00 00 00 00">
-    <div class="flabel">Instagram</div>
-    <input type="text" id="m-instagram" placeholder="@nom_instagram" autocorrect="off" autocapitalize="none">
-
-    <div class="section-sep">🎵 Prestation</div>
-    <div class="flabel">Date *</div>
-    <input type="date" id="m-date">
-    <div class="row2" style="margin-top:10px">
-      <div>
-        <div class="flabel" style="margin-top:0">Heure début</div>
-        <input type="time" id="m-hdebut" value="18:00">
-      </div>
-      <div>
-        <div class="flabel" style="margin-top:0">Heure fin</div>
-        <input type="time" id="m-hfin" value="00:00">
-      </div>
-    </div>
-    <div class="flabel">Type de prestation</div>
-    <select id="m-type">
-      <option value="Mariage">Mariage</option>
-      <option value="Kina">Kina</option>
-      <option value="Fiançailles">Fiançailles</option>
-      <option value="Anniversaire">Anniversaire</option>
-      <option value="Autre">Autre</option>
-    </select>
-    <div class="flabel">Statut</div>
-    <select id="m-statut">
-      <option value="confirme">Confirmé</option>
-      <option value="attente">En attente</option>
-      <option value="annule">Annulé</option>
-    </select>
-
-    <div class="section-sep">📍 Lieu</div>
-    <div class="flabel">Ville</div>
-    <input type="text" id="m-ville" placeholder="Ex : Strasbourg" autocorrect="off" autocapitalize="words">
-    <div class="flabel">Adresse de la salle</div>
-    <textarea id="m-adresse" placeholder="Ex : 23 allée Gluck, 68200 Mulhouse"></textarea>
-
-    <div class="section-sep">💰 Finances</div>
-    <div class="row2">
-      <div>
-        <div class="flabel" style="margin-top:0">Montant total (€)</div>
-        <input type="number" id="m-montant" placeholder="Ex: 1000" oninput="updateAcompteAuto()">
-      </div>
-      <div>
-        <div class="flabel" style="margin-top:0">Acompte (€)</div>
-        <input type="number" id="m-acompte" placeholder="Ex: 250">
-      </div>
-    </div>
-
-    <div class="section-sep">📝 Notes</div>
-    <textarea id="m-notes" placeholder="Informations supplémentaires..."></textarea>
-
-    <input type="hidden" id="m-id">
-    <button class="btn-primary" onclick="savePrestation()" style="margin-top:16px" id="modal-save-btn">Enregistrer</button>
-    <button class="btn-secondary" onclick="closeModal()">Annuler</button>
-  </div>
-</div>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getDatabase, ref, set, onValue, update, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyBv_0pZASNBoVNlQ4-ztKsXwVrIN0dMQ-U",
-    authDomain: "dj-meyra.firebaseapp.com",
-    databaseURL: "https://dj-meyra-default-rtdb.firebaseio.com",
-    projectId: "dj-meyra",
-    storageBucket: "dj-meyra.firebasestorage.app",
-    messagingSenderId: "161733120497",
-    appId: "1:161733120497:web:6d51fac4eb4d5730abf450"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-
-  // Sync prestations vers Firebase à chaque modification
-  window.syncToFirebase = function(data) {
-    set(ref(db, 'planning'), data);
-  };
-
-  // Écouter les changements Firebase en temps réel
-  onValue(ref(db, 'planning'), function(snapshot) {
-    var data = snapshot.val();
-    if (data) {
-      var arr;
-      if (Array.isArray(data)) {
-        arr = data.filter(function(x){return x!=null;});
-      } else if (typeof data === 'object') {
-        arr = Object.values(data).filter(function(x){return x!=null;});
-      } else {
-        arr = [];
-      }
-      window._firebaseData = arr;
-      if (window._firebaseReady) window._onFirebaseUpdate(arr);
-    }
-  });
-
-  window._firebaseReady = false;
-  window.addEventListener('load', function() {
-    window._firebaseReady = true;
-  });
-
-  // Écouter les demandes en temps réel
-
-  onValue(ref(db, 'demandes'), function(snapshot) {
-    var data = snapshot.val();
-    var arr = [];
-    if(data) {
-      Object.keys(data).forEach(function(key) {
-        var d = data[key];
-        if(d) { d.firebaseKey = key; arr.push(d); }
-      });
-    }
-    allDemandes = arr;
-    // Badge sur nav
-    var nouvelles = arr.filter(function(d){return d.statut==='nouveau';}).length;
-    var label = document.getElementById('nav-demandes-label');
-    if(label) label.textContent = nouvelles > 0 ? 'Dem. ('+nouvelles+')' : 'Demandes';
-    // Re-render si page active
-    var page = document.getElementById('page-demandes');
-    if(page && page.classList.contains('active')) renderDemandes(filtreActuel);
-  });
-
-  // Mettre à jour statut demande dans Firebase
-  window._updateDemande = function(key, statut) {
-    update(ref(db, 'demandes/' + key), {statut: statut});
-  };
-</script>
-
-<!-- PAGE DEMANDES -->
+<!-- ═══════════ DEMANDES ═══════════ -->
 <div class="page" id="page-demandes">
-  <div class="page-header"><h1>Demandes</h1><p id="demandes-subtitle">Chargement...</p></div>
-
-  <div style="display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px">
-    <button onclick="filtrerDemandes('tous')" id="f-tous" style="flex-shrink:0;padding:7px 14px;border-radius:20px;border:none;font-size:13px;font-weight:600;cursor:pointer;background:#1c1c1e;color:#fff">Toutes</button>
-    <button onclick="filtrerDemandes('nouveau')" id="f-nouveau" style="flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid #e5e5ea;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#1c1c1e">Nouvelles</button>
-    <button onclick="filtrerDemandes('en_attente')" id="f-en_attente" style="flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid #e5e5ea;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#1c1c1e">En attente</button>
-    <button onclick="filtrerDemandes('confirme')" id="f-confirme" style="flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid #e5e5ea;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#1c1c1e">Confirmées</button>
-    <button onclick="filtrerDemandes('refuse')" id="f-refuse" style="flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid #e5e5ea;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#1c1c1e">Refusées</button>
+  <div class="page-header"><h1>Demandes</h1><p id="dem-sub">—</p></div>
+  <div class="filter-bar">
+    <button class="filter-btn active" id="fb-tous" onclick="filtrerDem('tous')">Toutes</button>
+    <button class="filter-btn" id="fb-nouveau" onclick="filtrerDem('nouveau')">Nouvelles</button>
+    <button class="filter-btn" id="fb-en_attente" onclick="filtrerDem('en_attente')">En attente</button>
+    <button class="filter-btn" id="fb-confirme" onclick="filtrerDem('confirme')">Confirmées</button>
+    <button class="filter-btn" id="fb-refuse" onclick="filtrerDem('refuse')">Refusées</button>
   </div>
+  <div id="dem-list"><p class="empty-note">Chargement...</p></div>
+</div>
 
-  <div id="demandes-list"><p style="font-size:13px;color:#c7c7cc;text-align:center;padding:30px 0">Chargement des demandes...</p></div>
+<!-- MODAL PRESTATION -->
+<div class="overlay" id="modal-presta">
+  <div class="modal">
+    <div class="modal-hdr"><span class="modal-title" id="modal-titre">Ajouter</span><button class="modal-close" onclick="fermerModal()">✕</button></div>
+    <div class="ssep">👤 Client</div>
+    <div class="flabel">Nom *</div><input type="text" id="m-nom" placeholder="Nom Prénom" autocorrect="off" autocapitalize="words">
+    <div class="flabel">Téléphone</div><input type="tel" id="m-tel" placeholder="06 00 00 00 00">
+    <div class="flabel">Instagram</div><input type="text" id="m-insta" placeholder="@instagram" autocorrect="off" autocapitalize="none">
+    <div class="ssep">🎵 Prestation</div>
+    <div class="flabel">Date *</div><input type="date" id="m-date">
+    <div class="row2" style="margin-top:10px">
+      <div><div class="flabel" style="margin-top:0">Début</div><input type="time" id="m-hdebut" value="18:00"></div>
+      <div><div class="flabel" style="margin-top:0">Fin</div><input type="time" id="m-hfin" value="00:00"></div>
+    </div>
+    <div class="flabel">Type</div>
+    <select id="m-type"><option>Mariage</option><option>Kina</option><option>Fiançailles</option><option>Anniversaire</option><option>Autre</option></select>
+    <div class="flabel">Statut</div>
+    <select id="m-statut"><option value="confirme">Confirmé</option><option value="attente">En attente</option><option value="annule">Annulé</option></select>
+    <div class="ssep">📍 Lieu</div>
+    <div class="flabel">Ville</div><input type="text" id="m-ville" placeholder="Ville" autocorrect="off" autocapitalize="words">
+    <div class="flabel">Adresse de la salle</div><textarea id="m-adresse" placeholder="Adresse complète..."></textarea>
+    <div class="ssep">💰 Finances</div>
+    <div class="row2">
+      <div><div class="flabel" style="margin-top:0">Montant total (€)</div><input type="number" id="m-montant" placeholder="Ex: 1000" oninput="calcAcompteModal()"></div>
+      <div><div class="flabel" style="margin-top:0">Acompte (€)</div><input type="number" id="m-acompte" placeholder="Ex: 250"></div>
+    </div>
+    <div class="flabel">Notes</div><textarea id="m-notes" placeholder="Notes..."></textarea>
+    <input type="hidden" id="m-id">
+    <button class="btn-ok" style="background:#1c1c1e;margin-top:16px" onclick="sauvegarderPresta()" id="m-save-btn">Enregistrer</button>
+    <button class="btn-grey" onclick="fermerModal()">Annuler</button>
+  </div>
+</div>
+
+<!-- MODAL DETAIL -->
+<div class="overlay" id="modal-detail">
+  <div class="modal">
+    <div class="modal-hdr"><span class="modal-title" id="det-titre">Détail</span><button class="modal-close" onclick="fermerDetail()">✕</button></div>
+    <div id="det-content"></div>
+  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-var prestations=JSON.parse(localStorage.getItem('djmeyra_v2')||'[]');
-// Callback quand Firebase envoie des données plus récentes
-window._onFirebaseUpdate = function(data) {
-  if(!data||!Array.isArray(data))return;
-  prestations = data;
+// ═══════════════════════════════════════════════════
+// DONNÉES
+// ═══════════════════════════════════════════════════
+var prestations = JSON.parse(localStorage.getItem('djmeyra_v2') || '[]');
+var acomptesRecus = JSON.parse(localStorage.getItem('djmeyra_ac') || '{}');
+// Les demandes viennent UNIQUEMENT de Firebase via window._demandes
+var calDate = new Date();
+var anneeFinance = new Date().getFullYear();
+var vueActuelle = 'cal';
+var filtreDem = 'tous';
+
+function saveLocal() {
   localStorage.setItem('djmeyra_v2', JSON.stringify(prestations));
-  renderPlanning();
-  // Mettre à jour Finance seulement si l'onglet est visible
-  var finPage = document.getElementById('page-finance');
-  if(finPage && finPage.classList.contains('active')) renderFinance();
-};
-var acomptesRecus=JSON.parse(localStorage.getItem('djmeyra_ac')||'{}');
-function saveData(){
-  localStorage.setItem('djmeyra_v2',JSON.stringify(prestations));
-  localStorage.setItem('djmeyra_ac',JSON.stringify(acomptesRecus));
-  if(window.syncToFirebase) window.syncToFirebase(prestations);
+  localStorage.setItem('djmeyra_ac', JSON.stringify(acomptesRecus));
+}
+function fmt(n) { return n.toLocaleString('fr-FR') + ' €'; }
+function fmtPDF(n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+
+// ═══════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════
+function goTo(p) {
+  document.querySelectorAll('.page').forEach(function(x) { x.classList.remove('active'); });
+  document.querySelectorAll('.nav-btn').forEach(function(x) { x.classList.remove('active'); });
+  document.getElementById('page-' + p).classList.add('active');
+  var idx = {devis:0, planning:1, finance:2, demandes:3}[p];
+  if (idx !== undefined) document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+  if (p === 'planning') renderPlanning();
+  if (p === 'finance') renderFinance();
+  if (p === 'demandes') renderDemandes();
 }
 
-// NAV
-function showPage(p){
-  document.querySelectorAll('.page').forEach(function(x){x.classList.remove('active')});
-  document.querySelectorAll('.nav-btn').forEach(function(x){x.classList.remove('active')});
-  document.getElementById('page-'+p).classList.add('active');
-  [{devis:0,planning:1,finance:2}[p]].forEach(function(i){document.querySelectorAll('.nav-btn')[i].classList.add('active')});
-  if(p==='planning')renderPlanning();
-  if(p==='finance'){
-    if(window._firebaseData&&window._firebaseData.length>0){
-      prestations=window._firebaseData;
-      localStorage.setItem('djmeyra_v2',JSON.stringify(prestations));
-    } else {
-      prestations=JSON.parse(localStorage.getItem('djmeyra_v2')||'[]');
-    }
-    renderFinance();
-  }
-}
-
+// ═══════════════════════════════════════════════════
 // DEVIS
-var sB=0,sL='',sF=0,sK=0,sH=0,sC='',dNum=null;
-var BAR=[{max:50,f:0,h:0},{max:100,f:100,h:0},{max:200,f:100,h:0},{max:300,f:400,h:0},{max:400,f:600,h:1},{max:600,f:800,h:1},{max:800,f:1000,h:1},{max:1000,f:1200,h:1}];
-var PRIX={Mariage:1200,Kina:800,'Fiançailles':800,Anniversaire:500,Autre:600};
-function gF(km){for(var i=0;i<BAR.length;i++)if(km<=BAR[i].max)return BAR[i];return{f:1200,h:1};}
-function gDN(){if(dNum)return dNum;var d=new Date();dNum='DM-'+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+Math.floor(Math.random()*900+100);return dNum;}
-function fmt(n){return n.toLocaleString('fr-FR')+' €';}
-function selP(btn){document.querySelectorAll('.pbtn').forEach(function(b){b.classList.remove('active')});btn.classList.add('active');sB=parseInt(btn.dataset.base);sL=btn.dataset.label;upd();}
-function cD(d,f){var dm=parseInt(d.split(':')[0])*60+parseInt(d.split(':')[1]),fm=parseInt(f.split(':')[0])*60+parseInt(f.split(':')[1]);if(fm<=dm)fm+=1440;return(fm-dm)/60;}
-function upd(){
-  var deb=document.getElementById('h-debut').value||'18:00',fin=document.getElementById('h-fin').value||'00:00',h=cD(deb,fin);
-  var hd=Number.isInteger(h)?h+'h':h.toFixed(1)+'h';
-  document.getElementById('dur-txt').textContent=hd+' de prestation';
-  document.getElementById('dur-recap').textContent=hd;
-  var nbS=Math.max(0,h-6),si=document.getElementById('supp-info');
-  if(nbS>0){si.style.display='block';document.getElementById('supp-txt').textContent=nbS.toFixed(nbS%1?1:0)+'h supp. × 100 € = '+fmt(Math.round(nbS*100));}else si.style.display='none';
-  if(!sB)return;
-  var remise=Math.max(0,parseInt(document.getElementById('remise-input').value)||0);
-  var supp=Math.round(nbS*100),total=Math.max(0,sB+supp+sF-remise),ac=Math.round(total*.25),reste=total-ac;
-  var client=document.getElementById('nom-client').value,dv=document.getElementById('date-presta').value;
-  var ds=dv?new Date(dv+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}):'';
-  var html='';
-  var tel=document.getElementById('tel-client').value;
-  var insta=document.getElementById('insta-client').value;
-  if(client)html+='<div class="dline main"><span>Client</span><span>'+client+'</span></div>';
-  if(tel)html+='<div class="dline"><span>Téléphone</span><span>'+tel+'</span></div>';
-  if(insta)html+='<div class="dline"><span>Instagram</span><span>'+insta+'</span></div>';
-  if(ds)html+='<div class="dline"><span>Date</span><span>'+ds+'</span></div>';
-  html+='<div class="dline main"><span>'+sL+'</span><span>'+fmt(sB)+'</span></div>';
-  html+='<div class="dline"><span style="color:#c7c7cc">Forfait 6h ('+deb+' → '+fin+')</span><span style="color:#c7c7cc">inclus</span></div>';
-  if(nbS>0)html+='<div class="dline"><span>'+nbS.toFixed(nbS%1?1:0)+'h supp. × 100 €</span><span>+ '+fmt(supp)+'</span></div>';
-  if(sF>0){var det='Essence + péages'+(sH?' + hôtel':'')+(sF>=400?' + dérangement':'');html+='<div class="dline"><span>Déplacement ('+sK+' km)<br><span style="font-size:11px;color:#c7c7cc">'+det+'</span></span><span>+ '+fmt(sF)+'</span></div>';}
-  else if(sC)html+='<div class="dline"><span>Déplacement</span><span style="color:#34c759">Local (inclus)</span></div>';
-  else html+='<div class="dline"><span>Déplacement</span><span style="color:#c7c7cc">—</span></div>';
-  if(remise>0)html+='<div class="dline" style="color:#cc0000"><span>Remise</span><span>- '+fmt(remise)+'</span></div>';
-  document.getElementById('detail-wrap').innerHTML=html;
-  document.getElementById('total-amt').textContent=fmt(total);
-  // Pré-remplir acompte à 25% seulement si vide ou si le total a changé
-  var acInput=document.getElementById('acompte-input');
-  if(!acInput._userEdited){acInput.value=ac;}
-  var acVal=Math.max(0,parseInt(acInput.value)||ac);
-  document.getElementById('reste-amt').textContent=fmt(Math.max(0,total-acVal));
-  ['tot-box','ac-box','metric-box','planning-btn','pdf-btn'].forEach(function(id){
-    var el=document.getElementById(id);
-    el.style.display=id==='metric-box'?'grid':'flex';
-  });
-  document.getElementById('remise-box').style.display='block';
+// ═══════════════════════════════════════════════════
+var dBase = 0, dLabel = '', dFrais = 0, dKm = 0, dHotel = false, dVille = '', dNum = null;
+var BAR = [{max:50,f:0,h:false},{max:100,f:100,h:false},{max:200,f:100,h:false},{max:300,f:400,h:false},{max:400,f:600,h:true},{max:600,f:800,h:true},{max:800,f:1000,h:true},{max:1000,f:1200,h:true}];
+var PRIX = {Mariage:1200,Kina:800,'Fiançailles':800,Anniversaire:500,Autre:600};
+
+function getBareme(km) {
+  for (var i = 0; i < BAR.length; i++) if (km <= BAR[i].max) return BAR[i];
+  return {f:1200, h:true};
 }
-function ajouterAuPlanning(){
-  var client=document.getElementById('nom-client').value,date=document.getElementById('date-presta').value;
-  if(!client||!date||!sL){alert('Remplissez le client, la date et le type.');return;}
-  var deb=document.getElementById('h-debut').value||'18:00',fin=document.getElementById('h-fin').value||'00:00';
-  var h=cD(deb,fin),nbS=Math.max(0,h-6),total=sB+Math.round(nbS*100)+sF;
-  var ac=Math.round(total*.25);
-  prestations.push({id:Date.now(),client:client,tel:document.getElementById('tel-client').value.trim(),instagram:document.getElementById('insta-client').value.trim(),date:date,hdebut:deb,hfin:fin,type:sL,ville:sC||'',adresse:'',montant:total,acompte:ac,statut:'confirme',notes:''});
-  saveData();alert('✅ Ajouté au planning !');
+function genNum() {
+  if (dNum) return dNum;
+  var d = new Date();
+  dNum = 'DM-' + d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + '-' + Math.floor(Math.random()*900+100);
+  return dNum;
 }
-function updAcompte(){
-  var acInput=document.getElementById('acompte-input');
-  acInput._userEdited=true;
-  var total=parseInt(document.getElementById('total-amt').textContent.replace(/[^0-9]/g,''))||0;
-  var acVal=Math.max(0,parseInt(acInput.value)||0);
-  document.getElementById('reste-amt').textContent=fmt(Math.max(0,total-acVal));
-}
-function reset(){
-  sB=0;sL='';sF=0;sK=0;sH=0;sC='';dNum=null;
-  document.querySelectorAll('.pbtn').forEach(function(b){b.classList.remove('active')});
-  ['nom-client','tel-client','insta-client','date-presta','ville-input','remise-input','acompte-input'].forEach(function(id){document.getElementById(id).value='';});
-  document.getElementById('h-debut').value='18:00';document.getElementById('h-fin').value='00:00';
-  document.getElementById('sugg-box').style.display='none';document.getElementById('km-box').style.display='none';
-  document.getElementById('hotel-info').style.display='none';document.getElementById('supp-info').style.display='none';
-  document.getElementById('dur-txt').textContent='6h de prestation';
-  document.getElementById('detail-wrap').innerHTML='<p class="empty-note">Sélectionnez une prestation pour voir le total</p>';
-  ['tot-box','ac-box','planning-btn','pdf-btn'].forEach(function(id){document.getElementById(id).style.display='none';});
-  document.getElementById('metric-box').style.display='none';
+function calcDuree(a, b) {
+  var am = parseInt(a.split(':')[0])*60 + parseInt(a.split(':')[1]);
+  var bm = parseInt(b.split(':')[0])*60 + parseInt(b.split(':')[1]);
+  if (bm <= am) bm += 1440;
+  return (bm - am) / 60;
 }
 
+function selPresta(btn) {
+  document.querySelectorAll('.pbtn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  dBase = parseInt(btn.dataset.base);
+  dLabel = btn.dataset.label;
+  calcDevis();
+}
+
+function calcDevis() {
+  var deb = document.getElementById('d-hdebut').value || '18:00';
+  var fin = document.getElementById('d-hfin').value || '00:00';
+  var h = calcDuree(deb, fin);
+  var hd = Number.isInteger(h) ? h + 'h' : h.toFixed(1) + 'h';
+  document.getElementById('d-dur').textContent = hd + ' de prestation';
+  document.getElementById('d-duree').textContent = hd;
+  var nbS = Math.max(0, h - 6);
+  var si = document.getElementById('d-supp');
+  if (nbS > 0) {
+    si.style.display = 'block';
+    document.getElementById('d-supp-txt').textContent = nbS.toFixed(nbS%1?1:0) + 'h supp. × 100 € = ' + fmt(Math.round(nbS*100));
+  } else si.style.display = 'none';
+  if (!dBase) return;
+  var remise = Math.max(0, parseInt(document.getElementById('d-remise').value) || 0);
+  var supp = Math.round(nbS * 100);
+  var total = Math.max(0, dBase + supp + dFrais - remise);
+  var ac25 = Math.round(total * 0.25);
+  var acInput = document.getElementById('d-acompte');
+  if (!acInput._edited) acInput.value = ac25;
+  var acVal = Math.max(0, parseInt(acInput.value) || ac25);
+  var nom = document.getElementById('d-nom').value;
+  var tel = document.getElementById('d-tel').value;
+  var insta = document.getElementById('d-insta').value;
+  var date = document.getElementById('d-date').value;
+  var ds = date ? new Date(date+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}) : '';
+  var html = '';
+  if (nom) html += '<div class="dline main"><span>Client</span><span>' + nom + '</span></div>';
+  if (tel) html += '<div class="dline"><span>Téléphone</span><span>' + tel + '</span></div>';
+  if (insta) html += '<div class="dline"><span>Instagram</span><span>' + insta + '</span></div>';
+  if (ds) html += '<div class="dline"><span>Date</span><span>' + ds + '</span></div>';
+  html += '<div class="dline main"><span>' + dLabel + '</span><span>' + fmt(dBase) + '</span></div>';
+  html += '<div class="dline"><span style="color:#c7c7cc">Forfait 6h (' + deb + ' → ' + fin + ')</span><span style="color:#c7c7cc">inclus</span></div>';
+  if (nbS > 0) html += '<div class="dline"><span>' + nbS.toFixed(nbS%1?1:0) + 'h supp. × 100 €</span><span>+ ' + fmt(supp) + '</span></div>';
+  if (dFrais > 0) html += '<div class="dline"><span>Frais de déplacement</span><span>Inclus</span></div>';
+  else if (dVille) html += '<div class="dline"><span>Déplacement</span><span style="color:#34c759">Local (inclus)</span></div>';
+  if (remise > 0) html += '<div class="dline" style="color:#cc0000"><span>Remise</span><span>- ' + fmt(remise) + '</span></div>';
+  document.getElementById('d-recap').innerHTML = html;
+  document.getElementById('d-total').textContent = fmt(total);
+  document.getElementById('d-reste').textContent = fmt(Math.max(0, total - acVal));
+  ['d-totbox','d-acbox','d-metbox','d-rembox','d-planning-btn','d-pdf-btn'].forEach(function(id) {
+    var el = document.getElementById(id);
+    el.style.display = id === 'd-metbox' ? 'grid' : 'flex';
+  });
+}
+
+function updReste() {
+  document.getElementById('d-acompte')._edited = true;
+  var total = parseInt(document.getElementById('d-total').textContent.replace(/[^0-9]/g,'')) || 0;
+  var ac = Math.max(0, parseInt(document.getElementById('d-acompte').value) || 0);
+  document.getElementById('d-reste').textContent = fmt(Math.max(0, total - ac));
+}
+
+function ajouterPlanning() {
+  var nom = document.getElementById('d-nom').value;
+  var date = document.getElementById('d-date').value;
+  if (!nom || !date || !dLabel) { alert('Remplissez le client, la date et le type.'); return; }
+  var deb = document.getElementById('d-hdebut').value || '18:00';
+  var fin = document.getElementById('d-hfin').value || '00:00';
+  var h = calcDuree(deb, fin);
+  var nbS = Math.max(0, h - 6);
+  var remise = Math.max(0, parseInt(document.getElementById('d-remise').value) || 0);
+  var total = Math.max(0, dBase + Math.round(nbS*100) + dFrais - remise);
+  var ac = Math.max(0, parseInt(document.getElementById('d-acompte').value) || Math.round(total*0.25));
+  prestations.push({id:Date.now(),client:nom,tel:document.getElementById('d-tel').value.trim(),instagram:document.getElementById('d-insta').value.trim(),date:date,hdebut:deb,hfin:fin,type:dLabel,ville:dVille||'',adresse:'',montant:total,acompte:ac,statut:'confirme',notes:''});
+  saveLocal();
+  if (window._syncFirebase) window._syncFirebase(prestations);
+  alert('✅ Ajouté au planning !');
+}
+
+function resetDevis() {
+  dBase=0;dLabel='';dFrais=0;dKm=0;dHotel=false;dVille='';dNum=null;
+  document.querySelectorAll('.pbtn').forEach(function(b){b.classList.remove('active');});
+  ['d-nom','d-tel','d-insta','d-date','d-ville','d-remise','d-acompte'].forEach(function(id){
+    var el=document.getElementById(id);el.value='';if(el._edited!==undefined)el._edited=false;
+  });
+  document.getElementById('d-hdebut').value='18:00';
+  document.getElementById('d-hfin').value='00:00';
+  document.getElementById('d-sugg').style.display='none';
+  document.getElementById('d-kmbox').style.display='none';
+  document.getElementById('d-hotel').style.display='none';
+  document.getElementById('d-supp').style.display='none';
+  document.getElementById('d-dur').textContent='6h de prestation';
+  document.getElementById('d-recap').innerHTML='<p class="empty-note">Sélectionnez une prestation pour voir le total</p>';
+  ['d-totbox','d-acbox','d-planning-btn','d-pdf-btn'].forEach(function(id){document.getElementById(id).style.display='none';});
+  ['d-metbox','d-rembox'].forEach(function(id){document.getElementById(id).style.display='none';});
+}
+
+// ═══════════════════════════════════════════════════
 // VILLE
+// ═══════════════════════════════════════════════════
 var VILLES=[
   {n:'Mulhouse',r:'Haut-Rhin',km:0},
   {n:'Lutterbach',r:'Haut-Rhin',km:5},
@@ -572,7 +484,6 @@ var VILLES=[
   {n:'Bollwiller',r:'Haut-Rhin',km:18},
   {n:'Ensisheim',r:'Haut-Rhin',km:20},
   {n:'Altkirch',r:'Haut-Rhin',km:20},
-  {n:'Hirsingue',r:'Haut-Rhin',km:20},
   {n:'Dannemarie',r:'Haut-Rhin',km:25},
   {n:'Cernay',r:'Haut-Rhin',km:15},
   {n:'Thann',r:'Haut-Rhin',km:20},
@@ -596,19 +507,14 @@ var VILLES=[
   {n:'Bethoncourt',r:'Doubs',km:40},
   {n:'Audincourt',r:'Doubs',km:45},
   {n:'Sochaux',r:'Doubs',km:45},
-  {n:'Grand-Charmont',r:'Doubs',km:45},
-  {n:'Valentigney',r:'Doubs',km:50},
   {n:'Montbéliard',r:'Doubs',km:45},
   {n:'Morteau',r:'Doubs',km:90},
   {n:'Maîche',r:'Doubs',km:70},
   {n:'Pontarlier',r:'Doubs',km:120},
-  {n:'Ornans',r:'Doubs',km:120},
-  {n:'Baume-les-Dames',r:'Doubs',km:100},
   {n:'Besançon',r:'Doubs',km:130},
   {n:'Sélestat',r:'Bas-Rhin',km:70},
   {n:'Obernai',r:'Bas-Rhin',km:90},
   {n:'Molsheim',r:'Bas-Rhin',km:100},
-  {n:'Erstein',r:'Bas-Rhin',km:90},
   {n:'Boofzheim',r:'Bas-Rhin',km:85},
   {n:'Strasbourg',r:'Bas-Rhin',km:110},
   {n:'Strasbourg Meinau',r:'Bas-Rhin',km:115},
@@ -617,177 +523,72 @@ var VILLES=[
   {n:'Illkirch-Graffenstaden',r:'Bas-Rhin',km:108},
   {n:'Haguenau',r:'Bas-Rhin',km:140},
   {n:'Saverne',r:'Bas-Rhin',km:130},
-  {n:'Wissembourg',r:'Bas-Rhin',km:175},
   {n:'Saint-Dié-des-Vosges',r:'Vosges',km:100},
   {n:'Gérardmer',r:'Vosges',km:90},
   {n:'Remiremont',r:'Vosges',km:75},
-  {n:'Fraize',r:'Vosges',km:80},
   {n:'Épinal',r:'Vosges',km:120},
   {n:'Lure',r:'Haute-Saône',km:55},
-  {n:'Luxeuil-les-Bains',r:'Haute-Saône',km:85},
   {n:'Vesoul',r:'Haute-Saône',km:85},
   {n:'Gray',r:'Haute-Saône',km:130},
   {n:'Dampierre-sur-Salon',r:'Haute-Saône',km:130},
   {n:'Lons-le-Saunier',r:'Jura',km:150},
   {n:'Dole',r:'Jura',km:140},
-  {n:'Poligny',r:'Jura',km:155},
-  {n:'Champagnole',r:'Jura',km:165},
   {n:'Nancy',r:'Meurthe-et-Moselle',km:190},
   {n:'Metz',r:'Moselle',km:210},
   {n:'Thionville',r:'Moselle',km:235},
-  {n:'Sarrebourg',r:'Moselle',km:160},
-  {n:'Sarreguemines',r:'Moselle',km:195},
-  {n:'Forbach',r:'Moselle',km:215},
   {n:'Bar-le-Duc',r:'Meuse',km:240},
   {n:'Verdun',r:'Meuse',km:270},
   {n:'Chaumont',r:'Haute-Marne',km:200},
   {n:'Langres',r:'Haute-Marne',km:170},
   {n:'Bourg-en-Bresse',r:'Ain',km:270},
-  {n:'Oyonnax',r:'Ain',km:250},
   {n:'Lancrans',r:'Ain',km:220},
-  {n:'Ambérieu-en-Bugey',r:'Ain',km:290},
   {n:'Grenoble',r:'Isère',km:390},
-  {n:'Bourgoin-Jallieu',r:'Isère',km:370},
-  {n:'Vienne',r:'Isère',km:360},
   {n:'Lisle-d\'Abeau',r:'Isère',km:380},
-  {n:'Villeurbanne',r:'Rhône',km:340},
   {n:'Lyon',r:'Auvergne-Rhône-Alpes',km:340},
   {n:'Saint-Étienne',r:'Loire',km:395},
-  {n:'Roanne',r:'Loire',km:360},
-  {n:'Villefranche-sur-Saône',r:'Rhône',km:310},
   {n:'Annecy',r:'Haute-Savoie',km:300},
-  {n:'Thonon-les-Bains',r:'Haute-Savoie',km:310},
   {n:'Chambéry',r:'Savoie',km:330},
-  {n:'Annemasse',r:'Haute-Savoie',km:310},
   {n:'Chalon-sur-Saône',r:'Saône-et-Loire',km:260},
-  {n:'Mâcon',r:'Saône-et-Loire',km:295},
   {n:'Dijon',r:'Côte-d\'Or',km:220},
   {n:'Beaune',r:'Côte-d\'Or',km:240},
-  {n:'Auxerre',r:'Yonne',km:380},
-  {n:'Sens',r:'Yonne',km:420},
   {n:'Troyes',r:'Aube',km:340},
-  {n:'Châlons-en-Champagne',r:'Marne',km:380},
   {n:'Reims',r:'Marne',km:400},
-  {n:'Épernay',r:'Marne',km:420},
   {n:'Paris',r:'Île-de-France',km:530},
   {n:'Versailles',r:'Yvelines',km:540},
-  {n:'Saint-Denis',r:'Seine-Saint-Denis',km:540},
-  {n:'Créteil',r:'Val-de-Marne',km:535},
-  {n:'Nanterre',r:'Hauts-de-Seine',km:545},
-  {n:'Boulogne-Billancourt',r:'Hauts-de-Seine',km:540},
-  {n:'Argenteuil',r:'Val-d\'Oise',km:545},
-  {n:'Montreuil',r:'Seine-Saint-Denis',km:535},
-  {n:'Évry-Courcouronnes',r:'Essonne',km:530},
-  {n:'Massy',r:'Essonne',km:530},
-  {n:'Melun',r:'Seine-et-Marne',km:520},
-  {n:'Meaux',r:'Seine-et-Marne',km:510},
-  {n:'Pontoise',r:'Val-d\'Oise',km:550},
   {n:'Lille',r:'Nord',km:570},
-  {n:'Roubaix',r:'Nord',km:575},
-  {n:'Tourcoing',r:'Nord',km:575},
-  {n:'Dunkerque',r:'Nord',km:620},
-  {n:'Valenciennes',r:'Nord',km:560},
-  {n:'Douai',r:'Nord',km:555},
-  {n:'Lens',r:'Pas-de-Calais',km:560},
-  {n:'Arras',r:'Pas-de-Calais',km:540},
-  {n:'Calais',r:'Pas-de-Calais',km:640},
-  {n:'Boulogne-sur-Mer',r:'Pas-de-Calais',km:620},
-  {n:'Amiens',r:'Somme',km:560},
-  {n:'Beauvais',r:'Oise',km:590},
-  {n:'Compiègne',r:'Oise',km:530},
-  {n:'Soissons',r:'Aisne',km:470},
-  {n:'Laon',r:'Aisne',km:440},
-  {n:'Sedan',r:'Ardennes',km:370},
-  {n:'Charleville-Mézières',r:'Ardennes',km:360},
   {n:'Rouen',r:'Seine-Maritime',km:620},
-  {n:'Le Havre',r:'Seine-Maritime',km:680},
   {n:'Caen',r:'Calvados',km:750},
-  {n:'Cherbourg',r:'Manche',km:850},
-  {n:'Saint-Lô',r:'Manche',km:790},
-  {n:'Alençon',r:'Orne',km:710},
-  {n:'Évreux',r:'Eure',km:620},
   {n:'Rennes',r:'Ille-et-Vilaine',km:830},
   {n:'Brest',r:'Finistère',km:1000},
-  {n:'Quimper',r:'Finistère',km:900},
-  {n:'Lorient',r:'Morbihan',km:850},
-  {n:'Vannes',r:'Morbihan',km:820},
-  {n:'Saint-Brieuc',r:'Côtes-d\'Armor',km:870},
-  {n:'Saint-Malo',r:'Ille-et-Vilaine',km:790},
   {n:'Nantes',r:'Loire-Atlantique',km:750},
-  {n:'Saint-Nazaire',r:'Loire-Atlantique',km:770},
   {n:'Angers',r:'Maine-et-Loire',km:700},
   {n:'Le Mans',r:'Sarthe',km:680},
-  {n:'Laval',r:'Mayenne',km:720},
-  {n:'Cholet',r:'Maine-et-Loire',km:720},
   {n:'Orléans',r:'Loiret',km:540},
-  {n:'Chartres',r:'Eure-et-Loir',km:570},
   {n:'Tours',r:'Indre-et-Loire',km:600},
-  {n:'Blois',r:'Loir-et-Cher',km:570},
-  {n:'Bourges',r:'Cher',km:530},
-  {n:'Châteauroux',r:'Indre',km:570},
-  {n:'Poitiers',r:'Vienne',km:660},
-  {n:'Niort',r:'Deux-Sèvres',km:680},
   {n:'Bordeaux',r:'Gironde',km:790},
-  {n:'Mérignac',r:'Gironde',km:790},
-  {n:'Pessac',r:'Gironde',km:790},
   {n:'La Rochelle',r:'Charente-Maritime',km:730},
-  {n:'Saintes',r:'Charente-Maritime',km:730},
-  {n:'Angoulême',r:'Charente',km:720},
   {n:'Limoges',r:'Haute-Vienne',km:640},
-  {n:'Périgueux',r:'Dordogne',km:720},
-  {n:'Bergerac',r:'Dordogne',km:750},
-  {n:'Agen',r:'Lot-et-Garonne',km:750},
-  {n:'Pau',r:'Pyrénées-Atlantiques',km:830},
-  {n:'Bayonne',r:'Pyrénées-Atlantiques',km:870},
-  {n:'Biarritz',r:'Pyrénées-Atlantiques',km:890},
   {n:'Toulouse',r:'Haute-Garonne',km:700},
   {n:'Montpellier',r:'Hérault',km:620},
   {n:'Nîmes',r:'Gard',km:590},
-  {n:'Alès',r:'Gard',km:560},
   {n:'Perpignan',r:'Pyrénées-Orientales',km:750},
-  {n:'Carcassonne',r:'Aude',km:690},
-  {n:'Narbonne',r:'Aude',km:690},
-  {n:'Béziers',r:'Hérault',km:650},
-  {n:'Sète',r:'Hérault',km:630},
-  {n:'Millau',r:'Aveyron',km:600},
-  {n:'Rodez',r:'Aveyron',km:640},
-  {n:'Albi',r:'Tarn',km:680},
-  {n:'Castres',r:'Tarn',km:700},
-  {n:'Montauban',r:'Tarn-et-Garonne',km:720},
-  {n:'Mende',r:'Lozère',km:580},
   {n:'Marseille',r:'Bouches-du-Rhône',km:660},
   {n:'Aix-en-Provence',r:'Bouches-du-Rhône',km:640},
-  {n:'Arles',r:'Bouches-du-Rhône',km:600},
-  {n:'Salon-de-Provence',r:'Bouches-du-Rhône',km:620},
-  {n:'Martigues',r:'Bouches-du-Rhône',km:650},
   {n:'Toulon',r:'Var',km:700},
-  {n:'Fréjus',r:'Var',km:710},
-  {n:'Draguignan',r:'Var',km:695},
   {n:'Nice',r:'Alpes-Maritimes',km:730},
   {n:'Antibes',r:'Alpes-Maritimes',km:730},
   {n:'Cannes',r:'Alpes-Maritimes',km:730},
-  {n:'Grasse',r:'Alpes-Maritimes',km:725},
   {n:'Avignon',r:'Vaucluse',km:580},
-  {n:'Orange',r:'Vaucluse',km:560},
-  {n:'Carpentras',r:'Vaucluse',km:570},
-  {n:'Nîmes',r:'Gard',km:590},
   {n:'Gap',r:'Hautes-Alpes',km:500},
-  {n:'Briançon',r:'Hautes-Alpes',km:470},
-  {n:'Digne-les-Bains',r:'Alpes-de-Haute-Provence',km:570},
-  {n:'Manosque',r:'Alpes-de-Haute-Provence',km:600},
   {n:'Clermont-Ferrand',r:'Puy-de-Dôme',km:520},
-  {n:'Vichy',r:'Allier',km:470},
-  {n:'Moulins',r:'Allier',km:440},
-  {n:'Aurillac',r:'Cantal',km:600},
-  {n:'Le Puy-en-Velay',r:'Haute-Loire',km:490},
+  {n:'Beauvais',r:'Oise',km:590},
+  {n:'Amiens',r:'Somme',km:560},
   {n:'Bâle',r:'Suisse',km:35},
   {n:'Basel',r:'Suisse',km:35},
   {n:'Zwingen',r:'Suisse',km:40},
   {n:'Liestal',r:'Suisse',km:45},
   {n:'Aarau',r:'Suisse',km:110},
   {n:'Zurich',r:'Suisse',km:200},
-  {n:'Winterthur',r:'Suisse',km:215},
-  {n:'Saint-Gall',r:'Suisse',km:220},
   {n:'Berne',r:'Suisse',km:210},
   {n:'Fribourg',r:'Suisse',km:240},
   {n:'Soleure',r:'Suisse',km:160},
@@ -796,13 +597,10 @@ var VILLES=[
   {n:'La Chaux-de-Fonds',r:'Suisse',km:220},
   {n:'Genève',r:'Suisse',km:330},
   {n:'Lausanne',r:'Suisse',km:290},
-  {n:'Montreux',r:'Suisse',km:300},
   {n:'Sion',r:'Suisse',km:320},
   {n:'Lucerne',r:'Suisse',km:250},
-  {n:'Zoug',r:'Suisse',km:230},
   {n:'Schaffhouse',r:'Suisse',km:175},
   {n:'Thoune',r:'Suisse',km:235},
-  {n:'Brig',r:'Suisse',km:350},
   {n:'Buggingen',r:'Allemagne',km:50},
   {n:'Freiburg-im-Breisgau',r:'Allemagne',km:45},
   {n:'Lahr',r:'Allemagne',km:65},
@@ -816,132 +614,154 @@ var VILLES=[
   {n:'Liège',r:'Belgique',km:460},
   {n:'Luxembourg',r:'Luxembourg',km:300}
 ];
-function normalise(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[-']/g,' ').trim();}
-var sTO=null;
-function onVI(){
-  var v=document.getElementById('ville-input').value.trim();
-  clearTimeout(sTO);if(v.length<2){document.getElementById('sugg-box').style.display='none';return;}
-  sTO=setTimeout(function(){searchV(v,'sugg-box','ville-input',function(c){selCity(c.n,c.km);});},300);
+
+function norm(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[-']/g,' ').trim();}
+var villeSTO = null;
+function rechercheVille() {
+  var v = document.getElementById('d-ville').value.trim();
+  var box = document.getElementById('d-sugg');
+  clearTimeout(villeSTO);
+  if (v.length < 2) { box.style.display='none'; return; }
+  villeSTO = setTimeout(function() {
+    var nq = norm(v);
+    var m = VILLES.filter(function(c){return norm(c.n).indexOf(nq)===0;});
+    if (!m.length) m = VILLES.filter(function(c){return norm(c.n).indexOf(nq)!==-1;});
+    m = m.slice(0,6);
+    if (!m.length) { box.innerHTML='<div class="no-result">Aucune ville trouvée</div>'; box.style.display='block'; return; }
+    var html = '';
+    m.forEach(function(c,i) {
+      var b = getBareme(c.km);
+      var fs = c.km===0 ? 'Inclus' : '+ ' + fmt(b.f);
+      box['_v'+i] = c;
+      html += '<div class="sitem" onclick="choisirVille('+i+')"><div class="sname">'+c.n+'</div><div class="sdetail">'+c.r+' — '+c.km+' km — '+fs+'</div></div>';
+    });
+    box.innerHTML = html; box.style.display = 'block';
+  }, 300);
 }
-function searchV(q,boxId,inputId,onSelect){
-  var nq=normalise(q);
-  var m=VILLES.filter(function(c){return normalise(c.n).indexOf(nq)===0;});
-  if(!m.length)m=VILLES.filter(function(c){return normalise(c.n).indexOf(nq)!==-1;});
-  m=m.slice(0,5);
-  var box=document.getElementById(boxId);
-  if(!m.length){box.innerHTML='<div class="no-result">Aucune ville trouvée</div>';box.style.display='block';return;}
-  var html='';
-  m.forEach(function(c,i){
-    var b=gF(c.km);var fs=c.km===0?'Inclus':'+ '+fmt(b.f);
-    box['_cb'+i]=function(){onSelect(c);};
-    html+='<div class="sitem" onclick="document.getElementById(\''+boxId+'\')[\'_cb'+i+'\']()"><div class="sname">'+c.n+'</div><div class="sdetail">'+c.r+' — '+c.km+' km — '+fs+'</div></div>';
-  });
-  box.innerHTML=html;box.style.display='block';
-}
-function selCity(ville,km){
-  document.getElementById('ville-input').value=ville;document.getElementById('sugg-box').style.display='none';
-  sC=ville;sK=km;var b=gF(km);sF=b.f;sH=b.h;
-  document.getElementById('km-box').style.display='flex';
-  document.getElementById('km-num').textContent=km+' km';
-  document.getElementById('km-frais').textContent=km===0?'Local':fmt(b.f);
-  document.getElementById('hotel-info').style.display=b.h?'block':'none';upd();
+function choisirVille(i) {
+  var box = document.getElementById('d-sugg');
+  var c = box['_v'+i];
+  if (!c) return;
+  document.getElementById('d-ville').value = c.n;
+  box.style.display = 'none';
+  dVille = c.n; dKm = c.km;
+  var b = getBareme(c.km); dFrais = b.f; dHotel = b.h;
+  document.getElementById('d-kmbox').style.display = 'flex';
+  document.getElementById('d-km').textContent = c.km + ' km';
+  document.getElementById('d-kmfrais').textContent = c.km===0 ? 'Local' : fmt(b.f);
+  document.getElementById('d-hotel').style.display = b.h ? 'block' : 'none';
+  calcDevis();
 }
 
+// ═══════════════════════════════════════════════════
 // PLANNING
-var calDate=new Date(),vueActuelle='cal';
-function setVue(v){
-  vueActuelle=v;
-  document.getElementById('vue-cal').style.display=v==='cal'?'block':'none';
-  document.getElementById('vue-list').style.display=v==='list'?'block':'none';
-  var ca=document.getElementById('btn-vue-cal'),li=document.getElementById('btn-vue-list');
-  ca.style.background=v==='cal'?'#1c1c1e':'#fff';ca.style.color=v==='cal'?'#fff':'#1c1c1e';ca.style.border=v==='cal'?'none':'1.5px solid #e5e5ea';
-  li.style.background=v==='list'?'#1c1c1e':'#fff';li.style.color=v==='list'?'#fff':'#1c1c1e';li.style.border=v==='list'?'none':'1.5px solid #e5e5ea';
+// ═══════════════════════════════════════════════════
+function setVue(v) {
+  vueActuelle = v;
+  document.getElementById('vue-cal').style.display = v==='cal' ? 'block' : 'none';
+  document.getElementById('vue-list').style.display = v==='list' ? 'block' : 'none';
+  document.getElementById('btn-cal').style.cssText = v==='cal' ? 'flex:1;padding:10px;border-radius:10px;border:none;font-size:14px;font-weight:600;background:#1c1c1e;color:#fff;cursor:pointer' : 'flex:1;padding:10px;border-radius:10px;border:1.5px solid #e5e5ea;font-size:14px;font-weight:600;background:#fff;color:#1c1c1e;cursor:pointer';
+  document.getElementById('btn-list').style.cssText = v==='list' ? 'flex:1;padding:10px;border-radius:10px;border:none;font-size:14px;font-weight:600;background:#1c1c1e;color:#fff;cursor:pointer' : 'flex:1;padding:10px;border-radius:10px;border:1.5px solid #e5e5ea;font-size:14px;font-weight:600;background:#fff;color:#1c1c1e;cursor:pointer';
   renderPlanning();
 }
-function calNav(dir){calDate=new Date(calDate.getFullYear(),calDate.getMonth()+dir,1);renderPlanning();}
-function calSelectMois(){calDate.setMonth(parseInt(document.getElementById('cal-select-mois').value));renderPlanning();}
-function calSelectAnnee(){calDate.setFullYear(parseInt(document.getElementById('cal-select-annee').value));renderPlanning();}
-function clickJour(dateStr){
-  var p=prestations.find(function(x){return x.date===dateStr&&x.statut!=='annule';});
-  if(p){openModal(p.id);}
-  else{openModal(null,dateStr);}
+function calNav(dir) { calDate = new Date(calDate.getFullYear(), calDate.getMonth()+dir, 1); renderPlanning(); }
+function calApply() {
+  calDate.setMonth(parseInt(document.getElementById('cal-mois').value));
+  calDate.setFullYear(parseInt(document.getElementById('cal-annee').value));
+  renderPlanning();
 }
-function renderPlanning(){
-  var y=calDate.getFullYear(),m=calDate.getMonth();
+function renderPlanning() {
+  var y=calDate.getFullYear(), m=calDate.getMonth();
   var mois=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-  // Sélecteurs mois/année
-  var selMois=document.getElementById('cal-select-mois');
-  if(selMois)selMois.value=m;
-  var selAnnee=document.getElementById('cal-select-annee');
-  if(selAnnee){
-    var anneeMin=2024,anneeMax=new Date().getFullYear()+3,aopts='';
-    for(var a=anneeMin;a<=anneeMax;a++)aopts+='<option value="'+a+'"'+(a===y?' selected':'')+'>'+a+'</option>';
-    selAnnee.innerHTML=aopts;
-  }
-  var conf=prestations.filter(function(p){return p.statut==='confirme';}).length;
-  var att=prestations.filter(function(p){return p.statut==='attente';}).length;
-  document.getElementById('planning-subtitle').textContent=conf+' confirmée(s) · '+att+' en attente';
-  // Cal
+  var sm=document.getElementById('cal-mois'); if(sm)sm.value=m;
+  var sa=document.getElementById('cal-annee');
+  if(sa){var ao='';for(var a=2024;a<=new Date().getFullYear()+3;a++)ao+='<option value="'+a+'"'+(a===y?' selected':'')+'>'+a+'</option>';sa.innerHTML=ao;}
+  var conf=prestations.filter(function(p){return p&&p.statut==='confirme';}).length;
+  var att=prestations.filter(function(p){return p&&p.statut==='attente';}).length;
+  document.getElementById('pl-sub').textContent=conf+' confirmée(s) · '+att+' en attente';
   var first=new Date(y,m,1).getDay();first=(first+6)%7;
   var days=new Date(y,m+1,0).getDate(),today=new Date();
   var jours=['L','M','M','J','V','S','D'],html='';
-  jours.forEach(function(j){html+='<div class="cal-day-name">'+j+'</div>';});
+  jours.forEach(function(j){html+='<div class="cal-dn">'+j+'</div>';});
   for(var i=0;i<first;i++)html+='<div style="min-height:36px"></div>';
   for(var d=1;d<=days;d++){
     var ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    var p=prestations.find(function(x){return x.date===ds&&x.statut!=='annule';});
+    var p=prestations.find(function(x){return x&&x.date===ds&&x.statut!=='annule';});
     var isTod=today.getFullYear()===y&&today.getMonth()===m&&today.getDate()===d;
     var cls='cal-day '+(p?(p.statut==='confirme'?'reserve':'attente'):'libre')+(isTod?' today':'');
-    html+='<div class="'+cls+'" onclick="clickJour(\''+ds+'\')">'  +d+(p?'<div class="cal-dot"></div>':'')+'</div>';
+    html+='<div class="'+cls+'" onclick="clickJour(\''+ds+'\')">'+d+(p?'<div class="cal-dot"></div>':'')+'</div>';
   }
   document.getElementById('cal-grid').innerHTML=html;
-  // Liste
-  var sorted=[...prestations].sort(function(a,b){return a.date.localeCompare(b.date);});
+  var sorted=[...prestations].filter(function(p){return p&&p.statut!=='annule';}).sort(function(a,b){return String(a.date).localeCompare(String(b.date));});
   var lh='';
-  if(!sorted.length)lh='<p class="empty-note">Aucune prestation enregistrée</p>';
+  if(!sorted.length)lh='<p class="empty-note">Aucune prestation</p>';
   sorted.forEach(function(p){
     var ds=new Date(p.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
     var bc=p.statut==='confirme'?'confirme':p.statut==='attente'?'attente':'annule';
     var bt=p.statut==='confirme'?'Confirmé':p.statut==='attente'?'En attente':'Annulé';
     var horaires=(p.hdebut&&p.hfin)?p.hdebut+' → '+p.hfin:'';
-    lh+='<div class="presta-item '+bc+'">'
-      +'<div class="presta-top"><span class="presta-type">'+p.type+'</span><span class="presta-montant">'+fmt(p.montant)+'</span></div>'
-      +'<div class="presta-row">👤 '+p.client+(p.tel?' · 📞 '+p.tel:'')+(p.instagram?' · 📸 '+p.instagram:'')+'</div>'
-      +'<div class="presta-row">📅 '+ds+(horaires?' · ⏰ '+horaires:'')+'</div>'
-      +(p.ville?'<div class="presta-row">📍 '+p.ville+(p.adresse?' — '+p.adresse:'')+'</div>':'')
-      +(p.notes?'<div class="presta-row" style="color:#c7c7cc">📝 '+p.notes+'</div>':'')
+    var pid=prestations.indexOf(p);
+    lh+='<div class="pi '+bc+'">'
+      +'<div class="pi-top"><span class="pi-type">'+p.type+'</span><span class="pi-montant">'+fmt(p.montant)+'</span></div>'
+      +'<div class="pi-row">👤 '+p.client+(p.tel?' · 📞 '+p.tel:'')+(p.instagram?' · 📸 '+p.instagram:'')+'</div>'
+      +'<div class="pi-row">📅 '+ds+(horaires?' · ⏰ '+horaires:'')+'</div>'
+      +(p.ville?'<div class="pi-row">📍 '+p.ville+(p.adresse?' — '+p.adresse:'')+'</div>':'')
+      +(p.notes?'<div class="pi-row" style="color:#c7c7cc">📝 '+p.notes+'</div>':'')
       +'<div><span class="badge '+bc+'">'+bt+'</span> <span style="font-size:12px;color:#8e8e93">Acompte : '+fmt(p.acompte)+'</span></div>'
-      +'<div class="presta-actions">'
-      +'<button class="btn-edit" onclick="openModal('+p.id+')">✏️ Modifier</button>'
-      +'<button class="btn-delete" onclick="deletePresta('+p.id+')">🗑 Supprimer</button>'
+      +'<div class="pact">'
+      +'<button class="btn-edit" onclick="ouvrirModal('+pid+')">✏️ Modifier</button>'
+      +'<button class="btn-del" onclick="supprimerPresta('+pid+')">🗑 Supprimer</button>'
       +'</div>'
-      +'<button onclick="genContrat('+p.id+')" style="width:100%;margin-top:8px;padding:12px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;background:#e8f0fe;color:#1a56db;-webkit-appearance:none">📄 Générer le contrat PDF</button>'
+      +'<button onclick="genContrat('+pid+')" style="width:100%;margin-top:8px;padding:10px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;background:#e8f0fe;color:#1a56db;-webkit-appearance:none">📄 Générer le contrat PDF</button>'
       +'</div>';
   });
-  document.getElementById('liste-prestations').innerHTML=lh;
+  document.getElementById('pl-list').innerHTML=lh;
 }
-function deletePresta(id){
+function clickJour(ds){
+  var p=prestations.find(function(x){return x&&x.date===ds&&x.statut!=='annule';});
+  var modal=document.getElementById('modal-detail');
+  var content=document.getElementById('det-content');
+  var title=document.getElementById('det-titre');
+  if(!p){
+    title.textContent='📅 '+new Date(ds+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+    content.innerHTML='<div style="text-align:center;padding:20px;color:#8e8e93">🟢 Ce jour est disponible</div>';
+  } else {
+    var ds2=new Date(p.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+    var bc=p.statut==='confirme'?'confirme':'attente';
+    var bt=p.statut==='confirme'?'Confirmé':'En attente';
+    title.textContent=p.type;
+    var html='<span class="badge '+bc+'" style="margin-bottom:14px;display:inline-block">'+bt+'</span>';
+    var rows=[['👤','Client',p.client],['📞','Téléphone',p.tel],['📸','Instagram',p.instagram],['📅','Date',ds2],['⏰','Horaires',(p.hdebut&&p.hfin)?p.hdebut+' → '+p.hfin:''],['📍','Ville',p.ville],['🏛','Adresse',p.adresse],['💰','Montant',p.montant?fmt(p.montant):''],['💳','Acompte',p.acompte?fmt(p.acompte):''],['📝','Notes',p.notes]];
+    rows.forEach(function(r){if(r[2])html+='<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #e5e5ea;font-size:14px"><span style="font-size:18px;width:24px;text-align:center">'+r[0]+'</span><div><div style="font-size:11px;color:#8e8e93;margin-bottom:2px">'+r[1]+'</div><div style="font-weight:500">'+r[2]+'</div></div></div>';});
+    content.innerHTML=html;
+  }
+  modal.classList.add('open');
+}
+function fermerDetail(){document.getElementById('modal-detail').classList.remove('open');}
+document.getElementById('modal-detail').addEventListener('click',function(e){if(e.target===this)fermerDetail();});
+function supprimerPresta(idx){
   if(!confirm('Supprimer cette prestation ?'))return;
-  prestations=prestations.filter(function(x){return x.id!==id;});
-  saveData();renderPlanning();renderFinance();
+  prestations.splice(idx,1);
+  saveLocal();
+  if(window._syncFirebase)window._syncFirebase(prestations);
+  renderPlanning();renderFinance();
 }
 
 // MODAL
-function updateAcompteAuto(){
+function calcAcompteModal(){
   var m=parseInt(document.getElementById('m-montant').value)||0;
   document.getElementById('m-acompte').value=m?Math.round(m*.25):'';
 }
-function openModal(id,datePreset){
-  document.getElementById('modal').classList.add('open');
-  if(id){
-    var p=prestations.find(function(x){return x.id===id;});
-    if(!p)return;
-    document.getElementById('modal-title').textContent='Modifier la prestation';
-    document.getElementById('modal-save-btn').textContent='Enregistrer les modifications';
-    document.getElementById('m-id').value=id;
-    document.getElementById('m-client').value=p.client||'';
+function ouvrirModal(idx,datePreset){
+  document.getElementById('modal-presta').classList.add('open');
+  if(idx!==null&&idx!==undefined){
+    var p=prestations[idx];if(!p)return;
+    document.getElementById('modal-titre').textContent='Modifier la prestation';
+    document.getElementById('m-save-btn').textContent='Enregistrer les modifications';
+    document.getElementById('m-id').value=idx;
+    document.getElementById('m-nom').value=p.client||'';
     document.getElementById('m-tel').value=p.tel||'';
-    document.getElementById('m-instagram').value=p.instagram||'';
+    document.getElementById('m-insta').value=p.instagram||'';
     document.getElementById('m-date').value=p.date||'';
     document.getElementById('m-hdebut').value=p.hdebut||'18:00';
     document.getElementById('m-hfin').value=p.hfin||'00:00';
@@ -953,10 +773,10 @@ function openModal(id,datePreset){
     document.getElementById('m-acompte').value=p.acompte||'';
     document.getElementById('m-notes').value=p.notes||'';
   } else {
-    document.getElementById('modal-title').textContent='Ajouter une prestation';
-    document.getElementById('modal-save-btn').textContent='Enregistrer';
+    document.getElementById('modal-titre').textContent='Ajouter une prestation';
+    document.getElementById('m-save-btn').textContent='Enregistrer';
     document.getElementById('m-id').value='';
-    ['m-client','m-tel','m-ville','m-adresse','m-montant','m-acompte','m-notes'].forEach(function(id){document.getElementById(id).value='';});
+    ['m-nom','m-tel','m-insta','m-ville','m-adresse','m-montant','m-acompte','m-notes'].forEach(function(id){document.getElementById(id).value='';});
     document.getElementById('m-date').value=datePreset||'';
     document.getElementById('m-hdebut').value='18:00';
     document.getElementById('m-hfin').value='00:00';
@@ -964,444 +784,362 @@ function openModal(id,datePreset){
     document.getElementById('m-statut').value='confirme';
   }
 }
-function closeModal(){document.getElementById('modal').classList.remove('open');}
-function savePrestation(){
-  var client=document.getElementById('m-client').value.trim();
+function fermerModal(){document.getElementById('modal-presta').classList.remove('open');}
+document.getElementById('modal-presta').addEventListener('click',function(e){if(e.target===this)fermerModal();});
+function sauvegarderPresta(){
+  var nom=document.getElementById('m-nom').value.trim();
   var date=document.getElementById('m-date').value;
-  if(!client||!date){alert('Le nom et la date sont obligatoires.');return;}
+  if(!nom||!date){alert('Le nom et la date sont obligatoires.');return;}
   var montant=parseInt(document.getElementById('m-montant').value)||PRIX[document.getElementById('m-type').value]||600;
   var acompte=parseInt(document.getElementById('m-acompte').value)||Math.round(montant*.25);
-  var existId=document.getElementById('m-id').value;
-  var data={
-    client:client,tel:document.getElementById('m-tel').value.trim(),instagram:document.getElementById('m-instagram').value.trim(),
-    date:date,hdebut:document.getElementById('m-hdebut').value,hfin:document.getElementById('m-hfin').value,
-    type:document.getElementById('m-type').value,statut:document.getElementById('m-statut').value,
-    ville:document.getElementById('m-ville').value.trim(),adresse:document.getElementById('m-adresse').value.trim(),
-    montant:montant,acompte:acompte,notes:document.getElementById('m-notes').value.trim()
-  };
-  if(existId){
-    var idx=prestations.findIndex(function(x){return x.id==existId;});
-    if(idx>=0){prestations[idx]=Object.assign({id:parseInt(existId)},data);}
-  } else {
-    data.id=Date.now();prestations.push(data);
-  }
-  saveData();closeModal();renderPlanning();renderFinance();
+  var data={client:nom,tel:document.getElementById('m-tel').value.trim(),instagram:document.getElementById('m-insta').value.trim(),date:date,hdebut:document.getElementById('m-hdebut').value,hfin:document.getElementById('m-hfin').value,type:document.getElementById('m-type').value,statut:document.getElementById('m-statut').value,ville:document.getElementById('m-ville').value.trim(),adresse:document.getElementById('m-adresse').value.trim(),montant:montant,acompte:acompte,notes:document.getElementById('m-notes').value.trim()};
+  var eid=document.getElementById('m-id').value;
+  if(eid!==''){var i=parseInt(eid);prestations[i]=Object.assign({id:prestations[i].id||Date.now()},data);}
+  else{data.id=Date.now();prestations.push(data);}
+  saveLocal();
+  if(window._syncFirebase)window._syncFirebase(prestations);
+  fermerModal();renderPlanning();renderFinance();
 }
 
+// ═══════════════════════════════════════════════════
 // FINANCE
-var anneeFinance=new Date().getFullYear();
+// ═══════════════════════════════════════════════════
 function finNav(dir){anneeFinance+=dir;renderFinance();}
-
 function renderFinance(){
   var y=anneeFinance;
   document.getElementById('fin-annee').textContent='Année '+y;
-  if(!prestations||!Array.isArray(prestations))prestations=[];
   var yStr=String(y);
-  var conf=prestations.filter(function(p){return p&&p.statut==='confirme'&&p.date&&String(p.date).indexOf(yStr)===0;});
-  var att=prestations.filter(function(p){return p&&p.statut==='attente'&&p.date&&String(p.date).indexOf(yStr)===0;});
+  var conf=prestations.filter(function(p){return p&&p.statut==='confirme'&&p.date&&p.date.indexOf(yStr)===0;});
+  var att=prestations.filter(function(p){return p&&p.statut==='attente'&&p.date&&p.date.indexOf(yStr)===0;});
   var total=conf.reduce(function(s,p){return s+(Number(p.montant)||0);},0);
   var all=conf.concat(att);
-
-  // Grouper par mois — AVANT les calculs qui en dépendent
-  var mois=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
   var byMois={};
-  var byMoisConf={};
   all.sort(function(a,b){return String(a.date).localeCompare(String(b.date));}).forEach(function(p){
     var m=parseInt(String(p.date).split('-')[1])-1;
     if(isNaN(m))return;
     if(!byMois[m])byMois[m]=[];
     byMois[m].push(p);
-    if(p.statut==='confirme')byMoisConf[m]=1;
   });
-
-  var moyenneMensuelle=total>0?Math.round(total/12):0;
-
-  if(document.getElementById('fin-total'))document.getElementById('fin-total').textContent=fmt(total);
-  if(document.getElementById('fin-nb-total'))document.getElementById('fin-nb-total').textContent=conf.length+' confirmée(s) · '+att.length+' en attente';
-  if(document.getElementById('fin-moyenne'))document.getElementById('fin-moyenne').textContent=fmt(moyenneMensuelle);
-  if(document.getElementById('fin-nb-conf'))document.getElementById('fin-nb-conf').textContent=conf.length+att.length;
-  if(document.getElementById('fin-moy-presta'))document.getElementById('fin-moy-presta').textContent=conf.length?fmt(Math.round(total/conf.length)):'—';
-
+  document.getElementById('fin-total').textContent=fmt(total);
+  document.getElementById('fin-sub').textContent=conf.length+' confirmée(s) · '+att.length+' en attente';
+  document.getElementById('fin-moy').textContent=total?fmt(Math.round(total/12)):'0 €';
+  document.getElementById('fin-nb').textContent=conf.length+att.length;
+  document.getElementById('fin-moyp').textContent=conf.length?fmt(Math.round(total/conf.length)):'—';
+  var mois=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
   var html='';
-  if(!all.length){html='<p class="empty-note">Aucune prestation cette année</p>';}
+  if(!all.length)html='<p class="empty-note">Aucune prestation cette année</p>';
   Object.keys(byMois).sort(function(a,b){return a-b;}).forEach(function(m){
     var ps=byMois[m]||[];
-    var totalMois=ps.reduce(function(s,p){return s+(p.montant||0);},0);
+    var totalM=ps.reduce(function(s,p){return s+(Number(p.montant)||0);},0);
     html+='<div style="margin-bottom:14px">';
-    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
-      +'<span style="font-size:13px;font-weight:700;color:#1c1c1e">'+mois[m]+'</span>'
-      +'<span style="font-size:13px;font-weight:600;color:#1a56db">'+fmt(totalMois)+'</span>'
-      +'</div>';
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:13px;font-weight:700">'+mois[m]+'</span><span style="font-size:13px;font-weight:600;color:#1a56db">'+fmt(totalM)+'</span></div>';
     ps.forEach(function(p){
-      var ds=new Date(p.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'short'});
-      var isConf=p.statut==='confirme';
-      var badgeBg=isConf?'#e8fbe8':'#fff8e1';
-      var badgeCol=isConf?'#1a7f37':'#b8860b';
-      var badgeTxt=isConf?'Confirmé':'En attente';
+      var isC=p.statut==='confirme';
       html+='<div style="background:#f9f9f9;border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px">'
-        +'<div style="flex:1;min-width:0">'
-        +'<div style="font-size:14px;font-weight:600;color:#1c1c1e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+p.client+'</div>'
-        +'<div style="font-size:12px;color:#8e8e93;margin-top:2px">'+ds+' · '+p.type+'</div>'
-        +'<div style="margin-top:4px"><span style="font-size:11px;font-weight:600;background:'+badgeBg+';color:'+badgeCol+';padding:2px 8px;border-radius:6px">'+badgeTxt+'</span></div>'
-        +'</div>'
-        +'<div style="text-align:right;flex-shrink:0">'
-        +'<div style="font-size:15px;font-weight:700;color:#1c1c1e">'+fmt(p.montant)+'</div>'
-        +'<div style="font-size:11px;color:#8e8e93;margin-top:2px">Ac. '+fmt(p.acompte)+'</div>'
-        +'</div>'
+        +'<div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+p.client+'</div>'
+        +'<div style="font-size:12px;color:#8e8e93;margin-top:2px">'+p.type+'</div>'
+        +'<span class="badge '+(isC?'confirme':'attente')+'" style="margin-top:4px">'+(isC?'Confirmé':'En attente')+'</span></div>'
+        +'<div style="text-align:right;flex-shrink:0"><div style="font-size:15px;font-weight:700">'+fmt(p.montant)+'</div>'
+        +'<div style="font-size:11px;color:#8e8e93;margin-top:2px">Ac. '+fmt(p.acompte)+'</div></div>'
         +'</div>';
     });
     html+='</div>';
   });
-  document.getElementById('acompte-list').innerHTML=html;
+  document.getElementById('fin-detail').innerHTML=html;
 }
 
+// ═══════════════════════════════════════════════════
 // DEMANDES
-var allDemandes=[];
-var filtreActuel='tous';
-
-function filtrerDemandes(f){
-  filtreActuel=f;
-  var btns=['tous','nouveau','en_attente','confirme','refuse'];
-  btns.forEach(function(b){
-    var el=document.getElementById('f-'+b);
-    if(el){
-      el.style.background=b===f?'#1c1c1e':'#fff';
-      el.style.color=b===f?'#fff':'#1c1c1e';
-      el.style.border=b===f?'none':'1.5px solid #e5e5ea';
-    }
-  });
-  renderDemandes(f);
+// ═══════════════════════════════════════════════════
+function filtrerDem(f){
+  filtreDem=f;
+  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+  var el=document.getElementById('fb-'+f);
+  if(el)el.classList.add('active');
+  renderDemandes();
 }
 
-function renderDemandes(filtre){
-  var list=document.getElementById('demandes-list');
+function renderDemandes(){
+  var list=document.getElementById('dem-list');
   if(!list)return;
-  var filtered=filtre==='tous'?allDemandes:allDemandes.filter(function(d){return d.statut===filtre;});
-  filtered.sort(function(a,b){return b.id-a.id;});
-  var nouvelles=allDemandes.filter(function(d){return d.statut==='nouveau';}).length;
-  var label=document.getElementById('nav-demandes-label');
-  if(label){label.textContent=nouvelles>0?'Dem. ('+nouvelles+')':'Demandes';}
-  document.getElementById('demandes-subtitle').textContent=allDemandes.length+' demande(s) au total';
-  if(!filtered.length){list.innerHTML='<p style="font-size:13px;color:#c7c7cc;text-align:center;padding:30px 0">Aucune demande</p>';return;}
+  var all=window._demandes||[];
+  var sub=document.getElementById('dem-sub');
+  if(sub)sub.textContent=all.length+' demande(s) au total';
+  var nouvelles=all.filter(function(d){return d.statut==='nouveau';}).length;
+  var navLabel=document.getElementById('nav-dem');
+  if(navLabel)navLabel.textContent=nouvelles>0?'Dem.('+nouvelles+')':'Demandes';
+  var filtered=filtreDem==='tous'?all:all.filter(function(d){return d.statut===filtreDem;});
+  filtered=filtered.slice().sort(function(a,b){return (b.createdAt||'').localeCompare(a.createdAt||'');});
+  if(!filtered.length){list.innerHTML='<p class="empty-note">Aucune demande</p>';return;}
   var html='';
-  filtered.forEach(function(d){
+  filtered.forEach(function(d,di){
+    var realIdx=all.indexOf(d);
     var ds=d.date?new Date(d.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}):'—';
-    var dateOccupee=prestations.some(function(p){return p.date===d.date&&p.statut!=='annule';});
-    var statutLabel={nouveau:'🆕 Nouvelle',en_attente:'⏳ En attente',confirme:'✅ Confirmée',refuse:'❌ Refusée'}[d.statut]||'Nouvelle';
-    var statutBg={nouveau:'#e8f0fe',en_attente:'#fff8e1',confirme:'#e8fbe8',refuse:'#ffe5e5'}[d.statut]||'#e8f0fe';
-    var statutCol={nouveau:'#1a56db',en_attente:'#b8860b',confirme:'#1a7f37',refuse:'#cc0000'}[d.statut]||'#1a56db';
-    var bordCol={nouveau:'#4a90e2',en_attente:'#ff9500',confirme:'#34c759',refuse:'#ff3b30'}[d.statut]||'#4a90e2';
-    html+='<div style="background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;border-left:5px solid '+bordCol+'">';
+    var dateOcc=prestations.some(function(p){return p.date===d.date&&p.statut!=='annule';});
+    var sBg={nouveau:'#e8f0fe',en_attente:'#fff8e1',confirme:'#e8fbe8',refuse:'#ffe5e5'}[d.statut]||'#e8f0fe';
+    var sCol={nouveau:'#1a56db',en_attente:'#b8860b',confirme:'#1a7f37',refuse:'#cc0000'}[d.statut]||'#1a56db';
+    var bCol={nouveau:'#4a90e2',en_attente:'#ff9500',confirme:'#34c759',refuse:'#ff3b30'}[d.statut]||'#4a90e2';
+    var sLbl={nouveau:'🆕 Nouvelle',en_attente:'⏳ En attente',confirme:'✅ Confirmée',refuse:'❌ Refusée'}[d.statut]||'Nouvelle';
+    html+='<div class="dem-item" style="border-left:5px solid '+bCol+'">';
     html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">';
-    html+='<div><p style="font-size:15px;font-weight:700;margin:0">'+d.nom+'</p>';
-    html+='<p style="font-size:12px;color:#8e8e93;margin:2px 0 0">'+d.type+' · '+ds+'</p></div>';
-    html+='<span style="font-size:11px;font-weight:600;background:'+statutBg+';color:'+statutCol+';padding:3px 8px;border-radius:6px">'+statutLabel+'</span>';
-    html+='</div>';
-    if(d.tel)html+='<p style="font-size:13px;color:#8e8e93;margin-bottom:3px">📞 '+d.tel+'</p>';
-    if(d.instagram)html+='<p style="font-size:13px;color:#8e8e93;margin-bottom:3px">📸 '+d.instagram+'</p>';
-    if(d.ville)html+='<p style="font-size:13px;color:#8e8e93;margin-bottom:3px">📍 '+d.ville+'</p>';
-    if(d.message)html+='<p style="font-size:13px;color:#c7c7cc;margin-bottom:8px;font-style:italic">💬 '+d.message+'</p>';
-    html+='<div style="display:inline-flex;align-items:center;gap:6px;margin-bottom:10px;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:600;background:'+(dateOccupee?'#ffe5e5':'#e8fbe8')+';color:'+(dateOccupee?'#cc0000':'#1a7f37')+'">';
-    html+=(dateOccupee?'🔴 Date occupée':'🟢 Date libre')+'</div>';
+    html+='<div><p style="font-size:15px;font-weight:700;margin:0">'+d.nom+'</p><p style="font-size:12px;color:#8e8e93;margin:2px 0 0">'+d.type+' · '+ds+'</p></div>';
+    html+='<span style="font-size:11px;font-weight:600;background:'+sBg+';color:'+sCol+';padding:3px 8px;border-radius:6px">'+sLbl+'</span></div>';
+    if(d.tel)html+='<p class="dem-row">📞 '+d.tel+'</p>';
+    if(d.instagram)html+='<p class="dem-row">📸 '+d.instagram+'</p>';
+    if(d.ville)html+='<p class="dem-row">📍 '+d.ville+'</p>';
+    if(d.message)html+='<p class="dem-row" style="color:#c7c7cc;font-style:italic">💬 '+d.message+'</p>';
+    html+='<div style="display:inline-flex;align-items:center;gap:6px;margin:10px 0 6px;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:600;background:'+(dateOcc?'#ffe5e5':'#e8fbe8')+';color:'+(dateOcc?'#cc0000':'#1a7f37')+'">'+(dateOcc?'🔴 Date occupée':'🟢 Date libre')+'</div>';
     if(d.statut!=='confirme'&&d.statut!=='refuse'){
-      html+='<div style="display:flex;gap:6px;margin-top:8px">';
-      html+='<button onclick="actionDemande('+di+',\'confirme\')" style="flex:1;padding:9px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:#e8fbe8;color:#1a7f37">✅ Confirmer</button>';
-      html+='<button onclick="actionDemande('+di+',\'en_attente\')" style="flex:1;padding:9px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:#fff8e1;color:#b8860b">⏳ En attente</button>';
-      html+='<button onclick="actionDemande('+di+',\'refuse\')" style="flex:1;padding:9px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:#ffe5e5;color:#cc0000">❌ Refuser</button>';
+      html+='<div class="dem-actions">';
+      html+='<button data-idx="'+realIdx+'" data-action="confirme" onclick="clkDem(this)" style="background:#e8fbe8;color:#1a7f37">✅ Confirmer</button>';
+      html+='<button data-idx="'+realIdx+'" data-action="en_attente" onclick="clkDem(this)" style="background:#fff8e1;color:#b8860b">⏳ Attente</button>';
+      html+='<button data-idx="'+realIdx+'" data-action="refuse" onclick="clkDem(this)" style="background:#ffe5e5;color:#cc0000">❌ Refuser</button>';
       html+='</div>';
     }
-    if(d.statut==='confirme'||d.statut==='en_attente'){
-      html+='<button onclick="devisDepuisDemande('+di+')" style="width:100%;margin-top:8px;padding:10px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;background:#e8f0fe;color:#1a56db">📄 Créer un devis</button>';
-    }
+    html+='<button data-idx="'+realIdx+'" onclick="clkDevis(this)" style="width:100%;margin-top:8px;padding:10px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;background:#e8f0fe;color:#1a56db;-webkit-appearance:none">📄 Créer un devis</button>';
     html+='</div>';
   });
   list.innerHTML=html;
 }
 
-function actionDemande(idx,action){
-  var d=allDemandes[idx];if(!d)return;
-  var key=d.firebaseKey;
-  if(window._updateDemande){
-    window._updateDemande(key,action);
-  }
-  var idx=allDemandes.findIndex(function(x){return x.firebaseKey===key;});
-  if(idx>=0)allDemandes[idx].statut=action;
+function clkDem(btn){actionDem(parseInt(btn.dataset.idx),btn.dataset.action);}
+function clkDevis(btn){devisFromDem(parseInt(btn.dataset.idx));}
+function actionDem(idx,action){
+  var all=window._demandes||[];
+  var d=all[idx];if(!d)return;
+  if(window._updateDemande)window._updateDemande(d.firebaseKey,action);
+  d.statut=action;
   if(action==='confirme'){
     var exists=prestations.some(function(p){return p.date===d.date&&p.statut!=='annule';});
     if(exists&&!confirm('Cette date est déjà occupée. Confirmer quand même ?'))return;
     var presta={id:Date.now(),client:d.nom,tel:d.tel||'',instagram:d.instagram||'',date:d.date,hdebut:'18:00',hfin:'00:00',type:d.type,ville:d.ville||'',adresse:'',montant:0,acompte:0,statut:'confirme',notes:d.message||''};
-    prestations.push(presta);
-    saveData();
+    prestations.push(presta);saveLocal();
+    if(window._syncFirebase)window._syncFirebase(prestations);
   }
-  renderDemandes(filtreActuel);
+  renderDemandes();
 }
 
-function devisDepuisDemande(idx){
-  var d=allDemandes[idx];if(!d)return;
-  showPage('devis');
-  document.getElementById('nom-client').value=d.nom||'';
-  document.getElementById('tel-client').value=d.tel||'';
-  document.getElementById('insta-client').value=d.instagram||'';
-  document.getElementById('date-presta').value=d.date||'';
-  document.getElementById('ville-input').value=d.ville||'';
-  var types={Mariage:1200,Kina:800,'Fiançailles':800,Anniversaire:500,Autre:600};
-  document.querySelectorAll('.pbtn').forEach(function(b){
-    if(b.dataset.label===d.type){
-      b.classList.add('active');
-      sB=types[d.type]||600;
-      sL=d.type;
-    }
-  });
-  upd();
+function devisFromDem(idx){
+  var all=window._demandes||[];
+  var d=all[idx];if(!d)return;
+  goTo('devis');
+  setTimeout(function(){
+    document.getElementById('d-nom').value=d.nom||'';
+    document.getElementById('d-tel').value=d.tel||'';
+    document.getElementById('d-insta').value=d.insta||d.instagram||'';
+    document.getElementById('d-date').value=d.date||'';
+    document.getElementById('d-ville').value=d.ville||'';
+    var types={Mariage:1200,Kina:800,'Fiançailles':800,Anniversaire:500,Autre:600};
+    document.querySelectorAll('.pbtn').forEach(function(b){
+      if(b.dataset.label===d.type){b.classList.add('active');dBase=types[d.type]||600;dLabel=d.type;}
+    });
+    calcDevis();
+  },100);
 }
 
-// // CONTRAT PDF
-function genContrat(id){
-  var p=prestations.find(function(x){return x.id===id;});
-  if(!p){alert('Prestation introuvable.');return;}
-  var jsPDF=window.jspdf.jsPDF;
-  var doc=new jsPDF({unit:'mm',format:'a4'});
-  var W=210,mg=18,y=0;
-  var client=p.client||'___________________________';
-  var tel=p.tel||'_______________';
-  var lieu=p.ville||(p.adresse?'':'')||'___________________________';
-  var adresse=p.adresse||'';
-  var lieuComplet=adresse?(lieu+' — '+adresse):lieu;
-  var ds=p.date?new Date(p.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}):'_______________';
-  var horaires=(p.hdebut&&p.hfin)?p.hdebut+' \u00e0 '+p.hfin:'_______________';
-  var montant=p.montant?(function(n){var s=String(Math.round(n));return s.replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' €';})(p.montant):'________________';
-  var acompte=p.acompte?(function(n){var s=String(Math.round(n));return s.replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' €';})(p.acompte):'________________';
-  var today=new Date().toLocaleDateString('fr-FR');
-
-  // Fonctions utilitaires
-  function setFont(name,style,size){doc.setFont(name,style);doc.setFontSize(size);}
-  function txt(text,x,yy,opts){doc.text(text,x,yy,opts||{});}
-  function line(x1,y1,x2,y2){doc.line(x1,y1,x2,y2);}
-  function rect(x,yy,w,h,style){doc.rect(x,yy,w,h,style);}
-  function fillRect(x,yy,w,h,r,g,b){doc.setFillColor(r,g,b);doc.rect(x,yy,w,h,'F');}
-
-  // ── PAGE 1 ──────────────────────────────────────────────────
-  // EN-TÊTE
-  doc.setTextColor(30,30,30);
-  setFont('helvetica','bold',11);txt('DJ MEYRA',mg,18);
-  setFont('helvetica','normal',8.5);
-  txt("3 rue d'Ottmarsheim · 68100 Mulhouse",mg,24);
-  txt('Tél. 06.66.15.35.83 · SIRET : 880287066',mg,29);
-  setFont('helvetica','bold',15);
-  txt('CONTRAT DE PRESTATION DJ',W/2+15,22,{align:'center'});
-  doc.setDrawColor(30,30,30);doc.setLineWidth(0.8);line(mg,33,W-mg,33);
-
-  // INFOS PRESTATION
-  y=42;
-  var rows=[
-    ['Client :',client+'    Tél : '+tel],
-    ['Lieu :',lieuComplet],
-    ['Date :',ds],
-    ['Horaires :',horaires+'   (au-delà des horaires : facturation 100 €/h)'],
-  ];
-  rows.forEach(function(row){
-    fillRect(mg,y-4,42,9,235,235,235);
-    doc.setDrawColor(180,180,180);doc.setLineWidth(0.3);
-    rect(mg,y-4,42,9);rect(mg,y-4,W-mg*2,9);
-    setFont('helvetica','bold',8.5);txt(row[0],mg+2,y+1);
-    setFont('helvetica','normal',8.5);txt(row[1],mg+44,y+1);
-    y+=9;
-  });
-
-  // TABLEAU MONTANTS
-  y+=5;
-  fillRect(mg,y,W-mg*2,8,210,210,210);
-  doc.setDrawColor(150,150,150);doc.setLineWidth(0.3);
-  setFont('helvetica','bold',8.5);
-  txt('Désignation',mg+2,y+5.5);txt('Qté',mg+103,y+5.5,{align:'center'});txt('Montant',W-mg-2,y+5.5,{align:'right'});
-  rect(mg,y,W-mg*2,8);line(mg+95,y,mg+95,y+8);line(mg+115,y,mg+115,y+8);
-  y+=8;
-  var lignes=[
-    ['Forfait DJ - Animation de soirée','01',montant],
-    ['','',''],
-    ['','',''],
-    ['','',''],
-  ];
-  lignes.forEach(function(l){
-    rect(mg,y,W-mg*2,8);line(mg+95,y,mg+95,y+8);line(mg+115,y,mg+115,y+8);
-    setFont('helvetica','normal',8.5);
-    txt(l[0],mg+2,y+5.5);txt(l[1],mg+103,y+5.5,{align:'center'});txt(l[2],W-mg-2,y+5.5,{align:'right'});
-    y+=8;
-  });
-  fillRect(mg,y,W-mg*2,8,230,230,230);
-  rect(mg,y,W-mg*2,8);line(mg+115,y,mg+115,y+8);
-  setFont('helvetica','bold',8.5);
-  txt('MONTANT TOTAL TTC',mg+2,y+5.5);txt(montant,W-mg-2,y+5.5,{align:'right'});
-  y+=10;
-
-  // ACOMPTE
-  doc.setDrawColor(150,150,150);rect(mg,y,W/2-mg-5,9);
-  setFont('helvetica','bold',8.5);txt('Acompte versé à la signature : ',mg+2,y+6);
-  setFont('helvetica','normal',8.5);txt(acompte,mg+2+55,y+6);
-  rect(W/2-3,y,W/2-mg+3,9);
-  setFont('helvetica','bold',8.5);txt('Mode de règlement : ',W/2,y+6);
-  setFont('helvetica','normal',8.5);txt('Espèces ou Virement',W/2+40,y+6);
-  y+=11;
-  setFont('helvetica','normal',7.5);doc.setTextColor(130,130,130);
-  txt('TVA non applicable, art. 293B du CGI',mg,y);
-  doc.setTextColor(30,30,30);
-  y+=8;
-
-  // SIGNATURES PAGE 1
-  doc.setDrawColor(30,30,30);doc.setLineWidth(0.5);line(mg,y,W-mg,y);y+=7;
-  setFont('helvetica','normal',9);txt('Fait à Mulhouse, le '+today,mg,y);y+=8;
-  setFont('helvetica','bold',9);txt('Signature du prestataire',mg,y);txt('Signature du client',W/2+5,y);
-  setFont('helvetica','normal',8.5);
-  txt('Pour DJ MEYRA — BALCI Deniz',mg,y+5);txt('avec mention « Lu et approuvé »',W/2+5,y+5);
-  y+=30;
-  doc.setDrawColor(180,180,180);doc.setLineWidth(0.3);line(mg,y,W/2-5,y);line(W/2+5,y,W-mg,y);
-  doc.setLineWidth(0.5);doc.setDrawColor(30,30,30);
-  line(mg,280,W-mg,280);
-  setFont('helvetica','normal',7.5);doc.setTextColor(130,130,130);
-  txt('DJ MEYRA — BALCI Deniz — 06.66.15.35.83 — 3 rue d\'Ottmarsheim, 68100 Mulhouse — SIRET : 880287066',W/2,285,{align:'center'});
-
-  // ── PAGE 2 : CGV ────────────────────────────────────────────
-  doc.addPage();
-  doc.setTextColor(30,30,30);
-  setFont('helvetica','bold',12);txt('CONDITIONS GÉNÉRALES DE VENTE',W/2,18,{align:'center'});
-  doc.setDrawColor(30,30,30);doc.setLineWidth(1);line(mg,22,W-mg,22);
-  doc.setLineWidth(0.3);
-
-  var col1x=mg,col2x=W/2+2,colW=W/2-mg-4;
-  var cy1=30,cy2=30;
-
-  function artTitle(titre,cx,cy){
-    setFont('helvetica','bold',9);doc.setTextColor(30,30,30);
-    doc.text(titre,cx,cy);
-    return cy+6;
-  }
-  function artBody(text,cx,cy,cw){
-    setFont('helvetica','normal',8);doc.setTextColor(50,50,50);
-    var lines=doc.splitTextToSize(text,cw);
-    doc.text(lines,cx,cy);
-    return cy+lines.length*4.5+1;
-  }
-
-  // COL 1
-  cy1=artTitle("Art. 1 : CHAMP D'APPLICATION",col1x,cy1);
-  cy1=artBody("Les présentes CGV s'appliquent à toutes les prestations de DJ MEYRA (BALCI Deniz), Auto-Entrepreneur, 3 rue d'Ottmarsheim, 68100 Mulhouse. En signant, le CLIENT accepte intégralement ces conditions.",col1x,cy1,colW);
-  cy1+=3;
-  cy1=artTitle("Art. 2 : DURÉE DE LA PRESTATION",col1x,cy1);
-  cy1=artBody("La durée est stipulée au contrat et ne comprend pas les temps de montage et de démontage. Toute heure supplémentaire commencée est intégralement due à 100 €/heure. DJ MEYRA peut refuser des heures supplémentaires sans indemnité.",col1x,cy1,colW);
-  cy1+=3;
-  cy1=artTitle("Art. 3 : MODALITÉS DE PAIEMENT",col1x,cy1);
-  cy1=artBody("Paiement par espèces ou virement bancaire.",col1x,cy1,colW);
-  cy1=artBody("L'acompte versé est EN AUCUN CAS REMBOURSABLE, sauf décès d'un membre de la famille directe (père, mère, frère, sœur, conjoint, enfant).",col1x,cy1,colW);
-  cy1=artBody("Le CLIENT peut demander le report à une autre date, sous réserve de disponibilité de DJ MEYRA, sans frais supplémentaires.",col1x,cy1,colW);
-  cy1=artBody("La réservation n'est validée qu'à réception de l'acompte. Le solde est dû en fin de prestation. Tout défaut de paiement entraîne une pénalité de 5 fois le taux d'intérêt légal.",col1x,cy1,colW);
-  cy1+=3;
-  cy1=artTitle("Art. 4 : OBLIGATIONS DE DJ MEYRA",col1x,cy1);
-  cy1=artBody("- Fournir le matériel nécessaire (sonorisation, éclairages, animation) selon le devis.",col1x,cy1,colW);
-  cy1=artBody("- Se présenter au lieu de la prestation 1 à 3 heures avant le début pour l'installation.",col1x,cy1,colW);
-  cy1=artBody("- Respecter la puissance sonore maximale (100 dB en soirée, décret n°2017-1244).",col1x,cy1,colW);
-
-  // COL 2
-  cy2=artTitle("Art. 5 : OBLIGATIONS DU CLIENT",col2x,cy2);
-  cy2=artBody("- Permettre l'accès à DJ MEYRA au minimum 2 heures avant le début.",col2x,cy2,colW);
-  cy2=artBody("- Organiser l'événement dans une salle en parfait état de fonctionnement.",col2x,cy2,colW);
-  cy2=artBody("- Fournir un emplacement minimum 6 m × 4 m avec prises électriques 220 V (16-20 A).",col2x,cy2,colW);
-  cy2=artBody("- Fournir gratuitement repas et boisson non alcolisée pendant l'événement.",col2x,cy2,colW);
-  cy2=artBody("- Garantir le remboursement intégral en cas de destruction ou vol du matériel.",col2x,cy2,colW);
-  cy2+=3;
-  cy2=artTitle("Art. 6 : CLAUSE MÉTÉO ET FORCE MAJEURE",col2x,cy2);
-  cy2=artBody("En cas de prestation en extérieur, si les conditions météo rendent la prestation impossible, les parties conviennent de reporter à une date disponible. L'acompte reste acquis à DJ MEYRA.",col2x,cy2,colW);
-  cy2+=3;
-  cy2=artTitle("Art. 7 : RÉSILIATION DU CONTRAT",col2x,cy2);
-  cy2=artBody("L'acompte versé ne sera en aucun cas remboursé, quelle que soit la date d'annulation. Le CLIENT peut demander un report sous réserve de disponibilité.",col2x,cy2,colW);
-  cy2=artBody("DJ MEYRA peut rompre le contrat en cas de mauvais traitements, menaces, dégradations ou non-respect des obligations. Aucun remboursement ne sera accordé.",col2x,cy2,colW);
-  cy2+=3;
-  cy2=artTitle("Art. 8 : LITIGES",col2x,cy2);
-  cy2=artBody("En cas de litige, les parties s'engagent à rechercher une solution amiable. À défaut, les tribunaux de Mulhouse sont seuls compétents.",col2x,cy2,colW);
-
-  // Ligne de séparation verticale CGV
-  var maxCy=Math.max(cy1,cy2)+5;
-  doc.setDrawColor(180,180,180);doc.setLineWidth(0.3);
-  line(W/2,28,W/2,maxCy);
-
-  // SIGNATURES PAGE 2
-  var sy=maxCy+6;
-  doc.setDrawColor(30,30,30);doc.setLineWidth(0.5);line(mg,sy,W-mg,sy);sy+=7;
-  setFont('helvetica','normal',9);doc.setTextColor(30,30,30);
-  txt('Fait à Mulhouse, le '+today,mg,sy);sy+=8;
-  setFont('helvetica','bold',9);txt('Signature du prestataire',mg,sy);txt('Signature du client',W/2+5,sy);
-  setFont('helvetica','normal',8.5);
-  txt('Pour DJ MEYRA — BALCI Deniz',mg,sy+5);txt('avec mention « Lu et approuvé »',W/2+5,sy+5);
-  sy+=28;
-  doc.setDrawColor(180,180,180);doc.setLineWidth(0.3);
-  line(mg,sy,W/2-5,sy);line(W/2+5,sy,W-mg,sy);
-  doc.setLineWidth(0.5);doc.setDrawColor(30,30,30);line(mg,280,W-mg,280);
-  setFont('helvetica','normal',7.5);doc.setTextColor(130,130,130);
-  txt('DJ MEYRA — BALCI Deniz — 06.66.15.35.83 — 3 rue d\'Ottmarsheim, 68100 Mulhouse — SIRET : 880287066',W/2,285,{align:'center'});
-
-  doc.save('Contrat_DJMeyra_'+client.replace(/\s+/g,'_')+'.pdf');
-}
-
-// PDF
+// ═══════════════════════════════════════════════════
+// PDF DEVIS
+// ═══════════════════════════════════════════════════
 function genPDF(){
-  if(!sB){alert('Veuillez sélectionner une prestation.');return;}
+  if(!dBase){alert('Veuillez sélectionner une prestation.');return;}
   var jsPDF=window.jspdf.jsPDF,doc=new jsPDF({unit:'mm',format:'a4'});
   var W=210,mg=18,y=18;
-  var client=document.getElementById('nom-client').value||'—';
-  var telClient=document.getElementById('tel-client').value;
-  var dv=document.getElementById('date-presta').value;
+  var nom=document.getElementById('d-nom').value||'—';
+  var tel=document.getElementById('d-tel').value;
+  var insta=document.getElementById('d-insta').value;
+  var dv=document.getElementById('d-date').value;
   var ds=dv?new Date(dv+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}):'—';
-  var deb=document.getElementById('h-debut').value||'18:00',fin=document.getElementById('h-fin').value||'00:00';
-  var h=cD(deb,fin),nbS=Math.max(0,h-6),supp=Math.round(nbS*100);
-  var remise=Math.max(0,parseInt(document.getElementById('remise-input').value)||0);
-  var total=Math.max(0,sB+supp+sF-remise);
-  var acInput=document.getElementById('acompte-input');
-  var ac=acInput&&acInput.value?Math.max(0,parseInt(acInput.value)||0):Math.round(total*.25);
+  var deb=document.getElementById('d-hdebut').value||'18:00',fin=document.getElementById('d-hfin').value||'00:00';
+  var h=calcDuree(deb,fin),nbS=Math.max(0,h-6),supp=Math.round(nbS*100);
+  var remise=Math.max(0,parseInt(document.getElementById('d-remise').value)||0);
+  var total=Math.max(0,dBase+supp+dFrais-remise);
+  var ac=Math.max(0,parseInt(document.getElementById('d-acompte').value)||Math.round(total*.25));
   var reste=total-ac;
-  var num=gDN(),today=new Date().toLocaleDateString('fr-FR');
+  var num=genNum(),today=new Date().toLocaleDateString('fr-FR');
   doc.setFillColor(20,20,20);doc.rect(0,0,W,42,'F');
   doc.setTextColor(255,255,255);doc.setFontSize(26);doc.setFont('helvetica','bold');doc.text('DJ MEYRA',mg,20);
   doc.setFontSize(10);doc.setFont('helvetica','normal');doc.text('06.66.15.35.83',mg,29);doc.text('Mulhouse, France',mg,36);
   doc.text('Devis n\u00b0 '+num,W-mg,20,{align:'right'});doc.text('\u00c9mis le '+today,W-mg,27,{align:'right'});
-  y=52;doc.setTextColor(20,20,20);doc.setFontSize(12);doc.setFont('helvetica','bold');doc.text('Client',mg,y);y+=7;
+  y=52;doc.setTextColor(20,20,20);
+  doc.setFontSize(12);doc.setFont('helvetica','bold');doc.text('Client',mg,y);y+=7;
   doc.setFont('helvetica','normal');doc.setFontSize(10);
-  doc.text('Nom : '+client,mg,y);y+=5;
-  if(telClient){doc.text('T\u00e9l : '+telClient,mg,y);y+=5;}
-  var instaClient=document.getElementById('insta-client').value;
-  if(instaClient){doc.text('Instagram : '+instaClient,mg,y);y+=5;}
+  doc.text('Nom : '+nom,mg,y);y+=5;
+  if(tel){doc.text('T\u00e9l : '+tel,mg,y);y+=5;}
+  if(insta){doc.text('Instagram : '+insta,mg,y);y+=5;}
   doc.text('Date : '+ds,mg,y);y+=5;
   doc.text('Horaires : '+deb+' \u00e0 '+fin,mg,y);y+=5;
-  if(sC)doc.text('Lieu : '+sC,mg,y);y+=12;
+  if(dVille){doc.text('Lieu : '+dVille,mg,y);y+=5;}
+  y+=7;
   doc.setFillColor(240,240,240);doc.rect(mg,y,W-mg*2,8,'F');
   doc.setFont('helvetica','bold');doc.setFontSize(10);
   doc.text('Prestation',mg+3,y+5.5);doc.text('Montant',W-mg-3,y+5.5,{align:'right'});y+=12;
   function row(a,b){doc.setFont('helvetica','normal');doc.setFontSize(10);doc.text(a,mg+3,y);doc.text(b,W-mg-3,y,{align:'right'});y+=7;}
-  row('Forfait DJ - Animation de soir\u00e9e ('+deb+' \u00e0 '+fin+')',(function(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ');})(total)+' \u20ac');
-  if(sF>0)row('Frais de d\u00e9placement','Inclus');
-  if(remise>0)row('Remise','- '+(function(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ');})(remise)+' \u20ac');
+  row('Forfait DJ - Animation de soir\u00e9e ('+deb+' \u00e0 '+fin+')',fmtPDF(dBase+supp+dFrais)+' \u20ac');
+  if(dFrais>0)row('Frais de d\u00e9placement','Inclus');
+  if(remise>0)row('Remise','- '+fmtPDF(remise)+' \u20ac');
   y+=2;doc.setDrawColor(200,200,200);doc.line(mg,y,W-mg,y);y+=6;
   doc.setFillColor(20,20,20);doc.rect(mg,y,W-mg*2,12,'F');
   doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(13);
-  doc.text('TOTAL',mg+4,y+8);doc.text((function(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ');})(total)+' \u20ac',W-mg-4,y+8,{align:'right'});
+  doc.text('TOTAL',mg+4,y+8);doc.text(fmtPDF(total)+' \u20ac',W-mg-4,y+8,{align:'right'});
   y+=16;doc.setTextColor(20,20,20);
   doc.setFillColor(230,248,234);doc.rect(mg,y,W-mg*2,10,'F');
   doc.setFont('helvetica','bold');doc.setFontSize(11);
-  doc.text('Acompte \u00e0 verser (25 %)',mg+3,y+6.5);doc.text((function(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ');})(ac)+' \u20ac',W-mg-3,y+6.5,{align:'right'});
+  doc.text('Acompte \u00e0 verser',mg+3,y+6.5);doc.text(fmtPDF(ac)+' \u20ac',W-mg-3,y+6.5,{align:'right'});
   y+=14;doc.setFont('helvetica','normal');doc.setFontSize(10);
-  doc.text('Reste \u00e0 percevoir le jour de la prestation',mg+3,y);doc.text((function(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ');})(reste)+' \u20ac',W-mg-3,y,{align:'right'});
+  doc.text('Reste \u00e0 percevoir le jour de la prestation',mg+3,y);doc.text(fmtPDF(reste)+' \u20ac',W-mg-3,y,{align:'right'});
   y+=16;doc.setFontSize(9);doc.setTextColor(130,130,130);
-  doc.text('Ce devis est valable 30 jours \u00e0 compter de sa date d\'emission.',mg,y);y+=5;
+  doc.text('Ce devis est valable 30 jours \u00e0 compter de sa date d\'\'emission.',mg,y);y+=5;
   doc.text('L\'acompte confirme la r\u00e9servation. Merci pour votre confiance !',mg,y);
   doc.setFillColor(20,20,20);doc.rect(0,284,W,13,'F');
   doc.setTextColor(255,255,255);doc.setFontSize(8);
   doc.text('DJ MEYRA \u2014 06.66.15.35.83 \u2014 Mulhouse, France',W/2,292,{align:'center'});
-  doc.save('Devis_DJMeyra_'+client.replace(/\s+/g,'_')+'_'+num+'.pdf');
+  doc.save('Devis_DJMeyra_'+nom.replace(/\s+/g,'_')+'_'+num+'.pdf');
 }
 
+// CONTRAT PDF
+function genContrat(idx){
+  var p=prestations[idx];if(!p){alert('Prestation introuvable.');return;}
+  var jsPDF=window.jspdf.jsPDF,doc=new jsPDF({unit:'mm',format:'a4'});
+  var W=210,mg=18,y=0;
+  var client=p.client||'___________________________';
+  var tel=p.tel||'_______________';
+  var lieu=p.adresse?(p.ville+' \u2014 '+p.adresse):(p.ville||'___________________________');
+  var ds=p.date?new Date(p.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}):'_______________';
+  var horaires=(p.hdebut&&p.hfin)?p.hdebut+' \u00e0 '+p.hfin:'_______________';
+  var montant=p.montant?fmtPDF(p.montant)+' \u20ac':'________________';
+  var acompte=p.acompte?fmtPDF(p.acompte)+' \u20ac':'________________';
+  var today=new Date().toLocaleDateString('fr-FR');
+  function sf(name,style,size){doc.setFont(name,style);doc.setFontSize(size);}
+  function tx(text,x,yy,opts){doc.text(text,x,yy,opts||{});}
+  function ln(x1,y1,x2,y2){doc.line(x1,y1,x2,y2);}
+  function fillR(x,yy,w,h,r,g,b){doc.setFillColor(r,g,b);doc.rect(x,yy,w,h,'F');}
+  // Header
+  doc.setTextColor(30,30,30);
+  sf('helvetica','bold',11);tx('DJ MEYRA',mg,18);
+  sf('helvetica','normal',8.5);tx("3 rue d'Ottmarsheim \u00b7 68100 Mulhouse",mg,24);tx('T\u00e9l. 06.66.15.35.83 \u00b7 SIRET : 880287066',mg,29);
+  sf('helvetica','bold',15);tx('CONTRAT DE PRESTATION DJ',W/2+15,22,{align:'center'});
+  doc.setDrawColor(30,30,30);doc.setLineWidth(0.8);ln(mg,33,W-mg,33);
+  y=42;
+  var rows=[['\u00c9v\u00e9nement :',client+'    T\u00e9l : '+tel],['Lieu :',lieu],['Date :',ds],['Horaires :',horaires+'   (au-del\u00e0 des horaires : facturation 100 \u20ac/h)']];
+  rows.forEach(function(r){
+    fillR(mg,y-4,42,9,235,235,235);doc.setDrawColor(180,180,180);doc.setLineWidth(0.3);
+    doc.rect(mg,y-4,42,9);doc.rect(mg,y-4,W-mg*2,9);
+    sf('helvetica','bold',8.5);tx(r[0],mg+2,y+1);sf('helvetica','normal',8.5);tx(r[1],mg+44,y+1);y+=9;
+  });
+  y+=5;
+  fillR(mg,y,W-mg*2,8,210,210,210);doc.setDrawColor(150,150,150);doc.setLineWidth(0.3);
+  sf('helvetica','bold',8.5);tx('D\u00e9signation',mg+2,y+5.5);tx('Montant',W-mg-2,y+5.5,{align:'right'});
+  doc.rect(mg,y,W-mg*2,8);ln(mg+95,y,mg+95,y+8);ln(mg+115,y,mg+115,y+8);y+=8;
+  var lignes=[[p.type+' - Animation de soir\u00e9e','01',montant],['','',''],['','',''],['','','']];
+  lignes.forEach(function(l){doc.rect(mg,y,W-mg*2,8);ln(mg+95,y,mg+95,y+8);ln(mg+115,y,mg+115,y+8);sf('helvetica','normal',8.5);tx(l[0],mg+2,y+5.5);tx(l[1],mg+103,y+5.5,{align:'center'});tx(l[2],W-mg-2,y+5.5,{align:'right'});y+=8;});
+  fillR(mg,y,W-mg*2,8,230,230,230);doc.rect(mg,y,W-mg*2,8);ln(mg+115,y,mg+115,y+8);
+  sf('helvetica','bold',8.5);tx('MONTANT TOTAL TTC',mg+2,y+5.5);tx(montant,W-mg-2,y+5.5,{align:'right'});y+=10;
+  doc.setDrawColor(150,150,150);doc.rect(mg,y,W/2-mg-5,9);
+  sf('helvetica','bold',8.5);tx('Acompte vers\u00e9 \u00e0 la signature : ',mg+2,y+6);
+  sf('helvetica','normal',8.5);tx(acompte,mg+2+52,y+6);
+  doc.rect(W/2-3,y,W/2-mg+3,9);sf('helvetica','bold',8.5);tx('Mode de r\u00e8glement : ',W/2,y+6);sf('helvetica','normal',8.5);tx('Esp\u00e8ces ou Virement',W/2+40,y+6);
+  y+=11;sf('helvetica','normal',7.5);doc.setTextColor(130,130,130);tx('TVA non applicable, art. 293B du CGI',mg,y);doc.setTextColor(30,30,30);y+=8;
+  // CGV
+  doc.setDrawColor(30,30,30);doc.setLineWidth(0.5);ln(mg,y,W-mg,y);y+=4;
+  sf('helvetica','bold',10);tx('CONDITIONS G\u00c9N\u00c9RALES DE VENTE',W/2,y+5,{align:'center'});y+=10;
+  doc.setLineWidth(0.3);
+  var cx1=mg,cx2=W/2+2,cw=W/2-mg-4,cy1=y,cy2=y;
+  function aT(t,cx,cy){sf('helvetica','bold',9);doc.setTextColor(30,30,30);doc.text(t,cx,cy);return cy+6;}
+  function aB(t,cx,cy,cw2){sf('helvetica','normal',8);doc.setTextColor(50,50,50);var ls=doc.splitTextToSize(t,cw2||cw);doc.text(ls,cx,cy);return cy+ls.length*4.5+1;}
+  cy1=aT('Art.1 : CHAMP D\'APPLICATION',cx1,cy1);cy1=aB('Les pr\u00e9sentes CGV s\'appliquent \u00e0 toutes les prestations de DJ MEYRA (BALCI Deniz), 3 rue d\'Ottmarsheim, 68100 Mulhouse.',cx1,cy1);cy1+=3;
+  cy1=aT('Art.2 : DUR\u00c9E DE LA PRESTATION',cx1,cy1);cy1=aB('La dur\u00e9e est stipul\u00e9e au contrat et ne comprend pas les temps de montage et de d\u00e9montage. Toute heure suppl\u00e9mentaire commenc\u00e9e est due \u00e0 100\u20ac/h.',cx1,cy1);cy1+=3;
+  cy1=aT('Art.3 : MODALIT\u00c9S DE PAIEMENT',cx1,cy1);cy1=aB('Paiement par esp\u00e8ces ou virement. L\'acompte vers\u00e9 est EN AUCUN CAS REMBOURSABLE sauf d\u00e9c\u00e8s d\'un membre de la famille directe. Le CLIENT peut demander un report sous r\u00e9serve de disponibilit\u00e9. Tout d\u00e9faut de paiement entra\u00eene une p\u00e9nalit\u00e9 de 5x le taux l\u00e9gal.',cx1,cy1);cy1+=3;
+  cy1=aT('Art.4 : OBLIGATIONS DE DJ MEYRA',cx1,cy1);cy1=aB('- Fournir le mat\u00e9riel (sonorisation, \u00e9clairages) selon le devis.\n- Se pr\u00e9senter 1\u00e0 3h avant le d\u00e9but.\n- Respecter 100 dB max en soir\u00e9e (d\u00e9cret n\u00b02017-1244).',cx1,cy1);
+  cy2=aT('Art.5 : OBLIGATIONS DU CLIENT',cx2,cy2);cy2=aB('- Acc\u00e8s 2h avant le d\u00e9but.\n- Organiser l\'\u00e9v\u00e9nement dans une salle en parfait \u00e9tat.\n- Emplacement 6m\u00d74m avec prises 220V (16-20A).\n- Repas et boisson non alcolis\u00e9e fournis gratuitement.\n- Garantir le remboursement en cas de destruction du mat\u00e9riel.',cx2,cy2);cy2+=3;
+  cy2=aT('Art.6 : CLAUSE M\u00c9T\u00c9O',cx2,cy2);cy2=aB('En cas de prestation en ext\u00e9rieur, si les conditions m\u00e9t\u00e9o rendent la prestation impossible, les parties conviennent de reporter. L\'acompte reste acquis.',cx2,cy2);cy2+=3;
+  cy2=aT('Art.7 : R\u00c9SILIATION',cx2,cy2);cy2=aB('L\'acompte ne sera pas rembours\u00e9. Report possible sous r\u00e9serve de disponibilit\u00e9. DJ MEYRA peut rompre le contrat en cas de mauvais traitements ou non-respect des obligations.',cx2,cy2);cy2+=3;
+  cy2=aT('Art.8 : LITIGES',cx2,cy2);cy2=aB('Solution amiable privil\u00e9gi\u00e9e. \u00c0 d\u00e9faut, tribunaux de Mulhouse comp\u00e9tents.',cx2,cy2);
+  var maxY=Math.max(cy1,cy2)+5;
+  doc.setDrawColor(180,180,180);doc.setLineWidth(0.3);ln(W/2,y-4,W/2,maxY);
+  var sy=maxY+4;doc.setDrawColor(30,30,30);doc.setLineWidth(0.5);ln(mg,sy,W-mg,sy);sy+=5;
+  sf('helvetica','normal',9);doc.setTextColor(30,30,30);tx('Fait \u00e0 Mulhouse, le '+today,mg,sy);sy+=7;
+  sf('helvetica','bold',9);tx('Signature du prestataire',mg,sy);tx('Signature du client',W/2+5,sy);
+  sf('helvetica','normal',8.5);tx('Pour DJ MEYRA \u2014 BALCI Deniz',mg,sy+5);tx('avec mention \u00ab Lu et approuv\u00e9 \u00bb',W/2+5,sy+5);
+  sy+=28;doc.setDrawColor(180,180,180);doc.setLineWidth(0.3);ln(mg,sy,W/2-5,sy);ln(W/2+5,sy,W-mg,sy);
+  doc.setLineWidth(0.5);doc.setDrawColor(30,30,30);ln(mg,280,W-mg,280);
+  sf('helvetica','normal',7.5);doc.setTextColor(130,130,130);
+  tx('DJ MEYRA \u2014 BALCI Deniz \u2014 06.66.15.35.83 \u2014 3 rue d\'Ottmarsheim, 68100 Mulhouse \u2014 SIRET : 880287066',W/2,285,{align:'center'});
+  doc.save('Contrat_DJMeyra_'+client.replace(/\s+/g,'_')+'.pdf');
+}
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
 document.addEventListener('touchstart',function(e){
-  if(!e.target.closest('#ville-input')&&!e.target.closest('#sugg-box'))
-    document.getElementById('sugg-box').style.display='none';
+  if(!e.target.closest('#d-ville')&&!e.target.closest('#d-sugg'))
+    document.getElementById('d-sugg').style.display='none';
 },{passive:true});
 renderPlanning();
 </script>
+
+<!-- FIREBASE MODULE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, onValue, update, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const cfg = {
+  apiKey:"AIzaSyBv_0pZASNBoVNlQ4-ztKsXwVrIN0dMQ-U",
+  authDomain:"dj-meyra.firebaseapp.com",
+  databaseURL:"https://dj-meyra-default-rtdb.firebaseio.com",
+  projectId:"dj-meyra",
+  storageBucket:"dj-meyra.firebasestorage.app",
+  messagingSenderId:"161733120497",
+  appId:"1:161733120497:web:6d51fac4eb4d5730abf450"
+};
+const app = initializeApp(cfg);
+const db = getDatabase(app);
+
+// Sync planning vers Firebase
+window._syncFirebase = function(data) { set(ref(db,'planning'), data); };
+
+// Écouter planning Firebase
+onValue(ref(db,'planning'), function(snapshot) {
+  var data = snapshot.val();
+  if (data) {
+    var arr = Array.isArray(data) ? data.filter(Boolean) : Object.values(data).filter(Boolean);
+    if (arr.length > 0) {
+      prestations = arr;
+      localStorage.setItem('djmeyra_v2', JSON.stringify(prestations));
+      window._firebaseData = arr;
+      var page = document.getElementById('page-planning');
+      if (page && page.classList.contains('active')) renderPlanning();
+      var pagef = document.getElementById('page-finance');
+      if (pagef && pagef.classList.contains('active')) renderFinance();
+    }
+  }
+});
+
+// Écouter demandes Firebase
+window._demandes = [];
+onValue(ref(db,'demandes'), function(snapshot) {
+  var data = snapshot.val();
+  var arr = [];
+  if (data) {
+    Object.keys(data).forEach(function(key) {
+      var d = data[key];
+      if (d) { d.firebaseKey = key; arr.push(d); }
+    });
+  }
+  window._demandes = arr;
+  // Mettre à jour le badge nav
+  var nouvelles = arr.filter(function(d){return d.statut==='nouveau';}).length;
+  var navLabel = document.getElementById('nav-dem');
+  if (navLabel) navLabel.textContent = nouvelles>0 ? 'Dem.('+nouvelles+')' : 'Demandes';
+  // Re-render si page demandes active
+  var page = document.getElementById('page-demandes');
+  if (page && page.classList.contains('active')) renderDemandes();
+});
+
+// Mettre à jour statut demande
+window._updateDemande = function(key, statut) {
+  update(ref(db,'demandes/'+key), {statut: statut});
+};
+</script>
+
 </body>
 </html>
