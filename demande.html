@@ -163,9 +163,9 @@ function envoyerDemande(){
 }
 
 function sendEmail(d){
-  var serviceId='service_djmeyra';
-  var templateId='template_djmeyra';
-  var publicKey='YOUR_EMAILJS_KEY';
+  var serviceId='service_crqcg97';
+  var templateId='template_5m8hgcu';
+  var publicKey='2Tb7Y7aji7mIk41TM';
   var params={
     to_email:'deniz-balci@outlook.fr',
     from_name:d.nom,
@@ -190,6 +190,11 @@ function showSuccess(){
 
 <!-- EmailJS -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  window.addEventListener('load', function() {
+    if(window.emailjs) window.emailjs.init('2Tb7Y7aji7mIk41TM');
+  });
+</script>
 
 </body>
 </html>
