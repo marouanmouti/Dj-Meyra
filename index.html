@@ -732,6 +732,11 @@ function clickJour(ds){
     var html='<span class="badge '+bc+'" style="margin-bottom:14px;display:inline-block">'+bt+'</span>';
     var rows=[['👤','Client',p.client],['📞','Téléphone',p.tel],['📸','Instagram',p.instagram],['📅','Date',ds2],['⏰','Horaires',(p.hdebut&&p.hfin)?p.hdebut+' → '+p.hfin:''],['📍','Ville',p.ville],['🏛','Adresse',p.adresse],['💰','Montant',p.montant?fmt(p.montant):''],['💳','Acompte',p.acompte?fmt(p.acompte):''],['📝','Notes',p.notes]];
     rows.forEach(function(r){if(r[2])html+='<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #e5e5ea;font-size:14px"><span style="font-size:18px;width:24px;text-align:center">'+r[0]+'</span><div><div style="font-size:11px;color:#8e8e93;margin-bottom:2px">'+r[1]+'</div><div style="font-weight:500">'+r[2]+'</div></div></div>';});
+    var pid=prestations.indexOf(p);
+    html+='<div style="display:flex;gap:8px;margin-top:14px">';
+    html+='<button onclick="fermerDetail();ouvrirModal('+pid+')" style="flex:1;padding:12px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;background:#f2f2f7;color:#1c1c1e;-webkit-appearance:none">✏️ Modifier</button>';
+    html+='<button onclick="fermerDetail();genContrat('+pid+')" style="flex:1;padding:12px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;background:#e8f0fe;color:#1a56db;-webkit-appearance:none">📄 Contrat</button>';
+    html+='</div>';
     content.innerHTML=html;
   }
   modal.classList.add('open');
@@ -1008,73 +1013,135 @@ function genPDF(){
 // CONTRAT PDF
 function genContrat(idx){
   var p=prestations[idx];if(!p){alert('Prestation introuvable.');return;}
-  var jsPDF=window.jspdf.jsPDF,doc=new jsPDF({unit:'mm',format:'a4'});
-  var W=210,mg=18,y=0;
+  var jsPDF=window.jspdf.jsPDF;
+  var doc=new jsPDF({unit:'mm',format:'a4'});
+  var W=210,mg=18;
   var client=p.client||'___________________________';
   var tel=p.tel||'_______________';
-  var lieu=p.adresse?(p.ville+' \u2014 '+p.adresse):(p.ville||'___________________________');
+  var lieu=p.adresse?(p.ville+' — '+p.adresse):(p.ville||'___________________________');
   var ds=p.date?new Date(p.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}):'_______________';
-  var horaires=(p.hdebut&&p.hfin)?p.hdebut+' \u00e0 '+p.hfin:'_______________';
-  var montant=p.montant?fmtPDF(p.montant)+' \u20ac':'________________';
-  var acompte=p.acompte?fmtPDF(p.acompte)+' \u20ac':'________________';
+  var horaires=(p.hdebut&&p.hfin)?p.hdebut+' à '+p.hfin:'_______________';
+  var montant=p.montant?fmtPDF(p.montant)+' €':'________________';
+  var acompte=p.acompte?fmtPDF(p.acompte)+' €':'________________';
   var today=new Date().toLocaleDateString('fr-FR');
-  function sf(name,style,size){doc.setFont(name,style);doc.setFontSize(size);}
-  function tx(text,x,yy,opts){doc.text(text,x,yy,opts||{});}
+
+  function sf(nm,st,sz){doc.setFont(nm,st);doc.setFontSize(sz);}
+  function tx(t,x,y,o){doc.text(t,x,y,o||{});}
   function ln(x1,y1,x2,y2){doc.line(x1,y1,x2,y2);}
-  function fillR(x,yy,w,h,r,g,b){doc.setFillColor(r,g,b);doc.rect(x,yy,w,h,'F');}
-  // Header
+  function fillR(x,y,w,h,r,g,b){doc.setFillColor(r,g,b);doc.rect(x,y,w,h,'F');}
+
+  // ═══ PAGE 1 : CONTRAT ═══
+  var y=18;
   doc.setTextColor(30,30,30);
-  sf('helvetica','bold',11);tx('DJ MEYRA',mg,18);
-  sf('helvetica','normal',8.5);tx("3 rue d'Ottmarsheim \u00b7 68100 Mulhouse",mg,24);tx('T\u00e9l. 06.66.15.35.83 \u00b7 SIRET : 880287066',mg,29);
-  sf('helvetica','bold',15);tx('CONTRAT DE PRESTATION DJ',W/2+15,22,{align:'center'});
-  doc.setDrawColor(30,30,30);doc.setLineWidth(0.8);ln(mg,33,W-mg,33);
-  y=42;
-  var rows=[['\u00c9v\u00e9nement :',client+'    T\u00e9l : '+tel],['Lieu :',lieu],['Date :',ds],['Horaires :',horaires+'   (au-del\u00e0 des horaires : facturation 100 \u20ac/h)']];
-  rows.forEach(function(r){
-    fillR(mg,y-4,42,9,235,235,235);doc.setDrawColor(180,180,180);doc.setLineWidth(0.3);
+  sf('helvetica','bold',11);tx('DJ MEYRA',mg,y);
+  sf('helvetica','normal',8.5);tx("3 rue d'Ottmarsheim · 68100 Mulhouse",mg,y+6);tx('Tél. 06.66.15.35.83 · SIRET : 880287066',mg,y+11);
+  sf('helvetica','bold',15);tx('CONTRAT DE PRESTATION DJ',W/2+15,y+4,{align:'center'});
+  doc.setDrawColor(30,30,30);doc.setLineWidth(0.8);ln(mg,y+15,W-mg,y+15);
+  y+=24;
+  var infoRows=[
+    ['Client :',client+'    Tél : '+tel],
+    ['Lieu :',lieu],
+    ['Date :',ds],
+    ['Horaires :',horaires+'   (au-delà : 100 €/heure)']
+  ];
+  infoRows.forEach(function(r){
+    fillR(mg,y-4,42,9,235,235,235);
+    doc.setDrawColor(180,180,180);doc.setLineWidth(0.3);
     doc.rect(mg,y-4,42,9);doc.rect(mg,y-4,W-mg*2,9);
-    sf('helvetica','bold',8.5);tx(r[0],mg+2,y+1);sf('helvetica','normal',8.5);tx(r[1],mg+44,y+1);y+=9;
+    sf('helvetica','bold',8.5);tx(r[0],mg+2,y+1);
+    sf('helvetica','normal',8.5);tx(r[1],mg+44,y+1);
+    y+=9;
   });
   y+=5;
-  fillR(mg,y,W-mg*2,8,210,210,210);doc.setDrawColor(150,150,150);doc.setLineWidth(0.3);
-  sf('helvetica','bold',8.5);tx('D\u00e9signation',mg+2,y+5.5);tx('Montant',W-mg-2,y+5.5,{align:'right'});
-  doc.rect(mg,y,W-mg*2,8);ln(mg+95,y,mg+95,y+8);ln(mg+115,y,mg+115,y+8);y+=8;
-  var lignes=[[p.type+' - Animation de soir\u00e9e','01',montant],['','',''],['','',''],['','','']];
-  lignes.forEach(function(l){doc.rect(mg,y,W-mg*2,8);ln(mg+95,y,mg+95,y+8);ln(mg+115,y,mg+115,y+8);sf('helvetica','normal',8.5);tx(l[0],mg+2,y+5.5);tx(l[1],mg+103,y+5.5,{align:'center'});tx(l[2],W-mg-2,y+5.5,{align:'right'});y+=8;});
+  fillR(mg,y,W-mg*2,8,210,210,210);
+  doc.setDrawColor(150,150,150);doc.setLineWidth(0.3);
+  sf('helvetica','bold',8.5);tx('Désignation',mg+2,y+5.5);tx('Montant',W-mg-2,y+5.5,{align:'right'});
+  doc.rect(mg,y,W-mg*2,8);ln(mg+115,y,mg+115,y+8);y+=8;
+  var lignes=[[p.type+' - Animation de soirée','01',montant],['','',''],['','','']];
+  lignes.forEach(function(l){
+    doc.rect(mg,y,W-mg*2,8);ln(mg+95,y,mg+95,y+8);ln(mg+115,y,mg+115,y+8);
+    sf('helvetica','normal',8.5);tx(l[0],mg+2,y+5.5);tx(l[1],mg+100,y+5.5,{align:'center'});tx(l[2],W-mg-2,y+5.5,{align:'right'});
+    y+=8;
+  });
   fillR(mg,y,W-mg*2,8,230,230,230);doc.rect(mg,y,W-mg*2,8);ln(mg+115,y,mg+115,y+8);
-  sf('helvetica','bold',8.5);tx('MONTANT TOTAL TTC',mg+2,y+5.5);tx(montant,W-mg-2,y+5.5,{align:'right'});y+=10;
-  doc.setDrawColor(150,150,150);doc.rect(mg,y,W/2-mg-5,9);
-  sf('helvetica','bold',8.5);tx('Acompte vers\u00e9 \u00e0 la signature : ',mg+2,y+6);
-  sf('helvetica','normal',8.5);tx(acompte,mg+2+52,y+6);
-  doc.rect(W/2-3,y,W/2-mg+3,9);sf('helvetica','bold',8.5);tx('Mode de r\u00e8glement : ',W/2,y+6);sf('helvetica','normal',8.5);tx('Esp\u00e8ces ou Virement',W/2+40,y+6);
-  y+=11;sf('helvetica','normal',7.5);doc.setTextColor(130,130,130);tx('TVA non applicable, art. 293B du CGI',mg,y);doc.setTextColor(30,30,30);y+=8;
-  // CGV
-  doc.setDrawColor(30,30,30);doc.setLineWidth(0.5);ln(mg,y,W-mg,y);y+=4;
-  sf('helvetica','bold',10);tx('CONDITIONS G\u00c9N\u00c9RALES DE VENTE',W/2,y+5,{align:'center'});y+=10;
-  doc.setLineWidth(0.3);
-  var cx1=mg,cx2=W/2+2,cw=W/2-mg-4,cy1=y,cy2=y;
-  function aT(t,cx,cy){sf('helvetica','bold',9);doc.setTextColor(30,30,30);doc.text(t,cx,cy);return cy+6;}
-  function aB(t,cx,cy,cw2){sf('helvetica','normal',8);doc.setTextColor(50,50,50);var ls=doc.splitTextToSize(t,cw2||cw);doc.text(ls,cx,cy);return cy+ls.length*4.5+1;}
-  cy1=aT('Art.1 : CHAMP D\'APPLICATION',cx1,cy1);cy1=aB('Les pr\u00e9sentes CGV s\'appliquent \u00e0 toutes les prestations de DJ MEYRA (BALCI Deniz), 3 rue d\'Ottmarsheim, 68100 Mulhouse.',cx1,cy1);cy1+=3;
-  cy1=aT('Art.2 : DUR\u00c9E DE LA PRESTATION',cx1,cy1);cy1=aB('La dur\u00e9e est stipul\u00e9e au contrat et ne comprend pas les temps de montage et de d\u00e9montage. Toute heure suppl\u00e9mentaire commenc\u00e9e est due \u00e0 100\u20ac/h.',cx1,cy1);cy1+=3;
-  cy1=aT('Art.3 : MODALIT\u00c9S DE PAIEMENT',cx1,cy1);cy1=aB('Paiement par esp\u00e8ces ou virement. L\'acompte vers\u00e9 est EN AUCUN CAS REMBOURSABLE sauf d\u00e9c\u00e8s d\'un membre de la famille directe. Le CLIENT peut demander un report sous r\u00e9serve de disponibilit\u00e9. Tout d\u00e9faut de paiement entra\u00eene une p\u00e9nalit\u00e9 de 5x le taux l\u00e9gal.',cx1,cy1);cy1+=3;
-  cy1=aT('Art.4 : OBLIGATIONS DE DJ MEYRA',cx1,cy1);cy1=aB('- Fournir le mat\u00e9riel (sonorisation, \u00e9clairages) selon le devis.\n- Se pr\u00e9senter 1\u00e0 3h avant le d\u00e9but.\n- Respecter 100 dB max en soir\u00e9e (d\u00e9cret n\u00b02017-1244).',cx1,cy1);
-  cy2=aT('Art.5 : OBLIGATIONS DU CLIENT',cx2,cy2);cy2=aB('- Acc\u00e8s 2h avant le d\u00e9but.\n- Organiser l\'\u00e9v\u00e9nement dans une salle en parfait \u00e9tat.\n- Emplacement 6m\u00d74m avec prises 220V (16-20A).\n- Repas et boisson non alcolis\u00e9e fournis gratuitement.\n- Garantir le remboursement en cas de destruction du mat\u00e9riel.',cx2,cy2);cy2+=3;
-  cy2=aT('Art.6 : CLAUSE M\u00c9T\u00c9O',cx2,cy2);cy2=aB('En cas de prestation en ext\u00e9rieur, si les conditions m\u00e9t\u00e9o rendent la prestation impossible, les parties conviennent de reporter. L\'acompte reste acquis.',cx2,cy2);cy2+=3;
-  cy2=aT('Art.7 : R\u00c9SILIATION',cx2,cy2);cy2=aB('L\'acompte ne sera pas rembours\u00e9. Report possible sous r\u00e9serve de disponibilit\u00e9. DJ MEYRA peut rompre le contrat en cas de mauvais traitements ou non-respect des obligations.',cx2,cy2);cy2+=3;
-  cy2=aT('Art.8 : LITIGES',cx2,cy2);cy2=aB('Solution amiable privil\u00e9gi\u00e9e. \u00c0 d\u00e9faut, tribunaux de Mulhouse comp\u00e9tents.',cx2,cy2);
-  var maxY=Math.max(cy1,cy2)+5;
-  doc.setDrawColor(180,180,180);doc.setLineWidth(0.3);ln(W/2,y-4,W/2,maxY);
-  var sy=maxY+4;doc.setDrawColor(30,30,30);doc.setLineWidth(0.5);ln(mg,sy,W-mg,sy);sy+=5;
-  sf('helvetica','normal',9);doc.setTextColor(30,30,30);tx('Fait \u00e0 Mulhouse, le '+today,mg,sy);sy+=7;
-  sf('helvetica','bold',9);tx('Signature du prestataire',mg,sy);tx('Signature du client',W/2+5,sy);
-  sf('helvetica','normal',8.5);tx('Pour DJ MEYRA \u2014 BALCI Deniz',mg,sy+5);tx('avec mention \u00ab Lu et approuv\u00e9 \u00bb',W/2+5,sy+5);
-  sy+=28;doc.setDrawColor(180,180,180);doc.setLineWidth(0.3);ln(mg,sy,W/2-5,sy);ln(W/2+5,sy,W-mg,sy);
-  doc.setLineWidth(0.5);doc.setDrawColor(30,30,30);ln(mg,280,W-mg,280);
+  sf('helvetica','bold',8.5);tx('MONTANT TOTAL TTC',mg+2,y+5.5);tx(montant,W-mg-2,y+5.5,{align:'right'});
+  y+=10;
+  doc.setDrawColor(150,150,150);
+  doc.rect(mg,y,W/2-mg-5,9);
+  sf('helvetica','bold',8.5);tx('Acompte versé à la signature :',mg+2,y+6);
+  sf('helvetica','normal',8.5);tx(acompte,mg+50,y+6);
+  doc.rect(W/2-3,y,W/2-mg+3,9);
+  sf('helvetica','bold',8.5);tx('Mode de règlement :',W/2,y+6);
+  sf('helvetica','normal',8.5);tx('Espèces ou Virement',W/2+38,y+6);
+  y+=11;
+  sf('helvetica','normal',7.5);doc.setTextColor(130,130,130);tx('TVA non applicable, art. 293B du CGI',mg,y);
+  doc.setTextColor(30,30,30);y+=8;
+  doc.setDrawColor(30,30,30);doc.setLineWidth(0.5);ln(mg,y,W-mg,y);y+=7;
+  tx('Fait à Mulhouse, le '+today,mg,y);y+=8;
+  sf('helvetica','bold',9);tx('Signature du prestataire',mg,y);tx('Signature du client',W/2+5,y);
+  sf('helvetica','normal',8.5);tx('Pour DJ MEYRA — BALCI Deniz',mg,y+5);tx('avec mention « Lu et approuvé »',W/2+5,y+5);
+  y+=32;
+  doc.setDrawColor(180,180,180);doc.setLineWidth(0.3);ln(mg,y,W/2-5,y);ln(W/2+5,y,W-mg,y);
+  doc.setDrawColor(30,30,30);doc.setLineWidth(0.5);ln(mg,280,W-mg,280);
   sf('helvetica','normal',7.5);doc.setTextColor(130,130,130);
-  tx('DJ MEYRA \u2014 BALCI Deniz \u2014 06.66.15.35.83 \u2014 3 rue d\'Ottmarsheim, 68100 Mulhouse \u2014 SIRET : 880287066',W/2,285,{align:'center'});
+  tx('DJ MEYRA — BALCI Deniz — 06.66.15.35.83 — 3 rue d\'Ottmarsheim, 68100 Mulhouse — SIRET : 880287066',W/2,285,{align:'center'});
+
+  // ═══ PAGE 2 : CGV ═══
+  doc.addPage();
+  doc.setTextColor(30,30,30);
+  sf('helvetica','bold',12);tx('CONDITIONS GÉNÉRALES DE VENTE',W/2,18,{align:'center'});
+  doc.setDrawColor(30,30,30);doc.setLineWidth(1.5);ln(mg,22,W-mg,22);
+  doc.setLineWidth(0.3);
+
+  var cx1=mg,cx2=W/2+2,cw=W/2-mg-4,cy1=30,cy2=30;
+  function aT(t,cx,cy){sf('helvetica','bold',9);doc.setTextColor(30,30,30);doc.text(t,cx,cy);return cy+6;}
+  function aB(t,cx,cy){sf('helvetica','normal',8);doc.setTextColor(50,50,50);var ls=doc.splitTextToSize(t,cw);doc.text(ls,cx,cy);return cy+ls.length*4.5+2;}
+
+  cy1=aT('Art. 1 : CHAMP D\'APPLICATION',cx1,cy1);
+  cy1=aB('Les présentes CGV s\'appliquent à toutes les prestations de DJ MEYRA (BALCI Deniz), Auto-Entrepreneur, 3 rue d\'Ottmarsheim, 68100 Mulhouse. En signant, le CLIENT accepte intégralement ces conditions.',cx1,cy1);cy1+=3;
+  cy1=aT('Art. 2 : DURÉE DE LA PRESTATION',cx1,cy1);
+  cy1=aB('La durée est stipulée au contrat et ne comprend pas les temps de montage et de démontage. Toute heure supplémentaire commencée est intégralement due à 100 €/heure. DJ MEYRA peut refuser des heures supplémentaires sans indemnité.',cx1,cy1);cy1+=3;
+  cy1=aT('Art. 3 : MODALITÉS DE PAIEMENT',cx1,cy1);
+  cy1=aB('Paiement par espèces ou virement bancaire.',cx1,cy1);
+  cy1=aB('L\'acompte versé est EN AUCUN CAS REMBOURSABLE, sauf décès d\'un membre de la famille directe (père, mère, frère, sœur, conjoint, enfant).',cx1,cy1);
+  cy1=aB('Le CLIENT peut demander le report à une autre date sous réserve de disponibilité de DJ MEYRA, sans frais supplémentaires.',cx1,cy1);
+  cy1=aB('La réservation n\'est validée qu\'à réception de l\'acompte. Le solde est dû en fin de prestation. Tout défaut entraîne une pénalité de 5x le taux légal.',cx1,cy1);cy1+=3;
+  cy1=aT('Art. 4 : OBLIGATIONS DE DJ MEYRA',cx1,cy1);
+  cy1=aB('- Fournir le matériel nécessaire (sonorisation, éclairages) selon le devis.',cx1,cy1);
+  cy1=aB('- Se présenter 1 à 3 heures avant le début pour l\'installation.',cx1,cy1);
+  cy1=aB('- Respecter la puissance sonore maximale (100 dB, décret n°2017-1244).',cx1,cy1);
+
+  cy2=aT('Art. 5 : OBLIGATIONS DU CLIENT',cx2,cy2);
+  cy2=aB('- Permettre l\'accès à DJ MEYRA 2 heures avant le début.',cx2,cy2);
+  cy2=aB('- Organiser l\'événement dans une salle en parfait état.',cx2,cy2);
+  cy2=aB('- Fournir un emplacement 6m x 4m avec prises 220V (16-20A).',cx2,cy2);
+  cy2=aB('- Fournir gratuitement repas et boisson non alcolisée.',cx2,cy2);
+  cy2=aB('- Garantir le remboursement en cas de destruction ou vol du matériel.',cx2,cy2);
+  cy2+=3;
+  cy2=aT('Art. 6 : CLAUSE MÉTÉO ET FORCE MAJEURE',cx2,cy2);
+  cy2=aB('En cas de prestation en extérieur, si les conditions météo rendent la prestation impossible, les parties conviennent de reporter à une date disponible. L\'acompte reste acquis à DJ MEYRA.',cx2,cy2);cy2+=3;
+  cy2=aT('Art. 7 : RÉSILIATION DU CONTRAT',cx2,cy2);
+  cy2=aB('L\'acompte versé ne sera en aucun cas remboursé, quelle que soit la date d\'annulation. Le CLIENT peut demander un report sous réserve de disponibilité.',cx2,cy2);
+  cy2=aB('DJ MEYRA peut rompre le contrat en cas de mauvais traitements, menaces, dégradations ou non-respect des obligations. Aucun remboursement ne sera accordé.',cx2,cy2);cy2+=3;
+  cy2=aT('Art. 8 : LITIGES',cx2,cy2);
+  cy2=aB('En cas de litige, les parties s\'engagent à rechercher une solution amiable. À défaut, les tribunaux de Mulhouse sont seuls compétents.',cx2,cy2);
+
+  var maxY=Math.max(cy1,cy2)+5;
+  doc.setDrawColor(180,180,180);doc.setLineWidth(0.3);ln(W/2,28,W/2,maxY);
+  var sy=maxY+6;
+  doc.setDrawColor(30,30,30);doc.setLineWidth(0.5);ln(mg,sy,W-mg,sy);sy+=7;
+  sf('helvetica','normal',9);doc.setTextColor(30,30,30);tx('Fait à Mulhouse, le '+today,mg,sy);sy+=8;
+  sf('helvetica','bold',9);tx('Signature du prestataire',mg,sy);tx('Signature du client',W/2+5,sy);
+  sf('helvetica','normal',8.5);tx('Pour DJ MEYRA — BALCI Deniz',mg,sy+5);tx('avec mention « Lu et approuvé »',W/2+5,sy+5);
+  sy+=30;
+  doc.setDrawColor(180,180,180);doc.setLineWidth(0.3);ln(mg,sy,W/2-5,sy);ln(W/2+5,sy,W-mg,sy);
+  doc.setDrawColor(30,30,30);doc.setLineWidth(0.5);ln(mg,280,W-mg,280);
+  sf('helvetica','normal',7.5);doc.setTextColor(130,130,130);
+  tx('DJ MEYRA — BALCI Deniz — 06.66.15.35.83 — 3 rue d\'Ottmarsheim, 68100 Mulhouse — SIRET : 880287066',W/2,285,{align:'center'});
+
   doc.save('Contrat_DJMeyra_'+client.replace(/\s+/g,'_')+'.pdf');
 }
+
 
 // ═══════════════════════════════════════════════════
 // INIT
