@@ -216,11 +216,10 @@ select{font-size:15px;font-weight:700;border:none;background:none;color:#1c1c1e;
 <div class="page" id="page-demandes">
   <div class="page-header"><h1>Demandes</h1><p id="dem-sub">—</p></div>
   <div class="filter-bar">
-    <button class="filter-btn active" id="fb-tous" onclick="filtrerDem('tous')">Toutes</button>
-    <button class="filter-btn" id="fb-nouveau" onclick="filtrerDem('nouveau')">Nouvelles</button>
-    <button class="filter-btn" id="fb-en_attente" onclick="filtrerDem('en_attente')">En attente</button>
-    <button class="filter-btn" id="fb-confirme" onclick="filtrerDem('confirme')">Confirmées</button>
-    <button class="filter-btn" id="fb-refuse" onclick="filtrerDem('refuse')">Refusées</button>
+    <button class="filter-btn active" id="fb-nouveau" onclick="filtrerDem('nouveau')">🆕 Nouvelles</button>
+    <button class="filter-btn" id="fb-en_attente" onclick="filtrerDem('en_attente')">⏳ En attente</button>
+    <button class="filter-btn" id="fb-confirme" onclick="filtrerDem('confirme')">✅ Confirmées</button>
+    <button class="filter-btn" id="fb-refuse" onclick="filtrerDem('refuse')">❌ Refusées</button>
   </div>
   <div id="dem-list"><p class="empty-note">Chargement...</p></div>
 </div>
@@ -238,7 +237,7 @@ select{font-size:15px;font-weight:700;border:none;background:none;color:#1c1c1e;
 var prestations = [];
 var calDate = new Date();
 var vueActuelle = 'cal';
-var filtreDem = 'tous';
+var filtreDem = 'nouveau';
 var dBase=0,dLabel='',dFrais=0,dKm=0,dHotel=false,dVille='',dNum=null;
 var BAR=[{max:50,f:0,h:false},{max:100,f:100,h:false},{max:200,f:100,h:false},{max:300,f:400,h:false},{max:400,f:600,h:true},{max:600,f:800,h:true},{max:800,f:1000,h:true},{max:1000,f:1200,h:true}];
 var PRIX={Mariage:1200,Kina:800,'Fiançailles':800,Anniversaire:500,Autre:600};
@@ -451,12 +450,22 @@ function renderDemandes(){
       html+='<button data-idx="'+realIdx+'" data-action="refuse" onclick="clkDem(this)" style="background:#ffe5e5;color:#cc0000">\u274c Refuser</button>';
       html+='</div>';
     }
-    html+='<button data-idx="'+realIdx+'" onclick="clkDevis(this)" style="width:100%;margin-top:8px;padding:10px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;background:#e8f0fe;color:#1a56db;-webkit-appearance:none">\U0001f4c4 Créer un devis</button>';
+    html+='<button data-idx="'+realIdx+'" onclick="clkDevis(this)" style="width:100%;margin-top:8px;padding:10px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;background:#e8f0fe;color:#1a56db;-webkit-appearance:none">📄 Créer un devis</button>';
+    if(d.statut==='confirme'||d.statut==='refuse'){
+      html+='<button onclick="supprimerDemande('+realIdx+')" style="width:100%;margin-top:6px;padding:9px;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:#fff0f0;color:#cc0000;-webkit-appearance:none">🗑 Supprimer cette demande</button>';
+    }
     html+='</div>';
   });
   list.innerHTML=html;
 }
 function clkDem(btn){actionDem(parseInt(btn.dataset.idx),btn.dataset.action);}
+function supprimerDemande(idx){
+  var all=window._demandes||[];var d=all[idx];if(!d)return;
+  if(!confirm('Supprimer cette demande ?'))return;
+  if(window._deleteDemande)window._deleteDemande(d.firebaseKey);
+  window._demandes.splice(all.indexOf(d),1);
+  renderDemandes();
+}
 function clkDevis(btn){devisFromDem(parseInt(btn.dataset.idx));}
 function actionDem(idx,action){
   var all=window._demandes||[];var d=all[idx];if(!d)return;
@@ -545,7 +554,7 @@ renderPlanning();
 <!-- FIREBASE MODULE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const cfg = {
   apiKey:"AIzaSyBv_0pZASNBoVNlQ4-ztKsXwVrIN0dMQ-U",
@@ -595,6 +604,10 @@ onValue(ref(db,'demandes'), function(snapshot) {
 // Mettre à jour statut demande
 window._updateDemande = function(key, statut) {
   update(ref(db,'demandes/'+key), {statut: statut});
+};
+// Supprimer une demande
+window._deleteDemande = function(key) {
+  remove(ref(db,'demandes/'+key));
 };
 </script>
 
