@@ -248,11 +248,10 @@ select{-webkit-appearance:auto}
 <div class="page" id="page-demandes">
   <div class="page-header"><h1>Demandes</h1><p id="dem-sub">—</p></div>
   <div class="filter-bar">
-    <button class="filter-btn active" id="fb-tous" onclick="filtrerDem('tous')">Toutes</button>
-    <button class="filter-btn" id="fb-nouveau" onclick="filtrerDem('nouveau')">Nouvelles</button>
-    <button class="filter-btn" id="fb-en_attente" onclick="filtrerDem('en_attente')">En attente</button>
-    <button class="filter-btn" id="fb-confirme" onclick="filtrerDem('confirme')">Confirmées</button>
-    <button class="filter-btn" id="fb-refuse" onclick="filtrerDem('refuse')">Refusées</button>
+    <button class="filter-btn active" id="fb-nouveau" onclick="filtrerDem('nouveau')">🆕 Nouvelles</button>
+    <button class="filter-btn" id="fb-en_attente" onclick="filtrerDem('en_attente')">⏳ En attente</button>
+    <button class="filter-btn" id="fb-confirme" onclick="filtrerDem('confirme')">✅ Confirmées</button>
+    <button class="filter-btn" id="fb-refuse" onclick="filtrerDem('refuse')">❌ Refusées</button>
   </div>
   <div id="dem-list"><p class="empty-note">Chargement...</p></div>
 </div>
@@ -309,7 +308,7 @@ var acomptesRecus = JSON.parse(localStorage.getItem('djmeyra_ac') || '{}');
 var calDate = new Date();
 var anneeFinance = new Date().getFullYear();
 var vueActuelle = 'cal';
-var filtreDem = 'tous';
+var filtreDem = 'nouveau';
 
 function saveLocal() {
   localStorage.setItem('djmeyra_v2', JSON.stringify(prestations));
@@ -858,6 +857,13 @@ function filtrerDem(f){
   if(el)el.classList.add('active');
   renderDemandes();
 }
+function supprimerDemande(idx){
+  var all=window._demandes||[];var d=all[idx];if(!d)return;
+  if(!confirm('Supprimer cette demande ?'))return;
+  if(window._deleteDemande)window._deleteDemande(d.firebaseKey);
+  window._demandes.splice(all.indexOf(d),1);
+  renderDemandes();
+}
 
 function renderDemandes(){
   var list=document.getElementById('dem-list');
@@ -897,6 +903,9 @@ function renderDemandes(){
       html+='</div>';
     }
     html+='<button data-idx="'+realIdx+'" onclick="clkDevis(this)" style="width:100%;margin-top:8px;padding:10px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;background:#e8f0fe;color:#1a56db;-webkit-appearance:none">📄 Créer un devis</button>';
+    if(d.statut==='confirme'||d.statut==='refuse'){
+      html+='<button onclick="supprimerDemande('+realIdx+')" style="width:100%;margin-top:6px;padding:9px;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:#fff0f0;color:#cc0000;-webkit-appearance:none">🗑 Supprimer cette demande</button>';
+    }
     html+='</div>';
   });
   list.innerHTML=html;
@@ -1080,7 +1089,7 @@ renderPlanning();
 <!-- FIREBASE MODULE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, set, onValue, update, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, set, onValue, update, push, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const cfg = {
   apiKey:"AIzaSyBv_0pZASNBoVNlQ4-ztKsXwVrIN0dMQ-U",
