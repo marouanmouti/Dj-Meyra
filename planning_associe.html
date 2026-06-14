@@ -184,7 +184,7 @@ select{font-size:15px;font-weight:700;border:none;background:none;color:#1c1c1e;
   <div class="lecture">👁 Mode lecture seule</div>
   <div class="vue-toggle">
     <button id="btn-cal" onclick="setVue('cal')" style="background:#1c1c1e;color:#fff;border:none">📅 Calendrier</button>
-    <button id="btn-list" onclick="setVue('list')" style="background:#fff;color:#1c1c1e;border:1.5px solid #e5e5ea">📋 Liste</button>
+    <button id="btn-list" onclick="setVue('list')" style="background:#fff;color:#1c1c1e;border:1.5px solid #e5e5ea">⚡ À venir</button>
   </div>
   <div id="vue-cal">
     <div class="card">
@@ -368,21 +368,49 @@ function renderPlanning(){
     html+='<div class="'+cls+'" onclick="clickJour(\''+ds+'\')">'+d+(p?'<div class="cal-dot"></div>':'')+'</div>';
   }
   document.getElementById('cal-grid').innerHTML=html;
-  var sorted=[...prestations].filter(function(p){return p&&p.statut!=='annule';}).sort(function(a,b){return String(a.date).localeCompare(String(b.date));});
+  var today4=new Date();today4.setHours(0,0,0,0);
+  var futures2=[...prestations].filter(function(p){
+    if(!p||p.statut==='annule')return false;
+    var d=new Date(p.date+'T12:00:00');d.setHours(0,0,0,0);
+    return d>=today4;
+  }).sort(function(a,b){return String(a.date).localeCompare(String(b.date));});
   var lh='';
-  if(!sorted.length)lh='<p class="empty-note">Aucune prestation</p>';
-  sorted.forEach(function(p){
+  if(!futures2.length){lh='<p class="empty-note">Aucune prestation à venir</p>';document.getElementById('pl-list').innerHTML=lh;return;}
+  function fmt2a(n){return (n||0).toLocaleString('fr-FR')+' €';}
+  function badgePmt2(p){
+    var acRecu=p.acompteRecu||false,slRecu=p.soldeRecu||false;
+    var r='<span style="font-size:11px;padding:3px 8px;border-radius:6px;font-weight:600;background:'+(acRecu?'#e8fbe8':'#ffe5e5')+';color:'+(acRecu?'#1a7f37':'#cc0000')+'">'+(acRecu?'✓ Acompte '+fmt2a(p.acompte):'✗ Acompte non reçu')+'</span>';
+    if(acRecu&&!slRecu){var reste=Math.max(0,(p.montant||0)-(p.acompte||0));r+='<span style="font-size:11px;padding:3px 8px;border-radius:6px;font-weight:600;background:#fff8e1;color:#b8860b;margin-left:6px">⏳ Solde '+fmt2a(reste)+'</span>';}
+    if(slRecu){r+='<span style="font-size:11px;padding:3px 8px;border-radius:6px;font-weight:600;background:#e8fbe8;color:#1a7f37;margin-left:6px">✓ Tout encaissé</span>';}
+    return r;
+  }
+  futures2.forEach(function(p,i){
+    var d=new Date(p.date+'T12:00:00');d.setHours(0,0,0,0);
+    var diff=Math.round((d-today4)/(1000*60*60*24));
+    var jours=diff===0?'Aujourd\'hui':diff===1?'Demain':'Dans '+diff+' jours';
     var ds2=new Date(p.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
-    var bc=p.statut==='confirme'?'confirme':'attente';
-    var bt=p.statut==='confirme'?'Confirmé':'En attente';
-    var horaires=(p.hdebut&&p.hfin)?p.hdebut+' → '+p.hfin:'';
-    lh+='<div class="pi '+bc+'">'
-      +'<div class="pi-top"><span class="pi-type">'+p.type+'</span><span style="font-size:15px;font-weight:700;color:#1a56db">'+fmt(p.montant)+'</span></div>'
-      +'<div class="pi-row">👤 '+p.client+(p.tel?' · 📞 '+p.tel:'')+'</div>'
-      +'<div class="pi-row">📅 '+ds2+(horaires?' · ⏰ '+horaires:'')+'</div>'
-      +(p.ville?'<div class="pi-row">📍 '+p.ville+'</div>':'')
-      +'<div><span class="badge '+bc+'">'+bt+'</span></div>'
-      +'</div>';
+    var acRecu=p.acompteRecu||false,bord=!acRecu?'#ff3b30':(!p.soldeRecu?'#ff9500':'#34c759');
+    if(i===0){
+      lh+='<div style="font-size:11px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Prochaine prestation</div>';
+      lh+='<div style="background:#fff;border-radius:14px;border:2px solid #4a90e2;padding:14px;margin-bottom:16px;position:relative">';
+      lh+='<div style="position:absolute;top:-10px;left:14px;background:#e8f0fe;color:#1a56db;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px">'+jours+'</div>';
+      lh+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-top:8px;margin-bottom:10px">';
+      lh+='<div><p style="font-size:16px;font-weight:700;margin:0">'+p.client+'</p>';
+      lh+='<p style="font-size:12px;color:#8e8e93;margin:3px 0 0">'+p.type+' · '+ds2+'</p>';
+      if(p.ville)lh+='<p style="font-size:12px;color:#8e8e93;margin:2px 0 0">📍 '+p.ville+'</p>';
+      if(p.hdebut&&p.hfin)lh+='<p style="font-size:12px;color:#8e8e93;margin:2px 0 0">⏰ '+p.hdebut+' → '+p.hfin+'</p>';
+      lh+='</div><span style="font-size:18px;font-weight:700;color:#1a56db">'+fmt2a(p.montant)+'</span></div>';
+      lh+='<div style="background:#f9f9f9;border-radius:10px;padding:10px;display:flex;flex-wrap:wrap;gap:6px">'+badgePmt2(p)+'</div></div>';
+      if(futures2.length>1)lh+='<div style="font-size:11px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Prochaines prestations</div>';
+    } else {
+      lh+='<div style="background:#fff;border-radius:14px;padding:12px;margin-bottom:8px;border-left:5px solid '+bord+'">';
+      lh+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">';
+      lh+='<div><p style="font-size:14px;font-weight:700;margin:0">'+p.client+'</p>';
+      lh+='<p style="font-size:12px;color:#8e8e93;margin:2px 0 0">'+p.type+' · '+ds2+(p.ville?' · '+p.ville:'')+'</p></div>';
+      lh+='<div style="text-align:right"><p style="font-size:14px;font-weight:700;margin:0">'+fmt2a(p.montant)+'</p>';
+      lh+='<p style="font-size:11px;color:#8e8e93;margin:2px 0 0">'+jours+'</p></div></div>';
+      lh+='<div style="display:flex;flex-wrap:wrap;gap:6px">'+badgePmt2(p)+'</div></div>';
+    }
   });
   document.getElementById('pl-list').innerHTML=lh;
 }
@@ -400,8 +428,17 @@ function clickJour(ds){
     var bt=p.statut==='confirme'?'Confirmé':'En attente';
     title.textContent=p.type;
     var html='<span class="badge '+bc+'" style="margin-bottom:14px;display:inline-block">'+bt+'</span>';
-    var rows=[['👤','Client',p.client],['📞','Téléphone',p.tel],['📸','Instagram',p.instagram],['📅','Date',ds2],['⏰','Horaires',(p.hdebut&&p.hfin)?p.hdebut+' → '+p.hfin:''],['📍','Ville',p.ville],['🏛','Adresse',p.adresse],['💰','Montant',p.montant?fmt(p.montant):''],['💳','Acompte',p.acompte?fmt(p.acompte):''],['📝','Notes',p.notes]];
+    var rows=[['👤','Client',p.client],['📞','Téléphone',p.tel],['📸','Instagram',p.instagram],['📅','Date',ds2],['⏰','Horaires',(p.hdebut&&p.hfin)?p.hdebut+' → '+p.hfin:''],['📍','Ville',p.ville],['🏛','Adresse',p.adresse],['📝','Notes',p.notes]];
     rows.forEach(function(r){if(r[2])html+='<div class="det-row"><span class="det-icon">'+r[0]+'</span><div><div class="det-label">'+r[1]+'</div><div class="det-val">'+r[2]+'</div></div></div>';});
+    var acRecu=p.acompteRecu||false,slRecu=p.soldeRecu||false;
+    var acompte=p.acompte||0,montant=p.montant||0;
+    var resteAff=slRecu?0:(acRecu?Math.max(0,montant-acompte):montant);
+    html+='<div style="background:#f9f9f9;border-radius:12px;padding:12px;margin-top:12px">';
+    html+='<div style="font-size:11px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Finances</div>';
+    html+='<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e5e5ea;font-size:14px"><span style="color:#8e8e93">Montant total</span><span style="font-weight:600">'+fmt(montant)+'</span></div>';
+    html+='<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e5e5ea;font-size:14px"><span style="color:#8e8e93">Acompte</span><span style="font-weight:600;color:'+(acRecu?'#1a7f37':'#cc0000')+'">'+(acRecu?'✓ ':'✗ ')+fmt(acompte)+'</span></div>';
+    html+='<div style="display:flex;justify-content:space-between;padding:8px 0;font-size:14px"><span style="font-weight:600">Reste à percevoir</span><span style="font-weight:600;color:'+(resteAff===0?'#1a7f37':'#b8860b')+'">'+fmt(resteAff)+'</span></div>';
+    html+='</div>';
     content.innerHTML=html;
   }
   modal.classList.add('open');
