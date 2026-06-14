@@ -198,7 +198,7 @@ select{-webkit-appearance:auto}
   <div class="page-header"><h1>Planning</h1><p id="pl-sub">—</p></div>
   <div style="display:flex;gap:8px;margin-bottom:12px">
     <button onclick="setVue('cal')" id="btn-cal" style="flex:1;padding:10px;border-radius:10px;border:none;font-size:14px;font-weight:600;background:#1c1c1e;color:#fff;cursor:pointer">📅 Calendrier</button>
-    <button onclick="setVue('list')" id="btn-list" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid #e5e5ea;font-size:14px;font-weight:600;background:#fff;color:#1c1c1e;cursor:pointer">📋 Liste</button>
+    <button onclick="setVue('list')" id="btn-list" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid #e5e5ea;font-size:14px;font-weight:600;background:#fff;color:#1c1c1e;cursor:pointer">⚡ À venir</button>
   </div>
   <div id="vue-cal">
     <div class="card">
@@ -245,6 +245,27 @@ select{-webkit-appearance:auto}
     <div class="fin-card"><div class="fl">Moy. / mois</div><div class="fv" id="fin-moy" style="color:#1a56db">0 €</div></div>
     <div class="fin-card"><div class="fl">Prestations</div><div class="fv" id="fin-nb">0</div></div>
     <div class="fin-card"><div class="fl">Moy. / presta</div><div class="fv" id="fin-moyp">0 €</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px">
+    <div style="background:#e8fbe8;border-radius:14px;padding:14px;text-align:center">
+      <div style="font-size:11px;color:#0f6e56;margin-bottom:4px">Déjà encaissé</div>
+      <div style="font-size:20px;font-weight:700;color:#085041" id="fin-encaisse">0 €</div>
+      <div style="font-size:10px;color:#1a7f37;margin-top:3px">passées + acomptes</div>
+    </div>
+    <div style="background:#fff8e1;border-radius:14px;padding:14px;text-align:center">
+      <div style="font-size:11px;color:#b8860b;margin-bottom:4px">Reste à percevoir</div>
+      <div style="font-size:20px;font-weight:700;color:#7a5c00" id="fin-apercevoir">0 €</div>
+      <div style="font-size:10px;color:#b8860b;margin-top:3px">soldes à venir</div>
+    </div>
+  </div>
+  <div style="background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;border:0.5px solid #e5e5ea">
+    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px">
+      <span style="color:#8e8e93">Taux d'encaissement</span>
+      <span style="font-weight:700" id="fin-taux">0%</span>
+    </div>
+    <div style="height:8px;background:#f2f2f7;border-radius:4px;overflow:hidden">
+      <div id="fin-bar" style="width:0%;height:100%;background:#34c759;border-radius:4px;transition:width .3s"></div>
+    </div>
   </div>
   <div class="card"><p class="stitle">Détail par mois</p><div id="fin-detail"><p class="empty-note">Aucune prestation</p></div></div>
 </div>
@@ -696,28 +717,54 @@ function renderPlanning() {
     html+='<div class="'+cls+'" onclick="clickJour(\''+ds+'\')">'+d+(p?'<div class="cal-dot"></div>':'')+'</div>';
   }
   document.getElementById('cal-grid').innerHTML=html;
-  var sorted=[...prestations].filter(function(p){return p&&p.statut!=='annule';}).sort(function(a,b){return String(a.date).localeCompare(String(b.date));});
+  var today2=new Date();today2.setHours(0,0,0,0);
+  var futures=[...prestations].filter(function(p){
+    if(!p||p.statut==='annule')return false;
+    var d=new Date(p.date+'T12:00:00');d.setHours(0,0,0,0);
+    return d>=today2;
+  }).sort(function(a,b){return String(a.date).localeCompare(String(b.date));});
   var lh='';
-  if(!sorted.length)lh='<p class="empty-note">Aucune prestation</p>';
-  sorted.forEach(function(p){
+  if(!futures.length){lh='<p class="empty-note">Aucune prestation à venir</p>';document.getElementById('pl-list').innerHTML=lh;return;}
+  function badgePmt(p){
+    var acRecu=p.acompteRecu||false,slRecu=p.soldeRecu||false;
+    var r='';
+    r+='<span style="font-size:11px;padding:3px 8px;border-radius:6px;font-weight:600;background:'+(acRecu?'#e8fbe8':'#ffe5e5')+';color:'+(acRecu?'#1a7f37':'#cc0000')+'">'+(acRecu?'✓ Acompte '+fmt(p.acompte||0):'✗ Acompte non reçu')+'</span>';
+    if(acRecu&&!slRecu){var reste=Math.max(0,(p.montant||0)-(p.acompte||0));r+='<span style="font-size:11px;padding:3px 8px;border-radius:6px;font-weight:600;background:#fff8e1;color:#b8860b;margin-left:6px">⏳ Solde '+fmt(reste)+'</span>';}
+    if(slRecu){r+='<span style="font-size:11px;padding:3px 8px;border-radius:6px;font-weight:600;background:#e8fbe8;color:#1a7f37;margin-left:6px">✓ Tout encaissé</span>';}
+    return r;
+  }
+  futures.forEach(function(p,i){
+    var d=new Date(p.date+'T12:00:00');d.setHours(0,0,0,0);
+    var diff=Math.round((d-today2)/(1000*60*60*24));
+    var jours=diff===0?'Aujourd\'hui':diff===1?'Demain':'Dans '+diff+' jours';
     var ds=new Date(p.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
-    var bc=p.statut==='confirme'?'confirme':p.statut==='attente'?'attente':'annule';
-    var bt=p.statut==='confirme'?'Confirmé':p.statut==='attente'?'En attente':'Annulé';
-    var horaires=(p.hdebut&&p.hfin)?p.hdebut+' → '+p.hfin:'';
+    var bc=p.statut==='confirme'?'confirme':'attente';
     var pid=prestations.indexOf(p);
-    lh+='<div class="pi '+bc+'">'
-      +'<div class="pi-top"><span class="pi-type">'+p.type+'</span><span class="pi-montant">'+fmt(p.montant)+'</span></div>'
-      +'<div class="pi-row">👤 '+p.client+(p.tel?' · 📞 '+p.tel:'')+(p.instagram?' · 📸 '+p.instagram:'')+'</div>'
-      +'<div class="pi-row">📅 '+ds+(horaires?' · ⏰ '+horaires:'')+'</div>'
-      +(p.ville?'<div class="pi-row">📍 '+p.ville+(p.adresse?' — '+p.adresse:'')+'</div>':'')
-      +(p.notes?'<div class="pi-row" style="color:#c7c7cc">📝 '+p.notes+'</div>':'')
-      +'<div><span class="badge '+bc+'">'+bt+'</span> <span style="font-size:12px;color:#8e8e93">Acompte : '+fmt(p.acompte)+'</span></div>'
-      +'<div class="pact">'
-      +'<button class="btn-edit" onclick="ouvrirModal('+pid+')">✏️ Modifier</button>'
-      +'<button class="btn-del" onclick="supprimerPresta('+pid+')">🗑 Supprimer</button>'
-      +'</div>'
-      +'<button onclick="genContrat('+pid+')" style="width:100%;margin-top:8px;padding:10px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;background:#e8f0fe;color:#1a56db;-webkit-appearance:none">📄 Générer le contrat PDF</button>'
-      +'</div>';
+    var acRecu=p.acompteRecu||false;
+    var bord=!acRecu?'#ff3b30':(!p.soldeRecu?'#ff9500':'#34c759');
+    if(i===0){
+      lh+='<div style="font-size:11px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Prochaine prestation</div>';
+      lh+='<div style="background:#fff;border-radius:14px;border:2px solid #4a90e2;padding:14px;margin-bottom:16px;position:relative">';
+      lh+='<div style="position:absolute;top:-10px;left:14px;background:#e8f0fe;color:#1a56db;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px">'+jours+'</div>';
+      lh+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-top:8px;margin-bottom:10px">';
+      lh+='<div><p style="font-size:16px;font-weight:700;margin:0">'+p.client+'</p>';
+      lh+='<p style="font-size:12px;color:#8e8e93;margin:3px 0 0">'+p.type+' · '+ds+'</p>';
+      if(p.ville)lh+='<p style="font-size:12px;color:#8e8e93;margin:2px 0 0">📍 '+p.ville+'</p>';
+      if(p.hdebut&&p.hfin)lh+='<p style="font-size:12px;color:#8e8e93;margin:2px 0 0">⏰ '+p.hdebut+' → '+p.hfin+'</p>';
+      lh+='</div><span style="font-size:18px;font-weight:700;color:#1a56db">'+fmt(p.montant||0)+'</span></div>';
+      lh+='<div style="background:#f9f9f9;border-radius:10px;padding:10px;display:flex;flex-wrap:wrap;gap:6px">'+badgePmt(p)+'</div>';
+      lh+='</div>';
+      if(futures.length>1)lh+='<div style="font-size:11px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Prochaines prestations</div>';
+    } else {
+      lh+='<div style="background:#fff;border-radius:14px;padding:12px;margin-bottom:8px;border-left:5px solid '+bord+'">';
+      lh+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">';
+      lh+='<div><p style="font-size:14px;font-weight:700;margin:0">'+p.client+'</p>';
+      lh+='<p style="font-size:12px;color:#8e8e93;margin:2px 0 0">'+p.type+' · '+ds+(p.ville?' · '+p.ville:'')+'</p></div>';
+      lh+='<div style="text-align:right"><p style="font-size:14px;font-weight:700;margin:0">'+fmt(p.montant||0)+'</p>';
+      lh+='<p style="font-size:11px;color:#8e8e93;margin:2px 0 0">'+jours+'</p></div></div>';
+      lh+='<div style="display:flex;flex-wrap:wrap;gap:6px">'+badgePmt(p)+'</div>';
+      lh+='</div>';
+    }
   });
   document.getElementById('pl-list').innerHTML=lh;
 }
@@ -735,16 +782,43 @@ function clickJour(ds){
     var bt=p.statut==='confirme'?'Confirmé':'En attente';
     title.textContent=p.type;
     var html='<span class="badge '+bc+'" style="margin-bottom:14px;display:inline-block">'+bt+'</span>';
-    var rows=[['👤','Client',p.client],['📞','Téléphone',p.tel],['📸','Instagram',p.instagram],['📅','Date',ds2],['⏰','Horaires',(p.hdebut&&p.hfin)?p.hdebut+' → '+p.hfin:''],['📍','Ville',p.ville],['🏛','Adresse',p.adresse],['💰','Montant',p.montant?fmt(p.montant):''],['💳','Acompte',p.acompte?fmt(p.acompte):''],['📝','Notes',p.notes]];
+    var rows=[['👤','Client',p.client],['📞','Téléphone',p.tel],['📸','Instagram',p.instagram],['📅','Date',ds2],['⏰','Horaires',(p.hdebut&&p.hfin)?p.hdebut+' → '+p.hfin:''],['📍','Ville',p.ville],['🏛','Adresse',p.adresse],['📝','Notes',p.notes]];
     rows.forEach(function(r){if(r[2])html+='<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #e5e5ea;font-size:14px"><span style="font-size:18px;width:24px;text-align:center">'+r[0]+'</span><div><div style="font-size:11px;color:#8e8e93;margin-bottom:2px">'+r[1]+'</div><div style="font-weight:500">'+r[2]+'</div></div></div>';});
     var pid=prestations.indexOf(p);
-    html+='<div style="display:flex;gap:8px;margin-top:14px">';
+    var reste=Math.max(0,(p.montant||0)-(p.acompte||0));
+    html+='<div style="background:#f9f9f9;border-radius:12px;padding:12px;margin-top:12px">';
+    html+='<div style="font-size:11px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Finances</div>';
+    html+='<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e5e5ea;font-size:14px"><span style="color:#8e8e93">Montant total</span><span style="font-weight:600">'+fmt(p.montant||0)+'</span></div>';
+    var acRecu=p.acompteRecu||false;
+    var slRecu=p.soldeRecu||false;
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #e5e5ea">';
+    html+='<div style="display:flex;align-items:center;gap:10px">';
+    html+='<div onclick="togglePaiement('+pid+',\'acompteRecu\')" style="width:24px;height:24px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;'+(acRecu?'background:#e8fbe8;border:1.5px solid #34c759':'background:#fff;border:1.5px solid #e5e5ea')+'">'+(acRecu?'<span style="color:#1a7f37;font-size:14px">✓</span>':'')+'</div>';
+    html+='<span style="font-size:14px;color:'+(acRecu?'#1c1c1e':'#8e8e93')+'">Acompte reçu</span></div>';
+    html+='<span style="font-size:14px;font-weight:600;color:'+(acRecu?'#1a7f37':'#8e8e93')+'">'+fmt(p.acompte||0)+'</span></div>';
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #e5e5ea">';
+    html+='<div style="display:flex;align-items:center;gap:10px">';
+    html+='<div onclick="togglePaiement('+pid+',\'soldeRecu\')" style="width:24px;height:24px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;'+(slRecu?'background:#e8fbe8;border:1.5px solid #34c759':'background:#fff;border:1.5px solid #e5e5ea')+'">'+(slRecu?'<span style="color:#1a7f37;font-size:14px">✓</span>':'')+'</div>';
+    html+='<span style="font-size:14px;color:'+(slRecu?'#1c1c1e':'#8e8e93')+'">Solde reçu</span></div>';
+    html+='<span style="font-size:14px;font-weight:600;color:'+(slRecu?'#1a7f37':'#8e8e93')+'">'+fmt(reste)+'</span></div>';
+    var resteAffiche=slRecu?0:(acRecu?reste:(p.montant||0));
+    var couleurReste=slRecu?'#1a7f37':(resteAffiche>0?'#b8860b':'#1a7f37');
+    html+='<div style="display:flex;justify-content:space-between;padding:10px 0;font-size:14px"><span style="font-weight:600">Reste à percevoir</span><span style="font-weight:600;color:'+couleurReste+'">'+fmt(resteAffiche)+'</span></div>';
+    html+='</div>';
+    html+='<div style="display:flex;gap:8px;margin-top:12px">';
     html+='<button onclick="fermerDetail();ouvrirModal('+pid+')" style="flex:1;padding:12px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;background:#f2f2f7;color:#1c1c1e;-webkit-appearance:none">✏️ Modifier</button>';
     html+='<button onclick="fermerDetail();genContrat('+pid+')" style="flex:1;padding:12px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;background:#e8f0fe;color:#1a56db;-webkit-appearance:none">📄 Contrat</button>';
     html+='</div>';
     content.innerHTML=html;
   }
   modal.classList.add('open');
+}
+function togglePaiement(idx, champ){
+  var p = prestations[idx]; if(!p) return;
+  p[champ] = !p[champ];
+  saveLocal();
+  if(window._syncFirebase) window._syncFirebase(prestations);
+  clickJour(p.date);
 }
 function fermerDetail(){document.getElementById('modal-detail').classList.remove('open');}
 document.getElementById('modal-detail').addEventListener('click',function(e){if(e.target===this)fermerDetail();});
@@ -801,7 +875,7 @@ function sauvegarderPresta(){
   if(!nom||!date){alert('Le nom et la date sont obligatoires.');return;}
   var montant=parseInt(document.getElementById('m-montant').value)||PRIX[document.getElementById('m-type').value]||600;
   var acompte=parseInt(document.getElementById('m-acompte').value)||Math.round(montant*.25);
-  var data={client:nom,tel:document.getElementById('m-tel').value.trim(),instagram:document.getElementById('m-insta').value.trim(),date:date,hdebut:document.getElementById('m-hdebut').value,hfin:document.getElementById('m-hfin').value,type:document.getElementById('m-type').value,statut:document.getElementById('m-statut').value,ville:document.getElementById('m-ville').value.trim(),adresse:document.getElementById('m-adresse').value.trim(),montant:montant,acompte:acompte,notes:document.getElementById('m-notes').value.trim()};
+  var data={client:nom,tel:document.getElementById('m-tel').value.trim(),instagram:document.getElementById('m-insta').value.trim(),date:date,hdebut:document.getElementById('m-hdebut').value,hfin:document.getElementById('m-hfin').value,type:document.getElementById('m-type').value,statut:document.getElementById('m-statut').value,ville:document.getElementById('m-ville').value.trim(),adresse:document.getElementById('m-adresse').value.trim(),montant:montant,acompte:acompte,acompteRecu:false,soldeRecu:false,notes:document.getElementById('m-notes').value.trim()};
   var eid=document.getElementById('m-id').value;
   if(eid!==''){var i=parseInt(eid);prestations[i]=Object.assign({id:prestations[i].id||Date.now()},data);}
   else{data.id=Date.now();prestations.push(data);}
@@ -862,25 +936,46 @@ function renderFinance(){
   var y=anneeFinance;
   document.getElementById('fin-annee').textContent='Année '+y;
   var yStr=String(y);
+  var today3=new Date();today3.setHours(0,0,0,0);
   var conf=prestations.filter(function(p){return p&&p.statut==='confirme'&&p.date&&p.date.indexOf(yStr)===0;});
   var att=prestations.filter(function(p){return p&&p.statut==='attente'&&p.date&&p.date.indexOf(yStr)===0;});
+  var all=conf.concat(att).sort(function(a,b){return String(a.date).localeCompare(String(b.date));});
   var total=conf.reduce(function(s,p){return s+(Number(p.montant)||0);},0);
-  var all=conf.concat(att);
-  var byMois={};
-  all.sort(function(a,b){return String(a.date).localeCompare(String(b.date));}).forEach(function(p){
-    var m=parseInt(String(p.date).split('-')[1])-1;
-    if(isNaN(m))return;
-    if(!byMois[m])byMois[m]=[];
-    byMois[m].push(p);
+
+  // Calcul encaissé vs à percevoir
+  var encaisse=0,apercevoir=0;
+  all.forEach(function(p){
+    var d=new Date(p.date+'T12:00:00');d.setHours(0,0,0,0);
+    var passee=d<today3;
+    var m=Number(p.montant)||0,ac=Number(p.acompte)||0,reste=Math.max(0,m-ac);
+    if(p.soldeRecu){encaisse+=m;}
+    else if(p.acompteRecu){encaisse+=ac;apercevoir+=reste;}
+    else if(passee){encaisse+=m;}
+    else{apercevoir+=m;}
   });
+  var tauxEnc=total>0?Math.round(encaisse/total*100):0;
+
   document.getElementById('fin-total').textContent=fmt(total);
   document.getElementById('fin-sub').textContent=conf.length+' confirmée(s) · '+att.length+' en attente';
   document.getElementById('fin-moy').textContent=total?fmt(Math.round(total/12)):'0 €';
-  document.getElementById('fin-nb').textContent=conf.length+att.length;
+  document.getElementById('fin-nb').textContent=all.length;
   document.getElementById('fin-moyp').textContent=conf.length?fmt(Math.round(total/conf.length)):'—';
+
+  // Mise à jour des cartes encaissé/à percevoir
+  var finEnc=document.getElementById('fin-encaisse');
+  var finAp=document.getElementById('fin-apercevoir');
+  var finTaux=document.getElementById('fin-taux');
+  var finBar=document.getElementById('fin-bar');
+  if(finEnc)finEnc.textContent=fmt(encaisse);
+  if(finAp)finAp.textContent=fmt(apercevoir);
+  if(finTaux)finTaux.textContent=tauxEnc+'%';
+  if(finBar)finBar.style.width=tauxEnc+'%';
+
   var mois=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
   var html='';
-  if(!all.length)html='<p class="empty-note">Aucune prestation cette année</p>';
+  if(!all.length){html='<p class="empty-note">Aucune prestation cette année</p>';document.getElementById('fin-detail').innerHTML=html;return;}
+  var byMois={};
+  all.forEach(function(p){var m=parseInt(String(p.date).split('-')[1])-1;if(isNaN(m))return;if(!byMois[m])byMois[m]=[];byMois[m].push(p);});
   Object.keys(byMois).sort(function(a,b){return a-b;}).forEach(function(m){
     var ps=byMois[m]||[];
     var totalM=ps.reduce(function(s,p){return s+(Number(p.montant)||0);},0);
@@ -888,13 +983,17 @@ function renderFinance(){
     html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:13px;font-weight:700">'+mois[m]+'</span><span style="font-size:13px;font-weight:600;color:#1a56db">'+fmt(totalM)+'</span></div>';
     ps.forEach(function(p){
       var isC=p.statut==='confirme';
-      html+='<div style="background:#f9f9f9;border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px">'
-        +'<div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+p.client+'</div>'
-        +'<div style="font-size:12px;color:#8e8e93;margin-top:2px">'+p.type+'</div>'
-        +'<span class="badge '+(isC?'confirme':'attente')+'" style="margin-top:4px">'+(isC?'Confirmé':'En attente')+'</span></div>'
-        +'<div style="text-align:right;flex-shrink:0"><div style="font-size:15px;font-weight:700">'+fmt(p.montant)+'</div>'
-        +'<div style="font-size:11px;color:#8e8e93;margin-top:2px">Ac. '+fmt(p.acompte)+'</div></div>'
-        +'</div>';
+      var acRecu=p.acompteRecu||false,slRecu=p.soldeRecu||false;
+      var bord=slRecu?'#34c759':(acRecu?'#ff9500':'#ff3b30');
+      html+='<div style="background:#f9f9f9;border-radius:12px;padding:12px 14px;margin-bottom:8px;border-left:4px solid '+bord+'">';
+      html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">';
+      html+='<div><div style="font-size:14px;font-weight:600">'+p.client+'</div><div style="font-size:12px;color:#8e8e93;margin-top:2px">'+p.type+'</div></div>';
+      html+='<div style="text-align:right"><div style="font-size:15px;font-weight:700">'+fmt(p.montant||0)+'</div></div></div>';
+      html+='<div style="display:flex;flex-wrap:wrap;gap:6px">';
+      html+='<span style="font-size:11px;padding:3px 8px;border-radius:6px;font-weight:600;background:'+(acRecu?'#e8fbe8':'#ffe5e5')+';color:'+(acRecu?'#1a7f37':'#cc0000')+'">'+(acRecu?'✓ Acompte '+fmt(p.acompte||0):'✗ Acompte non reçu')+'</span>';
+      if(!slRecu&&acRecu){var r=Math.max(0,(p.montant||0)-(p.acompte||0));html+='<span style="font-size:11px;padding:3px 8px;border-radius:6px;font-weight:600;background:#fff8e1;color:#b8860b">⏳ Solde '+fmt(r)+'</span>';}
+      if(slRecu){html+='<span style="font-size:11px;padding:3px 8px;border-radius:6px;font-weight:600;background:#e8fbe8;color:#1a7f37">✓ Tout encaissé</span>';}
+      html+='</div></div>';
     });
     html+='</div>';
   });
