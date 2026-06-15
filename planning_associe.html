@@ -400,7 +400,10 @@ function renderPlanning(){
       if(p.ville)lh+='<p style="font-size:12px;color:#8e8e93;margin:2px 0 0">📍 '+p.ville+'</p>';
       if(p.hdebut&&p.hfin)lh+='<p style="font-size:12px;color:#8e8e93;margin:2px 0 0">⏰ '+p.hdebut+' → '+p.hfin+'</p>';
       lh+='</div><span style="font-size:18px;font-weight:700;color:#1a56db">'+fmt2a(p.montant)+'</span></div>';
-      lh+='<div style="background:#f9f9f9;border-radius:10px;padding:10px;display:flex;flex-wrap:wrap;gap:6px">'+badgePmt2(p)+'</div></div>';
+      lh+='<div style="background:#f9f9f9;border-radius:10px;padding:10px;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">'+badgePmt2(p)+'</div>';
+      var wa2=(p.adresse?p.adresse+' ':'')+p.ville;
+      if(wa2.trim()){lh+='<a href="https://waze.com/ul?q='+encodeURIComponent(wa2)+'&navigate=yes" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#33ccff;border-radius:10px;padding:11px;text-decoration:none"><span style="font-size:14px;font-weight:600;color:#fff">🗺️ Ouvrir dans Waze</span></a>';}
+      lh+='</div>';
       if(futures2.length>1)lh+='<div style="font-size:11px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Prochaines prestations</div>';
     } else {
       lh+='<div style="background:#fff;border-radius:14px;padding:12px;margin-bottom:8px;border-left:5px solid '+bord+'">';
@@ -409,7 +412,10 @@ function renderPlanning(){
       lh+='<p style="font-size:12px;color:#8e8e93;margin:2px 0 0">'+p.type+' · '+ds2+(p.ville?' · '+p.ville:'')+'</p></div>';
       lh+='<div style="text-align:right"><p style="font-size:14px;font-weight:700;margin:0">'+fmt2a(p.montant)+'</p>';
       lh+='<p style="font-size:11px;color:#8e8e93;margin:2px 0 0">'+jours+'</p></div></div>';
-      lh+='<div style="display:flex;flex-wrap:wrap;gap:6px">'+badgePmt2(p)+'</div></div>';
+      lh+='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">'+badgePmt2(p)+'</div>';
+      var wa4=(p.adresse?p.adresse+' ':'')+p.ville;
+      if(wa4.trim()){lh+='<a href="https://waze.com/ul?q='+encodeURIComponent(wa4)+'&navigate=yes" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#33ccff;border-radius:10px;padding:10px;text-decoration:none"><span style="font-size:13px;font-weight:600;color:#fff">🗺️ Ouvrir dans Waze</span></a>';}
+      lh+='</div>';
     }
   });
   document.getElementById('pl-list').innerHTML=lh;
@@ -428,8 +434,10 @@ function clickJour(ds){
     var bt=p.statut==='confirme'?'Confirmé':'En attente';
     title.textContent=p.type;
     var html='<span class="badge '+bc+'" style="margin-bottom:14px;display:inline-block">'+bt+'</span>';
+    var wazeAddr2=(p.adresse?p.adresse+' ':'')+p.ville;
     var rows=[['👤','Client',p.client],['📞','Téléphone',p.tel],['📸','Instagram',p.instagram],['📅','Date',ds2],['⏰','Horaires',(p.hdebut&&p.hfin)?p.hdebut+' → '+p.hfin:''],['📍','Ville',p.ville],['🏛','Adresse',p.adresse],['📝','Notes',p.notes]];
     rows.forEach(function(r){if(r[2])html+='<div class="det-row"><span class="det-icon">'+r[0]+'</span><div><div class="det-label">'+r[1]+'</div><div class="det-val">'+r[2]+'</div></div></div>';});
+    if(wazeAddr2.trim()){html+='<a href="https://waze.com/ul?q='+encodeURIComponent(wazeAddr2)+'&navigate=yes" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#33ccff;border-radius:10px;padding:11px;text-decoration:none;margin:10px 0"><span style="font-size:14px;font-weight:600;color:#fff">🗺️ Ouvrir dans Waze</span></a>';}
     var acRecu=p.acompteRecu||false,slRecu=p.soldeRecu||false;
     var acompte=p.acompte||0,montant=p.montant||0;
     var resteAff=slRecu?0:(acRecu?Math.max(0,montant-acompte):montant);
