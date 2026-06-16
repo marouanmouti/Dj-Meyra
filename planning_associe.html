@@ -412,9 +412,7 @@ function renderPlanning(){
       lh+='<p style="font-size:12px;color:#8e8e93;margin:2px 0 0">'+p.type+' · '+ds2+(p.ville?' · '+p.ville:'')+'</p></div>';
       lh+='<div style="text-align:right"><p style="font-size:14px;font-weight:700;margin:0">'+fmt2a(p.montant)+'</p>';
       lh+='<p style="font-size:11px;color:#8e8e93;margin:2px 0 0">'+jours+'</p></div></div>';
-      lh+='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">'+badgePmt2(p)+'</div>';
-      var wa4=(p.adresse?p.adresse+' ':'')+p.ville;
-      if(wa4.trim()){lh+='<a href="https://waze.com/ul?q='+encodeURIComponent(wa4)+'&navigate=yes" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#33ccff;border-radius:10px;padding:10px;text-decoration:none"><span style="font-size:13px;font-weight:600;color:#fff">🗺️ Ouvrir dans Waze</span></a>';}
+      lh+='<div style="display:flex;flex-wrap:wrap;gap:6px">'+badgePmt2(p)+'</div>';
       lh+='</div>';
     }
   });
