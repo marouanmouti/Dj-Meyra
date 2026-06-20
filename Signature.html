@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>DJ Meyra — Contrat de prestation</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f2f2f7;color:#1c1c1e;padding:20px 16px 60px}
+.header{text-align:center;margin-bottom:24px}
+.header h1{font-size:22px;font-weight:700}
+.header p{font-size:13px;color:#8e8e93;margin-top:4px}
+.card{background:#fff;border-radius:16px;padding:18px;margin-bottom:14px}
+.stitle{font-size:11px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f2f2f7;font-size:14px}
+.row:last-child{border-bottom:none}
+.row span:first-child{color:#8e8e93}
+.row span:last-child{font-weight:600;text-align:right}
+.totbox{background:#1c1c1e;border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.ribbox{background:#f9f9f9;border-radius:10px;padding:14px;margin-top:10px;border:1px solid #e5e5ea}
+.ribbox p{font-size:13px;margin-bottom:4px}
+.ribbox .iban{font-family:monospace;font-size:14px;font-weight:600;letter-spacing:.5px}
+.cgv-art{margin-bottom:14px}
+.cgv-art h3{font-size:13px;font-weight:700;margin-bottom:5px}
+.cgv-art p{font-size:12.5px;color:#444;line-height:1.55}
+.sign-box{background:#fff;border-radius:16px;padding:20px;margin-top:6px}
+.flabel{font-size:13px;color:#8e8e93;margin-bottom:6px;margin-top:14px}
+.flabel:first-child{margin-top:0}
+input[type=text]{width:100%;font-size:16px;padding:13px 14px;border-radius:10px;border:1.5px solid #e5e5ea;background:#f9f9f9;-webkit-appearance:none;outline:none}
+input:focus{border-color:#1c1c1e;background:#fff}
+.check-row{display:flex;align-items:flex-start;gap:10px;margin-top:16px;cursor:pointer}
+.checkbox{width:24px;height:24px;border-radius:6px;border:1.5px solid #e5e5ea;background:#fff;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.checkbox.checked{background:#1c1c1e;border-color:#1c1c1e}
+.checkbox.checked::after{content:'✓';color:#fff;font-size:15px;font-weight:700}
+.check-text{font-size:13px;color:#1c1c1e;line-height:1.5}
+.btn-sign{width:100%;padding:16px;font-size:16px;font-weight:700;background:#1c1c1e;border:none;border-radius:14px;cursor:pointer;color:#fff;margin-top:18px;-webkit-appearance:none}
+.btn-sign:disabled{opacity:.4;cursor:not-allowed}
+.btn-sign:active:not(:disabled){opacity:.8}
+.success-screen{display:none;text-align:center;padding:40px 20px}
+.success-icon{font-size:64px;margin-bottom:16px}
+.success-screen h2{font-size:22px;font-weight:700;margin-bottom:10px}
+.success-screen p{font-size:15px;color:#8e8e93;line-height:1.6;margin-bottom:24px}
+.btn-pdf{display:inline-flex;align-items:center;gap:8px;padding:14px 24px;background:#1c1c1e;border-radius:12px;color:#fff;font-size:14px;font-weight:600;text-decoration:none}
+.loading{text-align:center;padding:60px 20px;color:#8e8e93}
+.error-screen{text-align:center;padding:60px 20px;display:none}
+.error-screen h2{font-size:18px;font-weight:700;color:#cc0000;margin-bottom:8px}
+.error-screen p{font-size:14px;color:#8e8e93}
+</style>
+</head>
+<body>
+
+<div id="loading" class="loading">Chargement du contrat...</div>
+
+<div id="error-screen" class="error-screen">
+  <h2>⚠️ Contrat introuvable</h2>
+  <p>Ce lien n'est plus valide ou a expiré. Contactez DJ Meyra directement.</p>
+</div>
+
+<div id="main-content" style="display:none">
+  <div class="header">
+    <h1>🎵 DJ MEYRA</h1>
+    <p>Contrat de prestation à valider</p>
+  </div>
+
+  <div class="card">
+    <p class="stitle">Récapitulatif de la prestation</p>
+    <div class="row"><span>Client</span><span id="r-client">—</span></div>
+    <div class="row"><span>Type</span><span id="r-type">—</span></div>
+    <div class="row"><span>Date</span><span id="r-date">—</span></div>
+    <div class="row"><span>Horaires</span><span id="r-horaires">—</span></div>
+    <div class="row"><span>Lieu</span><span id="r-lieu">—</span></div>
+    <div class="totbox"><span style="color:#fff;font-size:14px;font-weight:600">Montant total</span><span style="color:#fff;font-size:22px;font-weight:700" id="r-montant">—</span></div>
+    <div class="row" style="margin-top:8px"><span>Acompte à verser</span><span id="r-acompte" style="color:#1a7f37">—</span></div>
+    <div class="ribbox">
+      <p style="font-weight:700;margin-bottom:8px">💳 Coordonnées bancaires</p>
+      <p>Titulaire : <strong>BALCI Deniz</strong></p>
+      <p class="iban">IBAN : FR76 1470 7508 4134 1198 9477 147</p>
+    </div>
+    <p style="font-size:12px;color:#ff9500;margin-top:10px;font-weight:500">⏱ L'acompte doit être versé sous 48h, sans quoi la réservation sera automatiquement annulée.</p>
+  </div>
+
+  <div class="card">
+    <p class="stitle">Conditions générales de vente</p>
+    <div class="cgv-art">
+      <h3>Art. 1 — Champ d'application</h3>
+      <p>Les présentes CGV s'appliquent à toutes les prestations de DJ MEYRA (BALCI Deniz), Auto-Entrepreneur, 3 rue d'Ottmarsheim, 68100 Mulhouse.</p>
+    </div>
+    <div class="cgv-art">
+      <h3>Art. 2 — Durée de la prestation</h3>
+      <p>La durée est stipulée au contrat et ne comprend pas les temps de montage et de démontage. Toute heure supplémentaire commencée est due à 100 €/heure.</p>
+    </div>
+    <div class="cgv-art">
+      <h3>Art. 3 — Modalités de paiement</h3>
+      <p>L'acompte doit être versé dans un délai de 48 heures suivant la signature du contrat, sans quoi la réservation sera automatiquement annulée. L'acompte versé est EN AUCUN CAS REMBOURSABLE, sauf décès d'un membre de la famille directe. Le solde est dû en fin de prestation.</p>
+    </div>
+    <div class="cgv-art">
+      <h3>Art. 4 — Obligations de DJ MEYRA</h3>
+      <p>Fournir le matériel nécessaire selon le devis, se présenter 1 à 3 heures avant le début, respecter la puissance sonore maximale (100 dB, décret n°2017-1244).</p>
+    </div>
+    <div class="cgv-art">
+      <h3>Art. 5 — Obligations du client</h3>
+      <p>Permettre l'accès 2 heures avant le début, fournir un emplacement 6m × 4m avec prises 220V, fournir repas et boisson, garantir le remboursement en cas de destruction du matériel.</p>
+    </div>
+    <div class="cgv-art">
+      <h3>Art. 6 — Clause météo</h3>
+      <p>En cas de prestation en extérieur rendue impossible par la météo, les parties conviennent de reporter à une date disponible. L'acompte reste acquis.</p>
+    </div>
+    <div class="cgv-art">
+      <h3>Art. 7 — Résiliation</h3>
+      <p>L'acompte ne sera en aucun cas remboursé. DJ MEYRA peut rompre le contrat en cas de mauvais traitements ou non-respect des obligations.</p>
+    </div>
+    <div class="cgv-art" style="margin-bottom:0">
+      <h3>Art. 8 — Litiges</h3>
+      <p>En cas de litige, solution amiable privilégiée. À défaut, tribunaux de Mulhouse seuls compétents.</p>
+    </div>
+  </div>
+
+  <div class="sign-box">
+    <p class="stitle">Signature électronique</p>
+    <div class="flabel">Votre nom complet *</div>
+    <input type="text" id="sign-nom" placeholder="Prénom et nom" autocorrect="off" autocapitalize="words">
+
+    <div class="check-row" onclick="toggleCheck()">
+      <div class="checkbox" id="checkbox"></div>
+      <span class="check-text">J'ai lu et j'accepte l'intégralité des conditions générales de vente ci-dessus, ainsi que le délai de versement de l'acompte sous 48h.</span>
+    </div>
+
+    <button class="btn-sign" id="btn-sign" disabled onclick="signerContrat()">✍️ Signer le contrat</button>
+  </div>
+</div>
+
+<div class="success-screen" id="success-screen">
+  <div class="success-icon">✅</div>
+  <h2>Contrat signé avec succès !</h2>
+  <p>Merci ! Votre contrat a bien été validé.<br>Pensez à verser l'acompte sous 48h pour confirmer définitivement votre réservation.</p>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBv_0pZASNBoVNlQ4-ztKsXwVrIN0dMQ-U",
+  authDomain:"dj-meyra.firebaseapp.com",
+  databaseURL:"https://dj-meyra-default-rtdb.firebaseio.com",
+  projectId:"dj-meyra",
+  storageBucket:"dj-meyra.firebasestorage.app",
+  messagingSenderId:"161733120497",
+  appId:"1:161733120497:web:6d51fac4eb4d5730abf450"
+};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const params = new URLSearchParams(window.location.search);
+const sigId = params.get('id');
+
+window._sigId = sigId;
+window._db = db;
+window._ref = ref;
+window._get = get;
+window._update = update;
+
+if (!sigId) {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('error-screen').style.display = 'block';
+} else {
+  get(ref(db, 'signatures/' + sigId)).then(function(snapshot) {
+    var data = snapshot.val();
+    document.getElementById('loading').style.display = 'none';
+    if (!data) {
+      document.getElementById('error-screen').style.display = 'block';
+      return;
+    }
+    if (data.signe) {
+      document.getElementById('success-screen').style.display = 'block';
+      var p2 = document.querySelector('#success-screen p');
+      p2.innerHTML = 'Ce contrat a déjà été signé le ' + new Date(data.signeDate).toLocaleDateString('fr-FR') + ' par ' + data.signeNom + '.';
+      return;
+    }
+    window._presta = data;
+    document.getElementById('main-content').style.display = 'block';
+    document.getElementById('r-client').textContent = data.client || '—';
+    document.getElementById('r-type').textContent = data.type || '—';
+    var ds = data.date ? new Date(data.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}) : '—';
+    document.getElementById('r-date').textContent = ds;
+    document.getElementById('r-horaires').textContent = (data.hdebut && data.hfin) ? data.hdebut + ' à ' + data.hfin : '—';
+    document.getElementById('r-lieu').textContent = data.adresse ? (data.ville + ' — ' + data.adresse) : (data.ville || '—');
+    document.getElementById('r-montant').textContent = (data.montant||0).toLocaleString('fr-FR') + ' €';
+    document.getElementById('r-acompte').textContent = (data.acompte||0).toLocaleString('fr-FR') + ' €';
+  }).catch(function() {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('error-screen').style.display = 'block';
+  });
+}
+</script>
+
+<script>
+var checked = false;
+function toggleCheck() {
+  checked = !checked;
+  document.getElementById('checkbox').classList.toggle('checked', checked);
+  updateBtnState();
+}
+function updateBtnState() {
+  var nom = document.getElementById('sign-nom').value.trim();
+  document.getElementById('btn-sign').disabled = !(checked && nom.length > 2);
+}
+document.getElementById('sign-nom').addEventListener('input', updateBtnState);
+
+function signerContrat() {
+  var nom = document.getElementById('sign-nom').value.trim();
+  if (!checked || nom.length < 3) { alert('Merci de remplir votre nom et accepter les CGV.'); return; }
+  var btn = document.getElementById('btn-sign');
+  btn.disabled = true; btn.textContent = 'Signature en cours...';
+
+  var sigData = {
+    signe: true,
+    signeNom: nom,
+    signeDate: new Date().toISOString()
+  };
+
+  window._update(window._ref(window._db, 'signatures/' + window._sigId), sigData).then(function() {
+    document.getElementById('main-content').style.display = 'none';
+    document.getElementById('success-screen').style.display = 'block';
+  }).catch(function() {
+    alert('Une erreur est survenue. Réessayez.');
+    btn.disabled = false; btn.textContent = '✍️ Signer le contrat';
+  });
+}
+</script>
+
+</body>
+</html>
