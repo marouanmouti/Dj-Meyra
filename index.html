@@ -818,6 +818,30 @@ function clickJour(ds){
   }
   modal.classList.add('open');
 }
+function envoyerSignature(idx){
+  var p = prestations[idx]; if(!p) return;
+  if(p.signatureId){
+    var url='https://marouanmouti.github.io/Dj-Meyra/signature.html?id='+p.signatureId;
+    if(navigator.share){navigator.share({title:'Contrat DJ Meyra',text:'Voici le lien pour signer votre contrat',url:url});}
+    else{navigator.clipboard.writeText(url).then(function(){alert('Lien copié ! Collez-le dans WhatsApp ou Instagram :\n\n'+url);});}
+    return;
+  }
+  var sigId='sig-'+Date.now()+'-'+Math.floor(Math.random()*1000);
+  p.signatureId=sigId;
+  saveLocal();
+  if(window._syncFirebase)window._syncFirebase(prestations);
+  if(window._createSignature){
+    window._createSignature(sigId,{
+      client:p.client,tel:p.tel,type:p.type,date:p.date,hdebut:p.hdebut,hfin:p.hfin,
+      ville:p.ville,adresse:p.adresse,montant:p.montant,acompte:p.acompte,
+      signe:false,createdAt:new Date().toISOString()
+    });
+  }
+  var url='https://marouanmouti.github.io/Dj-Meyra/signature.html?id='+sigId;
+  if(navigator.share){navigator.share({title:'Contrat DJ Meyra',text:'Voici le lien pour signer votre contrat',url:url});}
+  else{navigator.clipboard.writeText(url).then(function(){alert('✅ Lien de signature créé et copié !\n\nCollez-le dans WhatsApp ou Instagram :\n\n'+url);});}
+  clickJour(p.date);
+}
 function togglePaiement(idx, champ){
   var p = prestations[idx]; if(!p) return;
   p[champ] = !p[champ];
@@ -1234,7 +1258,7 @@ function genContrat(idx){
   tx('IBAN : FR76 1470 7508 4134 1198 9477 147',mg+3,y+14.5);
   y+=21;
   sf('helvetica','italic',7);doc.setTextColor(110,110,110);
-  tx('Le versement de l\'acompte vaut acceptation pleine et entière des présentes conditions générales de vente (voir page 2).',mg,y);
+  tx('L\'acompte doit être versé sous 48h, sans quoi la réservation sera automatiquement annulée. Son versement vaut acceptation pleine et entière des présentes conditions générales de vente (voir page 2).',mg,y);
   doc.setTextColor(30,30,30);y+=7;
   sf('helvetica','normal',7.5);doc.setTextColor(130,130,130);tx('TVA non applicable, art. 293B du CGI',mg,y);
   doc.setTextColor(30,30,30);y+=8;
@@ -1267,6 +1291,7 @@ function genContrat(idx){
   cy1=aB('Paiement par espèces ou virement bancaire.',cx1,cy1);
   cy1=aB('L\'acompte versé est EN AUCUN CAS REMBOURSABLE, sauf décès d\'un membre de la famille directe (père, mère, frère, sœur, conjoint, enfant).',cx1,cy1);
   cy1=aB('Le CLIENT peut demander le report à une autre date sous réserve de disponibilité de DJ MEYRA, sans frais supplémentaires.',cx1,cy1);
+  cy1=aB('L\'acompte doit être versé dans un délai de 48 heures suivant la signature du présent contrat, sans quoi la réservation sera automatiquement annulée.',cx1,cy1);
   cy1=aB('La réservation n\'est validée qu\'à réception de l\'acompte. Le solde est dû en fin de prestation. Tout défaut entraîne une pénalité de 5x le taux légal.',cx1,cy1);cy1+=3;
   cy1=aT('Art. 4 : OBLIGATIONS DE DJ MEYRA',cx1,cy1);
   cy1=aB('- Fournir le matériel nécessaire (sonorisation, éclairages) selon le devis.',cx1,cy1);
@@ -1377,6 +1402,38 @@ onValue(ref(db,'demandes'), function(snapshot) {
 window._updateDemande = function(key, statut) {
   update(ref(db,'demandes/'+key), {statut: statut});
 };
+
+window._deleteDemande = function(key) {
+  remove(ref(db,'demandes/'+key));
+};
+
+// Créer une signature
+window._createSignature = function(sigId, data) {
+  set(ref(db, 'signatures/' + sigId), data);
+};
+
+// Écouter les signatures pour mettre à jour le statut dans le planning
+onValue(ref(db, 'signatures'), function(snapshot) {
+  var data = snapshot.val();
+  if (!data) return;
+  var changed = false;
+  prestations.forEach(function(p) {
+    if (p.signatureId && data[p.signatureId]) {
+      var sig = data[p.signatureId];
+      if (sig.signe && !p.signe) {
+        p.signe = true;
+        p.signeDate = sig.signeDate;
+        p.signeNom = sig.signeNom;
+        changed = true;
+      }
+    }
+  });
+  if (changed) {
+    saveLocal();
+    var page = document.getElementById('page-planning');
+    if (page && page.classList.contains('active')) renderPlanning();
+  }
+});
 </script>
 
 </body>
