@@ -814,6 +814,7 @@ function clickJour(ds){
     html+='<button onclick="fermerDetail();ouvrirModal('+pid+')" style="flex:1;padding:12px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;background:#f2f2f7;color:#1c1c1e;-webkit-appearance:none">✏️ Modifier</button>';
     html+='<button onclick="fermerDetail();genContrat('+pid+')" style="flex:1;padding:12px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;background:#e8f0fe;color:#1a56db;-webkit-appearance:none">📄 Contrat</button>';
     html+='</div>';
+    html+='<button onclick="envoyerSignature('+pid+')" style="width:100%;margin-top:8px;padding:12px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;background:'+(p.signe?'#e8fbe8':(p.signatureId?'#fff3e0':'#f3e8ff'))+';color:'+(p.signe?'#1a7f37':(p.signatureId?'#e65100':'#7c3aed'))+';-webkit-appearance:none">'+(p.signe?'✅ Contrat signé le '+new Date(p.signeDate).toLocaleDateString('fr-FR'):(p.signatureId?'🔗 Renvoyer le lien de signature':'✍️ Envoyer pour signature électronique'))+'</button>';
     content.innerHTML=html;
   }
   modal.classList.add('open');
