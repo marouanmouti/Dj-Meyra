@@ -1263,8 +1263,9 @@ function genContrat(idx){
   tx('IBAN : FR76 1470 7508 4134 1198 9477 147',mg+3,y+14.5);
   y+=21;
   sf('helvetica','italic',7);doc.setTextColor(110,110,110);
-  tx('L\'acompte doit être versé sous 48h, sans quoi la réservation sera automatiquement annulée. Son versement vaut acceptation pleine et entière des présentes conditions générales de vente (voir page 2).',mg,y);
-  doc.setTextColor(30,30,30);y+=7;
+  var ribNote=doc.splitTextToSize('L\'acompte doit être versé sous 48h, sans quoi la réservation sera automatiquement annulée. Son versement vaut acceptation pleine et entière des présentes conditions générales de vente (voir page 2).',W-mg*2);
+  doc.text(ribNote,mg,y);
+  doc.setTextColor(30,30,30);y+=ribNote.length*3.5+3;
   sf('helvetica','normal',7.5);doc.setTextColor(130,130,130);tx('TVA non applicable, art. 293B du CGI',mg,y);
   doc.setTextColor(30,30,30);y+=8;
   doc.setDrawColor(30,30,30);doc.setLineWidth(0.5);ln(mg,y,W-mg,y);y+=7;
