@@ -1272,16 +1272,15 @@ function genContrat(idx){
   if(p.signe){
     var sigDateP=p.signeDate?new Date(p.signeDate):new Date();
     var sigDateStrP=sigDateP.toLocaleDateString('fr-FR')+' à '+sigDateP.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-    sf('helvetica','bold',9);tx('Signature du prestataire',mg,y);
+    sf('helvetica','bold',9);tx('Signature du prestataire',mg,y);tx('Signature du client',W/2+5,y);
     sf('helvetica','normal',8.5);tx('Pour DJ MEYRA — BALCI Deniz',mg,y+5);
-    fillR(W/2+5,y-4,W/2-mg-5,18,232,251,232);
-    doc.setDrawColor(52,199,89);doc.setLineWidth(0.5);doc.rect(W/2+5,y-4,W/2-mg-5,18);
-    sf('helvetica','bold',8);doc.setTextColor(26,127,55);tx('✓ Signé électroniquement',W/2+8,y+1);
-    sf('helvetica','normal',7.5);doc.setTextColor(30,30,30);
-    tx(p.signeNom||client,W/2+8,y+6.5);
-    tx(sigDateStrP,W/2+8,y+11);
+    fillR(W/2+5,y+8,W/2-mg-5,16,232,251,232);
+    doc.setDrawColor(52,199,89);doc.setLineWidth(0.5);doc.rect(W/2+5,y+8,W/2-mg-5,16);
+    sf('helvetica','bold',7.5);doc.setTextColor(26,127,55);tx('✓ Signé électroniquement',W/2+8,y+13.5);
+    sf('helvetica','normal',7);doc.setTextColor(30,30,30);
+    tx(p.signeNom||client,W/2+8,y+18.5);
     doc.setTextColor(30,30,30);
-    y+=23;
+    y+=28;
   } else {
     sf('helvetica','bold',9);tx('Signature du prestataire',mg,y);tx('Signature du client',W/2+5,y);
     sf('helvetica','normal',8.5);tx('Pour DJ MEYRA — BALCI Deniz',mg,y+5);tx('avec mention « Lu et approuvé »',W/2+5,y+5);
@@ -1341,16 +1340,15 @@ function genContrat(idx){
   if(p.signe){
     var sigDateP2=p.signeDate?new Date(p.signeDate):new Date();
     var sigDateStrP2=sigDateP2.toLocaleDateString('fr-FR')+' à '+sigDateP2.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-    sf('helvetica','bold',9);tx('Signature du prestataire',mg,sy);
+    sf('helvetica','bold',9);tx('Signature du prestataire',mg,sy);tx('Signature du client',W/2+5,sy);
     sf('helvetica','normal',8.5);tx('Pour DJ MEYRA — BALCI Deniz',mg,sy+5);
-    fillR(W/2+5,sy-4,W/2-mg-5,18,232,251,232);
-    doc.setDrawColor(52,199,89);doc.setLineWidth(0.5);doc.rect(W/2+5,sy-4,W/2-mg-5,18);
-    sf('helvetica','bold',8);doc.setTextColor(26,127,55);tx('✓ Signé électroniquement',W/2+8,sy+1);
-    sf('helvetica','normal',7.5);doc.setTextColor(30,30,30);
-    tx(p.signeNom||client,W/2+8,sy+6.5);
-    tx(sigDateStrP2,W/2+8,sy+11);
+    fillR(W/2+5,sy+8,W/2-mg-5,16,232,251,232);
+    doc.setDrawColor(52,199,89);doc.setLineWidth(0.5);doc.rect(W/2+5,sy+8,W/2-mg-5,16);
+    sf('helvetica','bold',7.5);doc.setTextColor(26,127,55);tx('✓ Signé électroniquement',W/2+8,sy+13.5);
+    sf('helvetica','normal',7);doc.setTextColor(30,30,30);
+    tx(p.signeNom||client,W/2+8,sy+18.5);
     doc.setTextColor(30,30,30);
-    sy+=21;
+    sy+=28;
   } else {
     sf('helvetica','bold',9);tx('Signature du prestataire',mg,sy);tx('Signature du client',W/2+5,sy);
     sf('helvetica','normal',8.5);tx('Pour DJ MEYRA — BALCI Deniz',mg,sy+5);tx('avec mention « Lu et approuvé »',W/2+5,sy+5);
